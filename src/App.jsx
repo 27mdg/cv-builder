@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import './App.css'
 import cvInicial from './datos/cvInicial.js'
 import textos from './idiomas/es.js'
@@ -7,6 +7,10 @@ import TextoLargo from './componentes/formulario/TextoLargo.jsx'
 import secciones from './datos/secciones.js'
 import Seccion from './componentes/formulario/Seccion.jsx'
 import SeccionLista from './componentes/formulario/SeccionLista.jsx'
+
+// La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
+// así el formulario aparece al instante y el PDF un momento después.
+const VistaPrevia = lazy(() => import('./componentes/VistaPrevia.jsx'))
 
 function App() {
   const [cv, setCv] = useState(cvInicial)
@@ -59,8 +63,10 @@ function App() {
           </Seccion>
         </section>
         <section className="preview-panel">
-          <h1>{cv.personal.nombre}</h1>
-          <p>{cv.personal.email}</p>
+          {/* Suspense muestra el texto "Cargando…" mientras llega la vista previa */}
+          <Suspense fallback={<p className="cargando">{textos.vistaPrevia.cargando}</p>}>
+            <VistaPrevia cv={cv}/>
+          </Suspense>
         </section>
       </main>
     </div>

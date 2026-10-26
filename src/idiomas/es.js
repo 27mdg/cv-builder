@@ -130,6 +130,9 @@ const es = {
     aptitud: 'Aptitud',
     anadir: '+ Añadir aptitud',
   },
+  vistaPrevia: {
+    cargando: 'Cargando vista previa…',
+  },
 }
 
 export default es
