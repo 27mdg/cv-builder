@@ -1,44 +1,59 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import textos from '../idiomas/es.js'
 import secciones from '../datos/secciones.js'
+import { valoresDiseno } from '../datos/diseno.js'
 import { tieneTexto, elementosConContenido, unir, resumenElemento, datosPersonales } from './formato.js'
 
 // Plantilla "Clásica": una columna, sobria.
 // Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
 
-// Color de los títulos (cambiarlo aquí cambia toda la plantilla)
-const acento = '#1f4e79'
+// Combinación de colores propia de esta plantilla (ver src/datos/diseno.js)
+const colorPorDefecto = 'azul'
 
+// Estilos de la plantilla según el diseño elegido en la barra de herramientas.
+// v: valores de valoresDiseno() (fuente, escala de letra, espacios, márgenes, colores)
 // Medidas en puntos (pt): 1 pt ≈ 0,35 mm. Un A4 mide 595 × 842 pt.
-const estilos = StyleSheet.create({
-  pagina: { padding: 40, fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.4, color: '#222' },
-  cabecera: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: acento,
-  },
-  foto: { width: 70, height: 70, borderRadius: 35, marginRight: 16, objectFit: 'cover' },
-  // lineHeight propio: el de la página se calcula para letra de 10 pt y aquí se montaría
-  nombre: { fontSize: 22, lineHeight: 1.2, fontFamily: 'Helvetica-Bold', color: acento },
-  puesto: { fontSize: 12, lineHeight: 1.3, marginTop: 2 },
-  contacto: { fontSize: 9, color: '#555', marginTop: 4 },
-  seccion: { marginTop: 14 },
-  tituloSeccion: {
-    fontSize: 11,
-    fontFamily: 'Helvetica-Bold',
-    color: acento,
-    textTransform: 'uppercase',
-    marginBottom: 4,
-  },
-  elemento: { marginBottom: 6 },
-  tituloElemento: { fontFamily: 'Helvetica-Bold' },
-  detalle: { fontSize: 9, color: '#666' },
-})
+function crearEstilos(v) {
+  // Tamaño de letra escalado: letra(10) = 10 pt con tamaño M
+  const letra = (pt) => pt * v.escala
+  return StyleSheet.create({
+    pagina: {
+      padding: 40 * v.margenes,
+      fontFamily: v.fuente,
+      fontSize: letra(10),
+      lineHeight: v.altoLinea,
+      color: '#222',
+    },
+    cabecera: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: v.principal,
+    },
+    foto: { width: 70, height: 70, borderRadius: 35, marginRight: 16, objectFit: 'cover' },
+    // lineHeight propio: el de la página se calcula para la letra normal y aquí se montaría
+    nombre: { fontSize: letra(22), lineHeight: 1.2, fontWeight: 'bold', color: v.principal },
+    puesto: { fontSize: letra(12), lineHeight: 1.3, marginTop: 2 },
+    contacto: { fontSize: letra(9), color: '#555', marginTop: 4 },
+    // Separación ENCIMA de cada sección (con marginBottom, react-pdf no reparte bien
+    // una sección larga entre dos páginas)
+    seccion: { marginTop: 14 * v.secciones },
+    tituloSeccion: {
+      fontSize: letra(11),
+      fontWeight: 'bold',
+      color: v.principal,
+      textTransform: 'uppercase',
+      marginBottom: 4,
+    },
+    elemento: { marginBottom: 6 * v.parrafos },
+    tituloElemento: { fontWeight: 'bold' },
+    detalle: { fontSize: letra(9), color: '#666' },
+  })
+}
 
 // Una sección del CV con su título
-function Seccion({ titulo, children }) {
+function Seccion({ estilos, titulo, children }) {
   return (
     <View style={estilos.seccion}>
       {/* minPresenceAhead: si el título quedaría solo al final de la página, pasa a la siguiente */}
@@ -50,7 +65,7 @@ function Seccion({ titulo, children }) {
 
 // Un elemento con título, detalle (fechas, lugar) y descripción.
 // wrap={false}: no se parte entre dos páginas
-function Elemento({ titulo, detalle, descripcion }) {
+function Elemento({ estilos, titulo, detalle, descripcion }) {
   return (
     <View style={estilos.elemento} wrap={false}>
       {tieneTexto(titulo) && <Text style={estilos.tituloElemento}>{titulo}</Text>}
@@ -61,7 +76,7 @@ function Elemento({ titulo, detalle, descripcion }) {
 }
 
 // Contenido de una sección con lista, según de qué sección se trate
-function ContenidoLista({ clave, lista }) {
+function ContenidoLista({ estilos, clave, lista }) {
   if (clave === 'habilidades') {
     return lista.map((item) => (
       <Text key={item.id}>{unir([item.habilidad, textos.comun.nivelesHabilidad[item.nivel]], ' — ')}</Text>
@@ -80,12 +95,13 @@ function ContenidoLista({ clave, lista }) {
   }
   return lista.map((item) => {
     const [titulo, detalle] = resumenElemento(clave, item)
-    return <Elemento key={item.id} titulo={titulo} detalle={detalle} descripcion={item.descripcion}/>
+    return <Elemento key={item.id} estilos={estilos} titulo={titulo} detalle={detalle} descripcion={item.descripcion}/>
   })
 }
 
 // cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Clasica({ cv }) {
+  const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto))
   const p = cv.personal
   const datos = datosPersonales(p)
   const nombreCompleto = datos.nombreCompleto
@@ -111,7 +127,7 @@ function Clasica({ cv }) {
         )}
 
         {tieneTexto(cv.perfil) && (
-          <Seccion titulo={textos.perfil.titulo}>
+          <Seccion estilos={estilos} titulo={textos.perfil.titulo}>
             <Text>{cv.perfil}</Text>
           </Seccion>
         )}
@@ -121,14 +137,14 @@ function Clasica({ cv }) {
           const lista = elementosConContenido(cv[clave])
           if (lista.length === 0) return null
           return (
-            <Seccion key={clave} titulo={textos[clave].titulo}>
-              <ContenidoLista clave={clave} lista={lista}/>
+            <Seccion key={clave} estilos={estilos} titulo={textos[clave].titulo}>
+              <ContenidoLista estilos={estilos} clave={clave} lista={lista}/>
             </Seccion>
           )
         })}
 
         {tieneTexto(cv.logros) && (
-          <Seccion titulo={textos.logros.titulo}>
+          <Seccion estilos={estilos} titulo={textos.logros.titulo}>
             <Text>{cv.logros}</Text>
           </Seccion>
         )}

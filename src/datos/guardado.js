@@ -19,6 +19,7 @@ export function cvDesdeDatos(datos) {
     ...cvInicial,
     ...datos.cv,
     personal: { ...cvInicial.personal, ...datos.cv.personal },
+    diseno: { ...cvInicial.diseno, ...datos.cv.diseno },
   }
   // Por si el archivo se ha tocado a mano: las listas tienen que ser listas
   for (const nombre of Object.keys(cvInicial)) {
