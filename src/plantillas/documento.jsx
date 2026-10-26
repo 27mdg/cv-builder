@@ -1,6 +1,8 @@
 import Clasica from './Clasica.jsx'
 import Moderna from './Moderna.jsx'
 import plantillas from './lista.js'
+// Da de alta las fuentes del PDF (solo hace falta importarlo una vez)
+import './fuentes.js'
 
 // Qué componente corresponde a cada plantilla de lista.js.
 // Para añadir una plantilla: crear su archivo, ponerla aquí, en lista.js y en es.js.

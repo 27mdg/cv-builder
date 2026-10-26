@@ -48,6 +48,11 @@ function App() {
     setCv((anterior) => ({ ...anterior, [clave]: valor }))
   }
 
+  // Cambia una opción de diseño, p. ej. cambiarDiseno('fuente', 'lato')
+  function cambiarDiseno(campo, valor) {
+    setCv((anterior) => ({ ...anterior, diseno: { ...anterior.diseno, [campo]: valor } }))
+  }
+
   // Cambia un campo de los datos personales, p. ej. cambiarPersonal('nombre', 'Ana')
   function cambiarPersonal(campo, valor) {
     setCv((anterior) => ({ ...anterior, personal: { ...anterior.personal, [campo]: valor } }))
@@ -111,6 +116,8 @@ function App() {
           <BarraHerramientas
             plantilla={cv.plantilla}
             alCambiarPlantilla={(id) => cambiarSeccion('plantilla', id)}
+            diseno={cv.diseno}
+            alCambiarDiseno={cambiarDiseno}
             pantallaCompleta={pantallaCompleta}
             alCambiarPantallaCompleta={setPantallaCompleta}
           />

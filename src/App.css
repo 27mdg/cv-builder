@@ -34,6 +34,15 @@
 .menu-herramienta { position: absolute; left: 0; bottom: calc(100% + 10px); min-width: 180px; padding: 6px; background: white; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); }
 .menu-herramienta button { width: 100%; }
 .menu-herramienta button.elegida { font-weight: bold; background: #eef0f3; }
+/* Menús de diseño (Fuente, Espaciado): más anchos y con scroll si no caben */
+.menu-diseno { width: 260px; max-height: 60vh; overflow-y: auto; padding: 6px; white-space: normal; }
+.menu-subtitulo, .deslizador-titulo { display: block; margin: 8px 4px 4px; font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; }
+.deslizador { display: block; margin-bottom: 8px; }
+.deslizador-fila { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+.deslizador-fila input { flex: 1; accent-color: #1f4e79; }
+.deslizador-valor { min-width: 32px; text-align: right; }
+.lista-fuentes button { justify-content: flex-start; text-align: left; }
+.lista-fuentes button.elegida::before { content: '✓'; margin-right: 6px; }
 .seccion { border: 1px solid #ccc; border-radius: 6px; margin-bottom: 12px; background: white; }
 .seccion > summary { padding: 12px; font-weight: bold; cursor: pointer; }
 .seccion-contenido { padding: 0 12px 12px; }

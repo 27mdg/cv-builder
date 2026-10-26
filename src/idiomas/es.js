@@ -147,6 +147,11 @@ const es = {
     pantallaCompleta: 'Pantalla completa',
     salirPantallaCompleta: 'Salir de pantalla completa (Esc)',
     proximamente: 'Próximamente',
+    tamanoFuente: 'Tamaño de fuente',
+    // "Arimo (tipo Arial)": fuente libre parecida a una de pago
+    tipo: 'tipo',
+    // Pasos de los deslizadores, del 1 al 5
+    pasos: ['XS', 'S', 'M', 'L', 'XL'],
   },
   plantillas: {
     clasica: 'Clásica',

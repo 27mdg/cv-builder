@@ -1,19 +1,24 @@
 import textos from '../idiomas/es.js'
 import plantillas from '../plantillas/lista.js'
+import { fuenteDe } from '../datos/diseno.js'
 import MenuHerramienta from './MenuHerramienta.jsx'
+import MenuFuente from './MenuFuente.jsx'
 import {
   IconoPlantillas, IconoFuente, IconoEspaciado, IconoColores,
   IconoPantallaCompleta, IconoSalirPantallaCompleta,
 } from './Iconos.jsx'
 
 // Barra flotante abajo de la vista previa: Plantillas, Fuente, Espaciado, Colores
-// y Pantalla completa. Fuente, Espaciado y Colores aún no funcionan ("Próximamente"):
-// para activarlos, quitar `desactivada` y poner su menú como en Plantillas.
+// y Pantalla completa. Las que aún no funcionan llevan `desactivada` ("Próximamente").
 // plantilla: id de la plantilla elegida
 // alCambiarPlantilla: función que recibe el id de la nueva plantilla
+// diseno: cv.diseno (fuente, tamaño, espaciado, colores)
+// alCambiarDiseno: función que recibe (campo, valor), p. ej. ('fuente', 'lato')
 // pantallaCompleta: true si la vista previa ocupa toda la ventana
 // alCambiarPantallaCompleta: función que recibe true / false
-function BarraHerramientas({ plantilla, alCambiarPlantilla, pantallaCompleta, alCambiarPantallaCompleta }) {
+function BarraHerramientas({
+  plantilla, alCambiarPlantilla, diseno, alCambiarDiseno, pantallaCompleta, alCambiarPantallaCompleta,
+}) {
   return (
     <div className="barra-herramientas">
       <MenuHerramienta icono={<IconoPlantillas/>} texto={textos.herramientas.plantillas}>
@@ -32,7 +37,10 @@ function BarraHerramientas({ plantilla, alCambiarPlantilla, pantallaCompleta, al
           </button>
         ))}
       </MenuHerramienta>
-      <MenuHerramienta icono={<IconoFuente/>} texto={textos.herramientas.fuente} desactivada/>
+      {/* El botón muestra el nombre de la fuente elegida, p. ej. "Lato" */}
+      <MenuHerramienta icono={<IconoFuente/>} texto={fuenteDe(diseno).nombre}>
+        {() => <MenuFuente diseno={diseno} alCambiar={alCambiarDiseno}/>}
+      </MenuHerramienta>
       <MenuHerramienta icono={<IconoEspaciado/>} texto={textos.herramientas.espaciado} desactivada/>
       <MenuHerramienta icono={<IconoColores/>} texto={textos.herramientas.colores} desactivada/>
       <button

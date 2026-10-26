@@ -6,9 +6,28 @@
 // id: lo que se guarda en el CV · nombre: lo que se ve en el menú
 // pista: fuente de pago a la que se parece (se muestra "Arimo (tipo Arial)")
 // familia: nombre de la fuente en el PDF · css: cómo se pinta su nombre en el menú
+// Para añadir una fuente: `npm install @fontsource/<id>`, añadirla aquí y en src/plantillas/fuentes.js.
 export const fuentes = [
+  // Helvetica viene dentro de todos los lectores de PDF: no hay que añadir ningún archivo
   { id: 'helvetica', nombre: 'Helvetica', familia: 'Helvetica', css: 'Helvetica, Arial, sans-serif' },
+  { id: 'arimo', nombre: 'Arimo', pista: 'Arial', familia: 'Arimo', css: "'Arimo', sans-serif" },
+  { id: 'carlito', nombre: 'Carlito', pista: 'Calibri', familia: 'Carlito', css: "'Carlito', sans-serif" },
+  { id: 'cousine', nombre: 'Cousine', pista: 'Courier New', familia: 'Cousine', css: "'Cousine', monospace" },
+  { id: 'eb-garamond', nombre: 'EB Garamond', familia: 'EB Garamond', css: "'EB Garamond', serif" },
+  { id: 'gelasio', nombre: 'Gelasio', pista: 'Georgia', familia: 'Gelasio', css: "'Gelasio', serif" },
+  { id: 'lato', nombre: 'Lato', familia: 'Lato', css: "'Lato', sans-serif" },
+  { id: 'noto-sans', nombre: 'Noto Sans', familia: 'Noto Sans', css: "'Noto Sans', sans-serif" },
+  { id: 'noto-serif', nombre: 'Noto Serif', familia: 'Noto Serif', css: "'Noto Serif', serif" },
+  { id: 'open-sans', nombre: 'Open Sans', familia: 'Open Sans', css: "'Open Sans', sans-serif" },
+  { id: 'poppins', nombre: 'Poppins', familia: 'Poppins', css: "'Poppins', sans-serif" },
+  { id: 'roboto', nombre: 'Roboto', familia: 'Roboto', css: "'Roboto', sans-serif" },
+  { id: 'tinos', nombre: 'Tinos', pista: 'Times New Roman', familia: 'Tinos', css: "'Tinos', serif" },
 ]
+
+// La fuente elegida en el CV (si no existe, la primera)
+export function fuenteDe(diseno) {
+  return fuentes.find((f) => f.id === diseno.fuente) ?? fuentes[0]
+}
 
 // Valores de los pasos 1–5 de los deslizadores (XS, S, M, L, XL). El 3 (M) es el normal.
 // Son multiplicadores: cada plantilla los aplica a sus propias medidas.
@@ -64,7 +83,7 @@ function coloresDe(diseno, colorPorDefecto) {
 // Números concretos para las plantillas a partir de lo elegido en la barra de herramientas.
 // diseno: cv.diseno · colorPorDefecto: ver coloresDe
 export function valoresDiseno(diseno, colorPorDefecto) {
-  const fuente = fuentes.find((f) => f.id === diseno.fuente) ?? fuentes[0]
+  const fuente = fuenteDe(diseno)
   // Si un valor guardado no es válido, se usa el normal (1)
   const paso = (lista, n) => lista[n - 1] ?? 1
   return {
