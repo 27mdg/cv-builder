@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import textos from '../idiomas/es.js'
 import secciones from '../datos/secciones.js'
-import { rangoFechas, formatearNacimiento, tieneTexto, elementosConContenido, unir } from './formato.js'
+import { tieneTexto, elementosConContenido, unir, resumenElemento, datosPersonales } from './formato.js'
 
 // Plantilla "Clásica": una columna, sobria.
 // Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
@@ -36,19 +36,6 @@ const estilos = StyleSheet.create({
   tituloElemento: { fontFamily: 'Helvetica-Bold' },
   detalle: { fontSize: 9, color: '#666' },
 })
-
-// Título + detalle de cada elemento en las secciones con fechas
-function resumenPuesto(item) {
-  return [unir([item.puesto, item.empleador], ' — '), unir([rangoFechas(item), item.localidad])]
-}
-const resumenes = {
-  formacion: (item) => [unir([item.formacion, item.centro], ' — '), unir([rangoFechas(item), item.localidad])],
-  experiencia: resumenPuesto,
-  practicas: resumenPuesto,
-  actividades: resumenPuesto,
-  cursos: (item) => [item.curso, rangoFechas(item)],
-  certificados: (item) => [item.certificado, rangoFechas(item)],
-}
 
 // Una sección del CV con su título
 function Seccion({ titulo, children }) {
@@ -92,7 +79,7 @@ function ContenidoLista({ clave, lista }) {
     return <Text>{unir(lista.map((item) => item.aptitud))}</Text>
   }
   return lista.map((item) => {
-    const [titulo, detalle] = resumenes[clave](item)
+    const [titulo, detalle] = resumenElemento(clave, item)
     return <Elemento key={item.id} titulo={titulo} detalle={detalle} descripcion={item.descripcion}/>
   })
 }
@@ -100,22 +87,11 @@ function ContenidoLista({ clave, lista }) {
 // cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Clasica({ cv }) {
   const p = cv.personal
-  const nombreCompleto = unir([p.nombre, p.apellidos], ' ')
-  const direccion = unir([p.direccion, unir([p.codigoPostal, p.localidad], ' ')], ', ')
-  const contacto = unir([p.email, p.telefono, direccion, p.web, p.linkedin])
-
-  // Otros datos personales y campos personalizados, como 'Etiqueta: valor'
-  const otrosDatos = unir([
-    [textos.personal.fechaNacimiento, formatearNacimiento(p.fechaNacimiento)],
-    [textos.personal.lugarNacimiento, p.lugarNacimiento],
-    [textos.personal.nacionalidad, p.nacionalidad],
-    [textos.personal.carne, p.carne],
-    [textos.personal.genero, p.genero],
-    [textos.personal.estadoCivil, p.estadoCivil],
-    ...elementosConContenido(p.personalizados).map((campo) => [campo.etiqueta, campo.valor]),
-  ]
-    .filter(([, valor]) => tieneTexto(valor))
-    .map(([etiqueta, valor]) => (tieneTexto(etiqueta) ? `${etiqueta}: ${valor}` : valor)))
+  const datos = datosPersonales(p)
+  const nombreCompleto = datos.nombreCompleto
+  // En esta plantilla, contacto y otros datos van cada uno en una línea
+  const contacto = unir(datos.contacto)
+  const otrosDatos = unir(datos.otrosDatos)
 
   const hayCabecera = p.foto || nombreCompleto || p.puesto || contacto || otrosDatos
 

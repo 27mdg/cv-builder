@@ -36,6 +36,44 @@ export function unir(partes, separador = ' · ') {
   return partes.filter(tieneTexto).join(separador)
 }
 
+// Título y detalle de un elemento de las secciones con fechas, p. ej.
+// ['Diseñadora — Estudio X', '03/2021 – Presente · Madrid']
+export function resumenElemento(clave, item) {
+  if (clave === 'formacion') {
+    return [unir([item.formacion, item.centro], ' — '), unir([rangoFechas(item), item.localidad])]
+  }
+  if (clave === 'cursos') return [item.curso, rangoFechas(item)]
+  if (clave === 'certificados') return [item.certificado, rangoFechas(item)]
+  // Experiencia, Prácticas y Actividades extracurriculares
+  return [unir([item.puesto, item.empleador], ' — '), unir([rangoFechas(item), item.localidad])]
+}
+
+// Datos personales listos para la cabecera de una plantilla:
+// nombreCompleto (texto), contacto y otrosDatos (listas de textos, sin vacíos).
+// Cada plantilla decide si los pinta en una línea o uno debajo de otro.
+export function datosPersonales(personal) {
+  const p = personal
+  const direccion = unir([p.direccion, unir([p.codigoPostal, p.localidad], ' ')], ', ')
+  // Otros datos y campos personalizados, como 'Etiqueta: valor'
+  const otrosDatos = [
+    [textos.personal.fechaNacimiento, formatearNacimiento(p.fechaNacimiento)],
+    [textos.personal.lugarNacimiento, p.lugarNacimiento],
+    [textos.personal.nacionalidad, p.nacionalidad],
+    [textos.personal.carne, p.carne],
+    [textos.personal.genero, p.genero],
+    [textos.personal.estadoCivil, p.estadoCivil],
+    ...elementosConContenido(p.personalizados).map((campo) => [campo.etiqueta, campo.valor]),
+  ]
+    .filter(([, valor]) => tieneTexto(valor))
+    .map(([etiqueta, valor]) => (tieneTexto(etiqueta) ? `${etiqueta}: ${valor}` : valor))
+
+  return {
+    nombreCompleto: unir([p.nombre, p.apellidos], ' '),
+    contacto: [p.email, p.telefono, direccion, p.web, p.linkedin].filter(tieneTexto),
+    otrosDatos,
+  }
+}
+
 // Un elemento tiene contenido si algún campo tiene algo escrito o elegido
 function tieneContenido(item) {
   return Object.entries(item).some(([nombre, valor]) => {
