@@ -157,6 +157,18 @@ const es = {
     // Pasos de los deslizadores, del 1 al 5
     pasos: ['XS', 'S', 'M', 'L', 'XL'],
   },
+  // Nombres de las combinaciones de colores (los ids están en src/datos/diseno.js)
+  nombresColores: {
+    'azul': 'Azul marino',
+    'verde-azulado': 'Verde azulado',
+    'rojo': 'Rojo',
+    'verde': 'Verde',
+    'ocre': 'Ocre',
+    'morado': 'Morado',
+    'salmon-oscuro': 'Salmón sobre negro',
+    'celeste-oscuro': 'Celeste sobre negro',
+    'propio': 'Color personalizado',
+  },
   plantillas: {
     clasica: 'Clásica',
     moderna: 'Moderna',

@@ -2,14 +2,12 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import textos from '../idiomas/es.js'
 import secciones from '../datos/secciones.js'
 import { valoresDiseno } from '../datos/diseno.js'
+import { colorPorDefecto } from './lista.js'
 import { tieneTexto, elementosConContenido, resumenElemento, datosPersonales } from './formato.js'
 
 // Plantilla "Moderna": dos columnas. A la izquierda un lateral de color con los datos
 // cortos (contacto, habilidades, idiomas...); a la derecha lo largo (experiencia, formación...).
 // Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
-
-// Combinación de colores propia de esta plantilla (ver src/datos/diseno.js)
-const colorPorDefecto = 'verde-azulado'
 // Ancho del lateral en puntos (el A4 mide 595 pt de ancho)
 const anchoLateral = 180
 
@@ -142,7 +140,7 @@ function ContenidoLateral({ estilos, clave, lista }) {
 
 // cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Moderna({ cv }) {
-  const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto))
+  const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto.moderna))
   const p = cv.personal
   const datos = datosPersonales(p)
 

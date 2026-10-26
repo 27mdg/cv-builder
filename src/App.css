@@ -32,6 +32,7 @@
 .boton-pantalla-completa { margin-left: 8px; }
 /* Menú que se abre hacia arriba desde una herramienta */
 .menu-herramienta { position: absolute; left: 0; bottom: calc(100% + 10px); min-width: 180px; padding: 6px; background: white; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); }
+.menu-herramienta.a-derecha { left: auto; right: 0; }
 .menu-herramienta button { width: 100%; }
 .menu-herramienta button.elegida { font-weight: bold; background: #eef0f3; }
 /* Menús de diseño (Fuente, Espaciado): más anchos y con scroll si no caben */
@@ -43,6 +44,14 @@
 .deslizador-valor { min-width: 32px; text-align: right; }
 .lista-fuentes button { justify-content: flex-start; text-align: left; }
 .lista-fuentes button.elegida::before { content: '✓'; margin-right: 6px; }
+/* Menú Colores: muestras cuadradas (fondo del lateral) con un círculo (color principal) */
+.menu-colores { display: flex; flex-wrap: wrap; gap: 8px; width: 268px; padding: 6px; }
+.menu-herramienta .muestra { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 2px solid #dde1e6; border-radius: 8px; cursor: pointer; }
+.menu-herramienta .muestra.elegida { border-color: #1f4e79; box-shadow: 0 0 0 2px rgba(31, 78, 121, 0.25); }
+.muestra-circulo { width: 26px; height: 26px; border-radius: 50%; }
+.muestra-arcoiris { position: relative; background: conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red); }
+/* El selector de color del navegador queda invisible encima de la muestra arcoíris */
+.muestra-arcoiris input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .seccion { border: 1px solid #ccc; border-radius: 6px; margin-bottom: 12px; background: white; }
 .seccion > summary { padding: 12px; font-weight: bold; cursor: pointer; }
 .seccion-contenido { padding: 0 12px 12px; }

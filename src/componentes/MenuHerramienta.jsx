@@ -6,8 +6,10 @@ import { IconoFlecha } from './Iconos.jsx'
 // icono: el icono del botón
 // texto: el nombre de la herramienta
 // desactivada: si es true, el botón se ve en gris y no hace nada ("Próximamente")
+// aDerecha: si es true, el menú se abre alineado a la derecha del botón (para que no se
+//   salga del panel en las herramientas que están más a la derecha)
 // children: el contenido del menú. Recibe la función cerrar: children(cerrar)
-function MenuHerramienta({ icono, texto, desactivada, children }) {
+function MenuHerramienta({ icono, texto, desactivada, aDerecha, children }) {
   const [abierto, setAbierto] = useState(false)
   const caja = useRef(null)
 
@@ -41,7 +43,11 @@ function MenuHerramienta({ icono, texto, desactivada, children }) {
         {texto}
         <IconoFlecha/>
       </button>
-      {abierto && <div className="menu-herramienta">{children(() => setAbierto(false))}</div>}
+      {abierto && (
+        <div className={aDerecha ? 'menu-herramienta a-derecha' : 'menu-herramienta'}>
+          {children(() => setAbierto(false))}
+        </div>
+      )}
     </span>
   )
 }

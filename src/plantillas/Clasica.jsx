@@ -2,13 +2,11 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import textos from '../idiomas/es.js'
 import secciones from '../datos/secciones.js'
 import { valoresDiseno } from '../datos/diseno.js'
+import { colorPorDefecto } from './lista.js'
 import { tieneTexto, elementosConContenido, unir, resumenElemento, datosPersonales } from './formato.js'
 
 // Plantilla "Clásica": una columna, sobria.
 // Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
-
-// Combinación de colores propia de esta plantilla (ver src/datos/diseno.js)
-const colorPorDefecto = 'azul'
 
 // Estilos de la plantilla según el diseño elegido en la barra de herramientas.
 // v: valores de valoresDiseno() (fuente, escala de letra, espacios, márgenes, colores)
@@ -101,7 +99,7 @@ function ContenidoLista({ estilos, clave, lista }) {
 
 // cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Clasica({ cv }) {
-  const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto))
+  const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto.clasica))
   const p = cv.personal
   const datos = datosPersonales(p)
   const nombreCompleto = datos.nombreCompleto
