@@ -139,6 +139,13 @@ const es = {
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     nombreArchivo: 'CV',
   },
+  plantillas: {
+    titulo: 'Plantilla',
+    clasica: 'Clásica',
+    moderna: 'Moderna',
+    // Títulos que solo usa alguna plantilla
+    contacto: 'Contacto',
+  },
   guardado: {
     aviso: 'Tus datos se guardan solo en este navegador. No se envían a ningún servidor.',
     borrar: 'Empezar de cero',
