@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PDFViewer } from '@react-pdf/renderer'
-import Clasica from '../plantillas/Clasica.jsx'
+import { documentoPdf } from '../plantillas/documento.jsx'
 
 // Milisegundos que se espera tras el último cambio antes de regenerar el PDF
 const espera = 500
@@ -20,7 +20,7 @@ function VistaPrevia({ cv }) {
 
   return (
     <PDFViewer className="visor-pdf">
-      <Clasica cv={cvMostrado}/>
+      {documentoPdf(cvMostrado)}
     </PDFViewer>
   )
 }

@@ -2,6 +2,10 @@
 .topbar { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: #222; color: white; }
 .acciones { display: flex; align-items: center; gap: 12px; }
 .boton-secundario { padding: 8px 16px; border: 1px solid #888; border-radius: 4px; background: transparent; color: white; font: inherit; cursor: pointer; }
+.selector-plantilla { display: flex; align-items: center; gap: 4px; margin-right: 12px; }
+.selector-plantilla span { margin-right: 4px; color: #bbb; }
+.selector-plantilla button { padding: 6px 12px; border: 1px solid #888; border-radius: 4px; background: transparent; color: white; font: inherit; cursor: pointer; }
+.selector-plantilla button.elegida { background: white; color: #222; border-color: white; }
 .aviso { margin: 0 0 12px; font-size: 14px; color: #555; }
 .descargar { display: flex; align-items: center; gap: 12px; }
 .descargar button { padding: 8px 16px; border: none; border-radius: 4px; background: #1f4e79; color: white; font: inherit; cursor: pointer; }

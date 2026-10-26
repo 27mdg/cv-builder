@@ -1,6 +1,6 @@
 import { pdf } from '@react-pdf/renderer'
 import textos from '../idiomas/es.js'
-import Clasica from './Clasica.jsx'
+import { documentoPdf } from './documento.jsx'
 import { unir, tieneTexto } from './formato.js'
 
 // Este archivo importa la librería de PDF (pesa mucho), así que la web
@@ -21,7 +21,7 @@ export function nombreArchivo(cv) {
 // Genera el PDF con los datos actuales y lo descarga
 export async function descargarPdf(cv) {
   // Blob: el PDF como un "archivo en memoria"
-  const blob = await pdf(<Clasica cv={cv}/>).toBlob()
+  const blob = await pdf(documentoPdf(cv)).toBlob()
   // Dirección temporal para ese archivo y un enlace que se pulsa por código
   const url = URL.createObjectURL(blob)
   const enlace = document.createElement('a')

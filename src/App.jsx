@@ -10,6 +10,7 @@ import Seccion from './componentes/formulario/Seccion.jsx'
 import SeccionLista from './componentes/formulario/SeccionLista.jsx'
 import BotonDescargar from './componentes/BotonDescargar.jsx'
 import BotonBorrar from './componentes/BotonBorrar.jsx'
+import SelectorPlantilla from './componentes/SelectorPlantilla.jsx'
 
 // La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
 // así el formulario aparece al instante y el PDF un momento después.
@@ -43,6 +44,7 @@ function App() {
       <header className="topbar">
         <span>{textos.app.titulo}</span>
         <div className="acciones">
+          <SelectorPlantilla valor={cv.plantilla} alCambiar={(id) => cambiarSeccion('plantilla', id)}/>
           {/* Al vaciar el CV, el useEffect de arriba guarda también el CV vacío */}
           <BotonBorrar alBorrar={() => setCv(cvInicial)}/>
           <BotonDescargar cv={cv}/>

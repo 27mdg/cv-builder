@@ -1,6 +1,8 @@
 // Forma de los datos de un CV vacío.
 // Las listas empiezan vacías y se rellenan con los botones "Añadir".
 const cvInicial = {
+  // Plantilla elegida (ver src/plantillas/lista.js)
+  plantilla: 'clasica',
   personal: {
     foto: '', // imagen ya reducida, como texto (data URL)
     nombre: '',
