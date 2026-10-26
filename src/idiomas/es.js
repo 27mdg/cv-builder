@@ -134,7 +134,7 @@ const es = {
     cargando: 'Cargando vista previa…',
   },
   descargar: {
-    boton: 'Descargar PDF',
+    boton: 'Descargar',
     generando: 'Generando PDF…',
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     nombreArchivo: 'CV',
@@ -147,13 +147,15 @@ const es = {
     contacto: 'Contacto',
   },
   archivo: {
+    nombre: 'Nombre del archivo',
+    importar: 'Importar',
+    exportar: 'Exportar',
+    confirmarImportar: 'Se sustituirá el CV actual por el del archivo. ¿Continuar?',
     errorNoValido: 'Este archivo no es un CV de CV Gratis.',
     errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',
   },
   guardado: {
-    aviso: 'Tus datos se guardan solo en este navegador. No se envían a ningún servidor.',
-    borrar: 'Empezar de cero',
-    confirmar: '¿Seguro? Se borrarán todos los datos del CV.',
+    aviso: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
   },
 }
 

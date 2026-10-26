@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import './App.css'
-import cvInicial from './datos/cvInicial.js'
 import { cargarCv, guardarCv } from './datos/guardado.js'
+import { nombreBase } from './datos/archivo.js'
 import textos from './idiomas/es.js'
 import DatosPersonales from './componentes/formulario/DatosPersonales.jsx'
 import TextoLargo from './componentes/formulario/TextoLargo.jsx'
@@ -9,7 +9,8 @@ import secciones from './datos/secciones.js'
 import Seccion from './componentes/formulario/Seccion.jsx'
 import SeccionLista from './componentes/formulario/SeccionLista.jsx'
 import BotonDescargar from './componentes/BotonDescargar.jsx'
-import BotonBorrar from './componentes/BotonBorrar.jsx'
+import BotonImportar from './componentes/BotonImportar.jsx'
+import BotonExportar from './componentes/BotonExportar.jsx'
 import SelectorPlantilla from './componentes/SelectorPlantilla.jsx'
 
 // La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
@@ -42,11 +43,20 @@ function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <span>{textos.app.titulo}</span>
+        {/* Logo provisional: cuando exista la página de inicio, este enlace llevará a ella */}
+        <a href="/" className="logo">{textos.app.titulo}</a>
+        {/* Nombre de los archivos descargados; si está vacío se ve (y se usa) el automático */}
+        <input
+          className="nombre-archivo"
+          aria-label={textos.archivo.nombre}
+          placeholder={nombreBase({ ...cv, nombreArchivo: '' })}
+          value={cv.nombreArchivo}
+          onChange={(e) => cambiarSeccion('nombreArchivo', e.target.value)}
+        />
         <div className="acciones">
           <SelectorPlantilla valor={cv.plantilla} alCambiar={(id) => cambiarSeccion('plantilla', id)}/>
-          {/* Al vaciar el CV, el useEffect de arriba guarda también el CV vacío */}
-          <BotonBorrar alBorrar={() => setCv(cvInicial)}/>
+          <BotonImportar cvActual={cv} alImportar={setCv}/>
+          <BotonExportar cv={cv}/>
           <BotonDescargar cv={cv}/>
         </div>
       </header>
