@@ -133,6 +133,12 @@ const es = {
   vistaPrevia: {
     cargando: 'Cargando vista previa…',
   },
+  descargar: {
+    boton: 'Descargar PDF',
+    generando: 'Generando PDF…',
+    error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
+    nombreArchivo: 'CV',
+  },
 }
 
 export default es
