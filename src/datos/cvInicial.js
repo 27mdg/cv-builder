@@ -3,6 +3,8 @@
 const cvInicial = {
   // Plantilla elegida (ver src/plantillas/lista.js)
   plantilla: 'clasica',
+  // Nombre de los archivos que se descargan; vacío = automático ('CV - Nombre Apellidos')
+  nombreArchivo: '',
   personal: {
     foto: '', // imagen ya reducida, como texto (data URL)
     nombre: '',

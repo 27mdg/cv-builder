@@ -146,6 +146,10 @@ const es = {
     // Títulos que solo usa alguna plantilla
     contacto: 'Contacto',
   },
+  archivo: {
+    errorNoValido: 'Este archivo no es un CV de CV Gratis.',
+    errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',
+  },
   guardado: {
     aviso: 'Tus datos se guardan solo en este navegador. No se envían a ningún servidor.',
     borrar: 'Empezar de cero',
