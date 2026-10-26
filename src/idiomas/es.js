@@ -16,15 +16,31 @@ const es = {
     titulo: 'Sobre mí',
     ayuda: 'Dos o tres frases sobre tu perfil y lo que buscas.',
   },
+  // Textos que usan varias secciones
+  comun: {
+    quitar: 'Quitar',
+    presente: 'Presente',
+    mes: 'Mes',
+    anio: 'Año',
+    meses: [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+    ],
+  },
+  // Etiquetas de campos que se repiten en varias secciones.
+  // Una sección puede poner la suya propia con el mismo nombre.
+  campos: {
+    puesto: 'Puesto',
+    empleador: 'Empleador',
+    localidad: 'Localidad',
+    inicio: 'Inicio',
+    fin: 'Fin',
+    descripcion: 'Descripción',
+  },
   experiencia: {
     titulo: 'Experiencia',
-    puesto: 'Puesto',
-    empresa: 'Empresa',
-    inicio: 'Inicio (p. ej. 2021)',
-    fin: 'Fin (p. ej. 2023 o Actualidad)',
     descripcion: 'Qué hacías y qué lograste',
     anadir: '+ Añadir experiencia',
-    quitar: 'Quitar',
   },
   educacion: {
     titulo: 'Educación',
