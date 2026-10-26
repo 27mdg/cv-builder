@@ -10,6 +10,7 @@ legend { font-weight: bold; margin-bottom: 8px; }
 .bloque { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
 .form-panel button { padding: 6px 12px; font: inherit; cursor: pointer; }
 .form-panel select { padding: 6px; margin-right: 8px; font: inherit; }
+.form-panel label > select { display: block; margin-top: 2px; }
 .campo-fecha { margin-bottom: 8px; }
 .campo-fecha > span { display: block; margin-bottom: 2px; }
 .form-panel .presente { display: inline-block; margin: 0; }

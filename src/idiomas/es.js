@@ -26,6 +26,25 @@ const es = {
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
     ],
+    elegir: 'Elige…',
+    // El número (1–5) es lo que se guarda
+    nivelesHabilidad: {
+      1: 'Principiante',
+      2: 'Básico',
+      3: 'Intermedio',
+      4: 'Avanzado',
+      5: 'Experto',
+    },
+    // El código de la izquierda es lo que se guarda
+    nivelesIdioma: {
+      nativo: 'Nativo',
+      C2: 'C2 – Maestría',
+      C1: 'C1 – Avanzado',
+      B2: 'B2 – Intermedio alto',
+      B1: 'B1 – Intermedio',
+      A2: 'A2 – Básico',
+      A1: 'A1 – Principiante',
+    },
   },
   // Etiquetas de campos que se repiten en varias secciones.
   // Una sección puede poner la suya propia con el mismo nombre.
@@ -48,6 +67,23 @@ const es = {
     descripcion: 'Qué hacías y qué lograste',
     anadir: '+ Añadir experiencia',
   },
+  habilidades: {
+    titulo: 'Habilidades',
+    habilidad: 'Habilidad',
+    nivel: 'Nivel',
+    anadir: '+ Añadir habilidad',
+  },
+  idiomas: {
+    titulo: 'Idiomas',
+    idioma: 'Idioma',
+    nivel: 'Nivel',
+    anadir: '+ Añadir idioma',
+  },
+  aficiones: {
+    titulo: 'Aficiones e intereses',
+    interes: 'Interés',
+    anadir: '+ Añadir interés',
+  },
   cursos: {
     titulo: 'Cursos',
     curso: 'Curso',
@@ -66,11 +102,10 @@ const es = {
     certificado: 'Certificado',
     anadir: '+ Añadir certificado',
   },
-  habilidades: {
-    titulo: 'Habilidades',
-  },
-  idiomas: {
-    titulo: 'Idiomas',
+  aptitudes: {
+    titulo: 'Aptitudes',
+    aptitud: 'Aptitud',
+    anadir: '+ Añadir aptitud',
   },
 }
 

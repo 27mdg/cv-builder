@@ -59,6 +59,27 @@ function Campo({ clave, campo, item, alCambiar }) {
       </CampoFecha>
     )
   }
+  if (campo.tipo === 'nivelHabilidad' || campo.tipo === 'nivelIdioma') {
+    const opciones = campo.tipo === 'nivelHabilidad' ? textos.comun.nivelesHabilidad : textos.comun.nivelesIdioma
+    return (
+      <label>
+        {texto}
+        <select
+          value={valor}
+          onChange={(e) => {
+            // El nivel de habilidad se guarda como número (1–5); cada plantilla decide cómo pintarlo
+            const elegido = e.target.value
+            alCambiar(campo.nombre, campo.tipo === 'nivelHabilidad' && elegido !== '' ? Number(elegido) : elegido)
+          }}
+        >
+          <option value="">{textos.comun.elegir}</option>
+          {Object.entries(opciones).map(([codigo, nombre]) => (
+            <option key={codigo} value={codigo}>{nombre}</option>
+          ))}
+        </select>
+      </label>
+    )
+  }
   // 'texto': una sola línea
   return (
     <label>

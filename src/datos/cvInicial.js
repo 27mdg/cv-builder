@@ -12,14 +12,14 @@ const cvInicial = {
   // Listas: los campos de cada elemento están en secciones.js
   formacion: [],
   experiencia: [],
+  habilidades: [],
+  idiomas: [],
+  aficiones: [],
   cursos: [],
   practicas: [],
   actividades: [],
   certificados: [],
-  // Cada elemento: un texto, por ejemplo 'JavaScript'
-  habilidades: [],
-  // Cada elemento: { idioma, nivel }
-  idiomas: [],
+  aptitudes: [],
 }
 
 export default cvInicial

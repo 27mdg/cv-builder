@@ -5,6 +5,8 @@
 //   'textoLargo' varias líneas
 //   'fecha'      mes (opcional) + año
 //   'fechaFin'   mes + año con interruptor "Presente" (se guarda en `presente`)
+//   'nivelHabilidad' desplegable 1–5 (se guarda el número)
+//   'nivelIdioma'    desplegable Nativo, C2 … A1 (se guarda el código, p. ej. 'B2')
 
 // Campos comunes a Experiencia, Prácticas y Actividades extracurriculares
 const camposPuesto = [
@@ -30,6 +32,21 @@ const secciones = [
   },
   { clave: 'experiencia', campos: camposPuesto },
   {
+    clave: 'habilidades',
+    campos: [
+      { nombre: 'habilidad', tipo: 'texto' },
+      { nombre: 'nivel', tipo: 'nivelHabilidad' },
+    ],
+  },
+  {
+    clave: 'idiomas',
+    campos: [
+      { nombre: 'idioma', tipo: 'texto' },
+      { nombre: 'nivel', tipo: 'nivelIdioma' },
+    ],
+  },
+  { clave: 'aficiones', campos: [{ nombre: 'interes', tipo: 'texto' }] },
+  {
     clave: 'cursos',
     campos: [
       { nombre: 'curso', tipo: 'texto' },
@@ -49,6 +66,7 @@ const secciones = [
       { nombre: 'descripcion', tipo: 'textoLargo' },
     ],
   },
+  { clave: 'aptitudes', campos: [{ nombre: 'aptitud', tipo: 'texto' }] },
 ]
 
 export default secciones
