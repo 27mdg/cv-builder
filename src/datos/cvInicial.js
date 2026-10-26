@@ -3,12 +3,25 @@
 const cvInicial = {
   personal: {
     nombre: '',
+    apellidos: '',
     puesto: '',
     email: '',
     telefono: '',
-    ciudad: '',
+    direccion: '',
+    codigoPostal: '',
+    localidad: '',
+    fechaNacimiento: '', // formato 'AAAA-MM-DD'
+    lugarNacimiento: '',
+    carne: '',
+    genero: '',
+    nacionalidad: '',
+    estadoCivil: '',
+    web: '',
+    linkedin: '',
+    // Cada elemento: { id, etiqueta, valor }
+    personalizados: [],
   },
-  resumen: '',
+  perfil: '',
   // Listas: los campos de cada elemento están en secciones.js
   formacion: [],
   experiencia: [],
@@ -20,6 +33,7 @@ const cvInicial = {
   actividades: [],
   certificados: [],
   aptitudes: [],
+  logros: '',
 }
 
 export default cvInicial

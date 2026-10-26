@@ -7,14 +7,35 @@ const es = {
   personal: {
     titulo: 'Datos personales',
     nombre: 'Nombre',
+    apellidos: 'Apellidos',
     puesto: 'Puesto',
-    email: 'Email',
+    email: 'Correo electrónico',
     telefono: 'Teléfono',
-    ciudad: 'Ciudad',
+    direccion: 'Dirección',
+    codigoPostal: 'Código postal',
+    localidad: 'Localidad',
+    fechaNacimiento: 'Fecha de nacimiento',
+    lugarNacimiento: 'Lugar de nacimiento',
+    carne: 'Carné de conducir',
+    genero: 'Género',
+    nacionalidad: 'Nacionalidad',
+    estadoCivil: 'Estado civil',
+    web: 'Página web',
+    linkedin: 'LinkedIn',
   },
-  resumen: {
-    titulo: 'Sobre mí',
+  personalizados: {
+    titulo: 'Campos personalizados',
+    etiqueta: 'Nombre del campo (p. ej. Disponibilidad)',
+    valor: 'Valor (p. ej. Inmediata)',
+    anadir: '+ Añadir campo',
+  },
+  perfil: {
+    titulo: 'Perfil',
     ayuda: 'Dos o tres frases sobre tu perfil y lo que buscas.',
+  },
+  logros: {
+    titulo: 'Logros',
+    ayuda: 'Escribe tus logros, uno por línea.',
   },
   // Textos que usan varias secciones
   comun: {
