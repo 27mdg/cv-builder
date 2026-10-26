@@ -139,6 +139,11 @@ const es = {
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     nombreArchivo: 'CV',
   },
+  guardado: {
+    aviso: 'Tus datos se guardan solo en este navegador. No se envían a ningún servidor.',
+    borrar: 'Empezar de cero',
+    confirmar: '¿Seguro? Se borrarán todos los datos del CV.',
+  },
 }
 
 export default es

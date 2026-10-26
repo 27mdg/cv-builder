@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import './App.css'
+import cvInicial from './datos/cvInicial.js'
 import { cargarCv, guardarCv } from './datos/guardado.js'
 import textos from './idiomas/es.js'
 import DatosPersonales from './componentes/formulario/DatosPersonales.jsx'
@@ -8,6 +9,7 @@ import secciones from './datos/secciones.js'
 import Seccion from './componentes/formulario/Seccion.jsx'
 import SeccionLista from './componentes/formulario/SeccionLista.jsx'
 import BotonDescargar from './componentes/BotonDescargar.jsx'
+import BotonBorrar from './componentes/BotonBorrar.jsx'
 
 // La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
 // así el formulario aparece al instante y el PDF un momento después.
@@ -40,10 +42,15 @@ function App() {
     <div className="app">
       <header className="topbar">
         <span>{textos.app.titulo}</span>
-        <BotonDescargar cv={cv}/>
+        <div className="acciones">
+          {/* Al vaciar el CV, el useEffect de arriba guarda también el CV vacío */}
+          <BotonBorrar alBorrar={() => setCv(cvInicial)}/>
+          <BotonDescargar cv={cv}/>
+        </div>
       </header>
       <main className="workspace">
         <section className="form-panel">
+          <p className="aviso">{textos.guardado.aviso}</p>
           <Seccion titulo={textos.personal.titulo} abierta>
             <DatosPersonales datos={cv.personal} alCambiar={cambiarPersonal}/>
           </Seccion>
