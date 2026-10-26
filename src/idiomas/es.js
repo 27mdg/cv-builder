@@ -6,6 +6,8 @@ const es = {
   },
   personal: {
     titulo: 'Datos personales',
+    foto: 'Foto',
+    quitarFoto: 'Quitar foto',
     nombre: 'Nombre',
     apellidos: 'Apellidos',
     puesto: 'Puesto',

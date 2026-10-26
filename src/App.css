@@ -10,6 +10,8 @@
 .form-panel input, .form-panel textarea { display: block; width: 100%; padding: 6px; margin-top: 2px; font: inherit; }
 .bloque { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
 .form-panel button { padding: 6px 12px; font: inherit; cursor: pointer; }
+.campo-foto { margin-bottom: 8px; }
+.campo-foto img { display: block; max-width: 120px; margin-bottom: 8px; border-radius: 4px; }
 .subtitulo { font-weight: bold; margin: 16px 0 8px; }
 .form-panel select { padding: 6px; margin-right: 8px; font: inherit; }
 .form-panel label > select { display: block; margin-top: 2px; }

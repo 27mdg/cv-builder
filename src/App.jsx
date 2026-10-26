@@ -11,9 +11,18 @@ import SeccionLista from './componentes/formulario/SeccionLista.jsx'
 function App() {
   const [cv, setCv] = useState(cvInicial)
 
+  // Los cambios parten siempre de la versión más reciente del CV (anterior), no de `cv`.
+  // Así, si llegan dos cambios casi a la vez (p. ej. la foto, que tarda un poco en
+  // reducirse), el segundo no borra el primero.
+
+  // Cambia una sección entera, p. ej. cambiarSeccion('perfil', 'Soy...')
+  function cambiarSeccion(clave, valor) {
+    setCv((anterior) => ({ ...anterior, [clave]: valor }))
+  }
+
   // Cambia un campo de los datos personales, p. ej. cambiarPersonal('nombre', 'Ana')
   function cambiarPersonal(campo, valor) {
-    setCv({ ...cv, personal: { ...cv.personal, [campo]: valor } })
+    setCv((anterior) => ({ ...anterior, personal: { ...anterior.personal, [campo]: valor } }))
   }
 
   return (
@@ -28,7 +37,7 @@ function App() {
             <TextoLargo
               valor={cv.perfil}
               ayuda={textos.perfil.ayuda}
-              alCambiar={(valor) => setCv({ ...cv, perfil: valor })}
+              alCambiar={(valor) => cambiarSeccion('perfil', valor)}
             />
           </Seccion>
           {secciones.map((seccion) => (
@@ -37,7 +46,7 @@ function App() {
                 clave={seccion.clave}
                 campos={seccion.campos}
                 lista={cv[seccion.clave]}
-                alCambiar={(lista) => setCv({ ...cv, [seccion.clave]: lista })}
+                alCambiar={(lista) => cambiarSeccion(seccion.clave, lista)}
               />
             </Seccion>
           ))}
@@ -45,7 +54,7 @@ function App() {
             <TextoLargo
               valor={cv.logros}
               ayuda={textos.logros.ayuda}
-              alCambiar={(valor) => setCv({ ...cv, logros: valor })}
+              alCambiar={(valor) => cambiarSeccion('logros', valor)}
             />
           </Seccion>
         </section>

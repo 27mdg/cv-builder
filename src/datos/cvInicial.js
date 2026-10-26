@@ -2,6 +2,7 @@
 // Las listas empiezan vacías y se rellenan con los botones "Añadir".
 const cvInicial = {
   personal: {
+    foto: '', // imagen ya reducida, como texto (data URL)
     nombre: '',
     apellidos: '',
     puesto: '',

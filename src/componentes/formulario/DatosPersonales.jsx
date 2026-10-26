@@ -1,5 +1,6 @@
 import textos from '../../idiomas/es.js'
 import SeccionLista from './SeccionLista.jsx'
+import CampoFoto from './CampoFoto.jsx'
 
 // Campos que se muestran, en orden. El texto de cada etiqueta sale de textos.personal
 // tipo: el tipo del <input> ('date' muestra un calendario)
@@ -33,6 +34,7 @@ const camposPersonalizados = [
 function DatosPersonales({ datos, alCambiar }) {
   return (
     <>
+      <CampoFoto valor={datos.foto} alCambiar={(foto) => alCambiar('foto', foto)}/>
       {campos.map((campo) => (
         <label key={campo.nombre}>
           {textos.personal[campo.nombre]}
