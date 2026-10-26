@@ -21,7 +21,7 @@ function App() {
       <header className="topbar">{textos.app.titulo}</header>
       <main className="workspace">
         <section className="form-panel">
-          <Seccion titulo={textos.personal.titulo}>
+          <Seccion titulo={textos.personal.titulo} abierta>
             <DatosPersonales datos={cv.personal} alCambiar={cambiarPersonal}/>
           </Seccion>
           <Seccion titulo={textos.perfil.titulo}>
