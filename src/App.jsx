@@ -7,6 +7,7 @@ import TextoLargo from './componentes/formulario/TextoLargo.jsx'
 import secciones from './datos/secciones.js'
 import Seccion from './componentes/formulario/Seccion.jsx'
 import SeccionLista from './componentes/formulario/SeccionLista.jsx'
+import BotonDescargar from './componentes/BotonDescargar.jsx'
 
 // La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
 // así el formulario aparece al instante y el PDF un momento después.
@@ -31,7 +32,10 @@ function App() {
 
   return (
     <div className="app">
-      <header className="topbar">{textos.app.titulo}</header>
+      <header className="topbar">
+        <span>{textos.app.titulo}</span>
+        <BotonDescargar cv={cv}/>
+      </header>
       <main className="workspace">
         <section className="form-panel">
           <Seccion titulo={textos.personal.titulo} abierta>

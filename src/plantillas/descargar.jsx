@@ -11,6 +11,8 @@ export function nombreArchivo(cv) {
   const nombre = unir([cv.personal.nombre, cv.personal.apellidos], ' ')
     // Quita los caracteres que no se permiten en nombres de archivo
     .replace(/[\\/:*?"<>|]/g, '')
+    // Junta los espacios repetidos que puedan quedar
+    .replace(/\s+/g, ' ')
     .trim()
   const base = textos.descargar.nombreArchivo
   return (tieneTexto(nombre) ? `${base} - ${nombre}` : base) + '.pdf'
