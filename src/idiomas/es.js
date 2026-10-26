@@ -148,6 +148,10 @@ const es = {
     salirPantallaCompleta: 'Salir de pantalla completa (Esc)',
     proximamente: 'Próximamente',
     tamanoFuente: 'Tamaño de fuente',
+    altoLinea: 'Alto de línea',
+    espaciadoParrafos: 'Espaciado entre párrafos',
+    espaciadoSecciones: 'Espaciado entre secciones',
+    margenes: 'Márgenes de página',
     // "Arimo (tipo Arial)": fuente libre parecida a una de pago
     tipo: 'tipo',
     // Pasos de los deslizadores, del 1 al 5

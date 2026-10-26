@@ -3,6 +3,7 @@ import plantillas from '../plantillas/lista.js'
 import { fuenteDe } from '../datos/diseno.js'
 import MenuHerramienta from './MenuHerramienta.jsx'
 import MenuFuente from './MenuFuente.jsx'
+import MenuEspaciado from './MenuEspaciado.jsx'
 import {
   IconoPlantillas, IconoFuente, IconoEspaciado, IconoColores,
   IconoPantallaCompleta, IconoSalirPantallaCompleta,
@@ -41,7 +42,9 @@ function BarraHerramientas({
       <MenuHerramienta icono={<IconoFuente/>} texto={fuenteDe(diseno).nombre}>
         {() => <MenuFuente diseno={diseno} alCambiar={alCambiarDiseno}/>}
       </MenuHerramienta>
-      <MenuHerramienta icono={<IconoEspaciado/>} texto={textos.herramientas.espaciado} desactivada/>
+      <MenuHerramienta icono={<IconoEspaciado/>} texto={textos.herramientas.espaciado}>
+        {() => <MenuEspaciado diseno={diseno} alCambiar={alCambiarDiseno}/>}
+      </MenuHerramienta>
       <MenuHerramienta icono={<IconoColores/>} texto={textos.herramientas.colores} desactivada/>
       <button
         type="button"
