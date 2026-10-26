@@ -11,7 +11,7 @@ import SeccionLista from './componentes/formulario/SeccionLista.jsx'
 import BotonDescargar from './componentes/BotonDescargar.jsx'
 import BotonImportar from './componentes/BotonImportar.jsx'
 import BotonExportar from './componentes/BotonExportar.jsx'
-import SelectorPlantilla from './componentes/SelectorPlantilla.jsx'
+import BarraHerramientas from './componentes/BarraHerramientas.jsx'
 
 // La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
 // así el formulario aparece al instante y el PDF un momento después.
@@ -25,6 +25,19 @@ function App() {
   useEffect(() => {
     guardarCv(cv)
   }, [cv])
+
+  // true cuando la vista previa ocupa toda la ventana
+  const [pantallaCompleta, setPantallaCompleta] = useState(false)
+
+  // En pantalla completa, la tecla Esc la cierra
+  useEffect(() => {
+    if (!pantallaCompleta) return
+    function alPulsarTecla(e) {
+      if (e.key === 'Escape') setPantallaCompleta(false)
+    }
+    window.addEventListener('keydown', alPulsarTecla)
+    return () => window.removeEventListener('keydown', alPulsarTecla)
+  }, [pantallaCompleta])
 
   // Los cambios parten siempre de la versión más reciente del CV (anterior), no de `cv`.
   // Así, si llegan dos cambios casi a la vez (p. ej. la foto, que tarda un poco en
@@ -54,7 +67,6 @@ function App() {
           onChange={(e) => cambiarSeccion('nombreArchivo', e.target.value)}
         />
         <div className="acciones">
-          <SelectorPlantilla valor={cv.plantilla} alCambiar={(id) => cambiarSeccion('plantilla', id)}/>
           <BotonImportar cvActual={cv} alImportar={setCv}/>
           <BotonExportar cv={cv}/>
           <BotonDescargar cv={cv}/>
@@ -91,11 +103,17 @@ function App() {
             />
           </Seccion>
         </section>
-        <section className="preview-panel">
+        <section className={pantallaCompleta ? 'preview-panel pantalla-completa' : 'preview-panel'}>
           {/* Suspense muestra el texto "Cargando…" mientras llega la vista previa */}
           <Suspense fallback={<p className="cargando">{textos.vistaPrevia.cargando}</p>}>
             <VistaPrevia cv={cv}/>
           </Suspense>
+          <BarraHerramientas
+            plantilla={cv.plantilla}
+            alCambiarPlantilla={(id) => cambiarSeccion('plantilla', id)}
+            pantallaCompleta={pantallaCompleta}
+            alCambiarPantallaCompleta={setPantallaCompleta}
+          />
         </section>
       </main>
     </div>

@@ -139,8 +139,16 @@ const es = {
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     nombreArchivo: 'CV',
   },
+  herramientas: {
+    plantillas: 'Plantillas',
+    fuente: 'Fuente',
+    espaciado: 'Espaciado',
+    colores: 'Colores',
+    pantallaCompleta: 'Pantalla completa',
+    salirPantallaCompleta: 'Salir de pantalla completa (Esc)',
+    proximamente: 'Próximamente',
+  },
   plantillas: {
-    titulo: 'Plantilla',
     clasica: 'Clásica',
     moderna: 'Moderna',
     // Títulos que solo usa alguna plantilla
