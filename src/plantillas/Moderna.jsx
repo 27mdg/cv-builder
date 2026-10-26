@@ -32,7 +32,11 @@ const estilos = StyleSheet.create({
   foto: { width: 100, height: 100, borderRadius: 50, marginBottom: 16, alignSelf: 'center', objectFit: 'cover' },
   nombre: { fontSize: 24, lineHeight: 1.2, fontFamily: 'Helvetica-Bold', color: acento },
   puesto: { fontSize: 13, lineHeight: 1.3, marginTop: 2, color: '#555' },
-  seccion: { marginBottom: 14 },
+  // Separación ENCIMA de cada sección (marginTop). Con marginBottom, react-pdf no sabe
+  // partir una sección larga entre dos páginas y la pasa entera a la siguiente.
+  seccion: { marginTop: 14 },
+  // El lateral no se parte entre páginas, así que aquí el margen puede ir debajo
+  seccionLateral: { marginBottom: 14 },
   tituloSeccion: {
     fontSize: 11,
     fontFamily: 'Helvetica-Bold',
@@ -74,7 +78,7 @@ function Puntos({ nivel }) {
 // Sección del lateral: título pequeño y contenido
 function SeccionLateral({ titulo, children }) {
   return (
-    <View style={estilos.seccion}>
+    <View style={estilos.seccionLateral}>
       <Text style={estilos.tituloLateral} minPresenceAhead={30}>{titulo}</Text>
       {children}
     </View>
@@ -167,7 +171,7 @@ function Moderna({ cv }) {
 
         <View style={estilos.principal}>
           {(tieneTexto(datos.nombreCompleto) || tieneTexto(p.puesto)) && (
-            <View style={estilos.seccion}>
+            <View>
               {tieneTexto(datos.nombreCompleto) && <Text style={estilos.nombre}>{datos.nombreCompleto}</Text>}
               {tieneTexto(p.puesto) && <Text style={estilos.puesto}>{p.puesto}</Text>}
             </View>
