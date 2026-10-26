@@ -18,6 +18,13 @@ const es = {
   },
   experiencia: {
     titulo: 'Experiencia',
+    puesto: 'Puesto',
+    empresa: 'Empresa',
+    inicio: 'Inicio (p. ej. 2021)',
+    fin: 'Fin (p. ej. 2023 o Actualidad)',
+    descripcion: 'Qué hacías y qué lograste',
+    anadir: '+ Añadir experiencia',
+    quitar: 'Quitar',
   },
   educacion: {
     titulo: 'Educación',

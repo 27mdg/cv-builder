@@ -9,7 +9,7 @@ const cvInicial = {
     ciudad: '',
   },
   resumen: '',
-  // Cada elemento: { puesto, empresa, inicio, fin, descripcion }
+  // Cada elemento: { id, puesto, empresa, inicio, fin, descripcion }
   experiencia: [],
   // Cada elemento: { titulo, centro, inicio, fin }
   educacion: [],
