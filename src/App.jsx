@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import cvInicial from './datos/cvInicial.js'
 import textos from './idiomas/es.js'
+import DatosPersonales from './componentes/formulario/DatosPersonales.jsx'
 
 function App() {
   const [cv, setCv] = useState(cvInicial)
@@ -16,14 +17,7 @@ function App() {
       <header className="topbar">{textos.app.titulo}</header>
       <main className="workspace">
         <section className="form-panel">
-          <label>
-            {textos.personal.nombre}
-            <input value={cv.personal.nombre} onChange={(e) => cambiarPersonal('nombre', e.target.value)}/>
-          </label>
-          <label>
-            {textos.personal.email}
-            <input value={cv.personal.email} onChange={(e) => cambiarPersonal('email', e.target.value)}/>
-          </label>
+          <DatosPersonales datos={cv.personal} alCambiar={cambiarPersonal}/>
         </section>
         <section className="preview-panel">
           <h1>{cv.personal.nombre}</h1>
