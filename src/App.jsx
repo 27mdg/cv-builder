@@ -1,6 +1,6 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import './App.css'
-import cvInicial from './datos/cvInicial.js'
+import { cargarCv, guardarCv } from './datos/guardado.js'
 import textos from './idiomas/es.js'
 import DatosPersonales from './componentes/formulario/DatosPersonales.jsx'
 import TextoLargo from './componentes/formulario/TextoLargo.jsx'
@@ -14,7 +14,13 @@ import BotonDescargar from './componentes/BotonDescargar.jsx'
 const VistaPrevia = lazy(() => import('./componentes/VistaPrevia.jsx'))
 
 function App() {
-  const [cv, setCv] = useState(cvInicial)
+  // Al abrir la web se carga el CV guardado en el navegador (o uno vacío)
+  const [cv, setCv] = useState(cargarCv)
+
+  // Cada vez que cambia el CV, se guarda
+  useEffect(() => {
+    guardarCv(cv)
+  }, [cv])
 
   // Los cambios parten siempre de la versión más reciente del CV (anterior), no de `cv`.
   // Así, si llegan dos cambios casi a la vez (p. ej. la foto, que tarda un poco en
