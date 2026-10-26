@@ -30,6 +30,12 @@ export function tieneTexto(texto) {
   return typeof texto === 'string' && texto.trim() !== ''
 }
 
+// Junta varios textos con un separador saltándose los vacíos:
+// unir(['ana@mail.com', '', 'Madrid']) → 'ana@mail.com · Madrid'
+export function unir(partes, separador = ' · ') {
+  return partes.filter(tieneTexto).join(separador)
+}
+
 // Un elemento tiene contenido si algún campo tiene algo escrito o elegido
 function tieneContenido(item) {
   return Object.entries(item).some(([nombre, valor]) => {
