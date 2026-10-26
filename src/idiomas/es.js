@@ -14,6 +14,7 @@ const es = {
   },
   resumen: {
     titulo: 'Sobre mí',
+    ayuda: 'Dos o tres frases sobre tu perfil y lo que buscas.',
   },
   experiencia: {
     titulo: 'Experiencia',
