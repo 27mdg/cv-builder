@@ -10,9 +10,12 @@ const cvInicial = {
   },
   resumen: '',
   // Listas: los campos de cada elemento están en secciones.js
+  formacion: [],
   experiencia: [],
-  // Cada elemento: { titulo, centro, inicio, fin }
-  educacion: [],
+  cursos: [],
+  practicas: [],
+  actividades: [],
+  certificados: [],
   // Cada elemento: un texto, por ejemplo 'JavaScript'
   habilidades: [],
   // Cada elemento: { idioma, nivel }

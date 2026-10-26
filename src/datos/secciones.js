@@ -5,13 +5,45 @@
 //   'textoLargo' varias líneas
 //   'fecha'      mes (opcional) + año
 //   'fechaFin'   mes + año con interruptor "Presente" (se guarda en `presente`)
+
+// Campos comunes a Experiencia, Prácticas y Actividades extracurriculares
+const camposPuesto = [
+  { nombre: 'puesto', tipo: 'texto' },
+  { nombre: 'empleador', tipo: 'texto' },
+  { nombre: 'localidad', tipo: 'texto' },
+  { nombre: 'inicio', tipo: 'fecha' },
+  { nombre: 'fin', tipo: 'fechaFin' },
+  { nombre: 'descripcion', tipo: 'textoLargo' },
+]
+
 const secciones = [
   {
-    clave: 'experiencia',
+    clave: 'formacion',
     campos: [
-      { nombre: 'puesto', tipo: 'texto' },
-      { nombre: 'empleador', tipo: 'texto' },
+      { nombre: 'formacion', tipo: 'texto' },
+      { nombre: 'centro', tipo: 'texto' },
       { nombre: 'localidad', tipo: 'texto' },
+      { nombre: 'inicio', tipo: 'fecha' },
+      { nombre: 'fin', tipo: 'fechaFin' },
+      { nombre: 'descripcion', tipo: 'textoLargo' },
+    ],
+  },
+  { clave: 'experiencia', campos: camposPuesto },
+  {
+    clave: 'cursos',
+    campos: [
+      { nombre: 'curso', tipo: 'texto' },
+      { nombre: 'inicio', tipo: 'fecha' },
+      { nombre: 'fin', tipo: 'fechaFin' },
+      { nombre: 'descripcion', tipo: 'textoLargo' },
+    ],
+  },
+  { clave: 'practicas', campos: camposPuesto },
+  { clave: 'actividades', campos: camposPuesto },
+  {
+    clave: 'certificados',
+    campos: [
+      { nombre: 'certificado', tipo: 'texto' },
       { nombre: 'inicio', tipo: 'fecha' },
       { nombre: 'fin', tipo: 'fechaFin' },
       { nombre: 'descripcion', tipo: 'textoLargo' },

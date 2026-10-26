@@ -37,13 +37,34 @@ const es = {
     fin: 'Fin',
     descripcion: 'Descripción',
   },
+  formacion: {
+    titulo: 'Formación',
+    formacion: 'Formación',
+    centro: 'Centro de estudios',
+    anadir: '+ Añadir formación',
+  },
   experiencia: {
     titulo: 'Experiencia',
     descripcion: 'Qué hacías y qué lograste',
     anadir: '+ Añadir experiencia',
   },
-  educacion: {
-    titulo: 'Educación',
+  cursos: {
+    titulo: 'Cursos',
+    curso: 'Curso',
+    anadir: '+ Añadir curso',
+  },
+  practicas: {
+    titulo: 'Prácticas',
+    anadir: '+ Añadir prácticas',
+  },
+  actividades: {
+    titulo: 'Actividades extracurriculares',
+    anadir: '+ Añadir actividad',
+  },
+  certificados: {
+    titulo: 'Certificados',
+    certificado: 'Certificado',
+    anadir: '+ Añadir certificado',
   },
   habilidades: {
     titulo: 'Habilidades',
