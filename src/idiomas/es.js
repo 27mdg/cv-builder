@@ -8,9 +8,10 @@ const es = {
     titulo: 'Datos personales',
     foto: 'Foto',
     quitarFoto: 'Quitar foto',
+    elegirFoto: 'Elegir foto',
     nombre: 'Nombre',
     apellidos: 'Apellidos',
-    puesto: 'Puesto',
+    puesto: 'Puesto de trabajo deseado',
     email: 'Correo electrónico',
     telefono: 'Teléfono',
     direccion: 'Dirección',
@@ -26,10 +27,10 @@ const es = {
     linkedin: 'LinkedIn',
   },
   personalizados: {
-    titulo: 'Campos personalizados',
     etiqueta: 'Nombre del campo (p. ej. Disponibilidad)',
     valor: 'Valor (p. ej. Inmediata)',
-    anadir: '+ Añadir campo',
+    // Botón "+" de Datos personales
+    boton: 'Campo personalizado',
   },
   perfil: {
     titulo: 'Perfil',
@@ -42,6 +43,8 @@ const es = {
   // Textos que usan varias secciones
   comun: {
     quitar: 'Quitar',
+    descripcion: 'Descripción',
+    plegar: 'Plegar o desplegar la sección',
     presente: 'Presente',
     mes: 'Mes',
     anio: 'Año',

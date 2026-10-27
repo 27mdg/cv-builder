@@ -1,4 +1,5 @@
 import textos from '../../idiomas/es.js'
+import { IconoCerrar, IconoPersona } from '../Iconos.jsx'
 
 // Tamaño máximo (en píxeles) del lado más largo de la foto
 const ladoMaximo = 400
@@ -42,15 +43,23 @@ function CampoFoto({ valor, alCambiar }) {
 
   return (
     <div className="campo-foto">
-      <label>
-        {textos.personal.foto}
+      <span className="etiqueta">{textos.personal.foto}</span>
+      {/* Todo el recuadro es un <label>: al pulsarlo se abre el selector de archivos,
+          que está escondido dentro */}
+      <label className="foto-recuadro" title={textos.personal.elegirFoto}>
+        {valor ? <img src={valor} alt={textos.personal.foto}/> : <IconoPersona/>}
         <input type="file" accept="image/*" onChange={elegir}/>
       </label>
       {valor && (
-        <>
-          <img src={valor} alt={textos.personal.foto}/>
-          <button type="button" onClick={() => alCambiar('')}>{textos.personal.quitarFoto}</button>
-        </>
+        <button
+          type="button"
+          className="foto-quitar"
+          title={textos.personal.quitarFoto}
+          aria-label={textos.personal.quitarFoto}
+          onClick={() => alCambiar('')}
+        >
+          <IconoCerrar/>
+        </button>
       )}
     </div>
   )

@@ -1,19 +1,23 @@
+import { useState } from 'react'
 import textos from '../../idiomas/es.js'
-import SeccionLista from './SeccionLista.jsx'
 import CampoFoto from './CampoFoto.jsx'
+import { IconoCerrar, IconoMas } from '../Iconos.jsx'
 
-// Campos que se muestran, en orden. El texto de cada etiqueta sale de textos.personal
+// Campos que siempre se ven, en orden. El texto de cada etiqueta sale de textos.personal
 // tipo: el tipo del <input> ('date' muestra un calendario)
+// completo: si es true, ocupa las dos columnas de la rejilla
+// (nombre, apellidos y puesto van aparte, junto a la foto)
 const campos = [
-  { nombre: 'nombre', tipo: 'text' },
-  { nombre: 'apellidos', tipo: 'text' },
-  { nombre: 'puesto', tipo: 'text' },
   { nombre: 'email', tipo: 'email' },
   { nombre: 'telefono', tipo: 'tel' },
-  { nombre: 'direccion', tipo: 'text' },
+  { nombre: 'direccion', tipo: 'text', completo: true },
   { nombre: 'codigoPostal', tipo: 'text' },
   { nombre: 'localidad', tipo: 'text' },
-  { nombre: 'fechaNacimiento', tipo: 'date' },
+  { nombre: 'fechaNacimiento', tipo: 'date', completo: true },
+]
+
+// Campos que se usan menos: empiezan escondidos y se abren con su botón "+"
+const camposExtra = [
   { nombre: 'lugarNacimiento', tipo: 'text' },
   { nombre: 'carne', tipo: 'text' },
   { nombre: 'genero', tipo: 'text' },
@@ -23,35 +27,121 @@ const campos = [
   { nombre: 'linkedin', tipo: 'text' },
 ]
 
-// Cada campo personalizado: una etiqueta y su valor (p. ej. "Disponibilidad" + "Inmediata")
-const camposPersonalizados = [
-  { nombre: 'etiqueta', tipo: 'texto' },
-  { nombre: 'valor', tipo: 'texto' },
-]
+// Un campo de una línea con su etiqueta encima
+// enfocar: si es true, el cursor se pone en él al aparecer
+function Campo({ campo, datos, alCambiar, enfocar, children }) {
+  return (
+    <div className={campo.completo ? 'campo campo-completo' : 'campo'}>
+      <label>
+        {textos.personal[campo.nombre]}
+        <input
+          type={campo.tipo}
+          value={datos[campo.nombre]}
+          autoFocus={enfocar}
+          onChange={(e) => alCambiar(campo.nombre, e.target.value)}
+        />
+      </label>
+      {children}
+    </div>
+  )
+}
+
+// Botón "×" de la esquina de un campo extra
+function BotonQuitar({ alPulsar }) {
+  return (
+    <button type="button" className="campo-quitar" title={textos.comun.quitar}
+      aria-label={textos.comun.quitar} onClick={alPulsar}>
+      <IconoCerrar/>
+    </button>
+  )
+}
 
 // datos: el objeto cv.personal
 // alCambiar: función que recibe (campo, valor)
 function DatosPersonales({ datos, alCambiar }) {
+  // Campos extra que el usuario ha abierto con su botón "+" (aunque sigan vacíos).
+  // Los que tienen algo escrito se ven siempre, también al volver a abrir la web.
+  const [abiertos, setAbiertos] = useState([])
+  // id del último campo personalizado añadido, para poner el cursor en él
+  const [nuevoPersonalizado, setNuevoPersonalizado] = useState(null)
+
+  const visibles = camposExtra.filter((c) => datos[c.nombre] !== '' || abiertos.includes(c.nombre))
+  const escondidos = camposExtra.filter((c) => !visibles.includes(c))
+
+  function quitarExtra(nombre) {
+    alCambiar(nombre, '')
+    setAbiertos(abiertos.filter((n) => n !== nombre))
+  }
+
+  function anadirPersonalizado() {
+    const nuevo = { id: crypto.randomUUID(), etiqueta: '', valor: '' }
+    setNuevoPersonalizado(nuevo.id)
+    alCambiar('personalizados', [...datos.personalizados, nuevo])
+  }
+
+  function cambiarPersonalizado(id, campo, valor) {
+    alCambiar('personalizados', datos.personalizados.map((p) => (p.id === id ? { ...p, [campo]: valor } : p)))
+  }
+
+  function quitarPersonalizado(id) {
+    alCambiar('personalizados', datos.personalizados.filter((p) => p.id !== id))
+  }
+
   return (
     <>
-      <CampoFoto valor={datos.foto} alCambiar={(foto) => alCambiar('foto', foto)}/>
-      {campos.map((campo) => (
-        <label key={campo.nombre}>
-          {textos.personal[campo.nombre]}
-          <input
-            type={campo.tipo}
-            value={datos[campo.nombre]}
-            onChange={(e) => alCambiar(campo.nombre, e.target.value)}
-          />
-        </label>
-      ))}
-      <p className="subtitulo">{textos.personalizados.titulo}</p>
-      <SeccionLista
-        clave="personalizados"
-        campos={camposPersonalizados}
-        lista={datos.personalizados}
-        alCambiar={(lista) => alCambiar('personalizados', lista)}
-      />
+      {/* Arriba: la foto a la izquierda y, a su lado, nombre, apellidos y puesto */}
+      <div className="personal-cabecera">
+        <CampoFoto valor={datos.foto} alCambiar={(foto) => alCambiar('foto', foto)}/>
+        <div className="rejilla">
+          <Campo campo={{ nombre: 'nombre', tipo: 'text' }} datos={datos} alCambiar={alCambiar}/>
+          <Campo campo={{ nombre: 'apellidos', tipo: 'text' }} datos={datos} alCambiar={alCambiar}/>
+          <Campo campo={{ nombre: 'puesto', tipo: 'text', completo: true }} datos={datos} alCambiar={alCambiar}/>
+        </div>
+      </div>
+
+      <div className="rejilla">
+        {campos.map((campo) => (
+          <Campo key={campo.nombre} campo={campo} datos={datos} alCambiar={alCambiar}/>
+        ))}
+        {visibles.map((campo) => (
+          <Campo key={campo.nombre} campo={campo} datos={datos} alCambiar={alCambiar}
+            enfocar={abiertos.includes(campo.nombre)}>
+            <BotonQuitar alPulsar={() => quitarExtra(campo.nombre)}/>
+          </Campo>
+        ))}
+        {/* Cada campo personalizado ocupa una fila: su nombre y su valor */}
+        {datos.personalizados.map((p) => (
+          <div className="campo campo-completo personalizado" key={p.id}>
+            <input
+              aria-label={textos.personalizados.etiqueta}
+              placeholder={textos.personalizados.etiqueta}
+              value={p.etiqueta}
+              autoFocus={p.id === nuevoPersonalizado}
+              onChange={(e) => cambiarPersonalizado(p.id, 'etiqueta', e.target.value)}
+            />
+            <input
+              aria-label={textos.personalizados.valor}
+              placeholder={textos.personalizados.valor}
+              value={p.valor}
+              onChange={(e) => cambiarPersonalizado(p.id, 'valor', e.target.value)}
+            />
+            <BotonQuitar alPulsar={() => quitarPersonalizado(p.id)}/>
+          </div>
+        ))}
+      </div>
+
+      {/* Botones "+" de los campos que aún no se ven */}
+      <div className="chips">
+        {escondidos.map((campo) => (
+          <button type="button" className="chip" key={campo.nombre}
+            onClick={() => setAbiertos([...abiertos, campo.nombre])}>
+            <IconoMas/>{textos.personal[campo.nombre]}
+          </button>
+        ))}
+        <button type="button" className="chip" onClick={anadirPersonalizado}>
+          <IconoMas/>{textos.personalizados.boton}
+        </button>
+      </div>
     </>
   )
 }

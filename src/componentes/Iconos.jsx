@@ -40,6 +40,21 @@ export function IconoSalirPantallaCompleta() {
   return <Icono><path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></Icono>
 }
 
+// Signo "+" (botones para añadir un campo)
+export function IconoMas() {
+  return <Icono><path d="M12 5v14M5 12h14"/></Icono>
+}
+
+// Aspa "×" (botones para quitar)
+export function IconoCerrar() {
+  return <Icono><path d="M6 6l12 12M18 6L6 18"/></Icono>
+}
+
+// Silueta de una persona (hueco de la foto vacío)
+export function IconoPersona() {
+  return <Icono><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></Icono>
+}
+
 // Flechita hacia abajo de los menús
 export function IconoFlecha() {
   return (

@@ -14,7 +14,7 @@
 .descargar button:disabled { opacity: 0.6; cursor: wait; }
 .descargar-error { color: #ffb4a9; font-size: 14px; }
 .workspace { flex: 1; display: flex; min-height: 0; }
-.form-panel { width: 50%; overflow-y: auto; padding: 16px;}
+.form-panel { width: 50%; overflow-y: auto; padding: 16px 32px 32px; background: white; }
 .preview-panel { position: relative; width: 50%; background: #e9ebee; }
 /* Zona con scroll donde se ven las hojas; abajo deja sitio para la barra de herramientas */
 .vista-previa { box-sizing: border-box; height: 100%; overflow-y: auto; padding: 24px 24px 96px; }
@@ -52,19 +52,63 @@
 .muestra-arcoiris { position: relative; background: conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red); }
 /* El selector de color del navegador queda invisible encima de la muestra arcoíris */
 .muestra-arcoiris input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-.seccion { border: 1px solid #ccc; border-radius: 6px; margin-bottom: 12px; background: white; }
-.seccion > summary { padding: 12px; font-weight: bold; cursor: pointer; }
-.seccion-contenido { padding: 0 12px 12px; }
-.form-panel label { display: block; margin-bottom: 8px; }
-.form-panel input, .form-panel textarea { display: block; width: 100%; padding: 6px; margin-top: 2px; font: inherit; }
-.bloque { border: 1px solid #ccc; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+/* ===== Formulario ===== */
+/* Secciones separadas por una línea; la cabecera es el título y un círculo con flecha */
+.seccion { border-bottom: 1px solid #e3e5e8; }
+.seccion > summary { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; cursor: pointer; list-style: none; }
+.seccion > summary::-webkit-details-marker { display: none; }
+.seccion > summary h2 { font-size: 22px; color: #222; }
+.seccion-flecha { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid #9aa0a6; border-radius: 50%; color: #333; transition: transform 0.2s; }
+.seccion-flecha svg { width: 16px; height: 16px; }
+.seccion[open] .seccion-flecha { transform: rotate(180deg); }
+.seccion > summary:hover .seccion-flecha { background: #f2f3f5; }
+.seccion-contenido { padding-bottom: 28px; }
+
+/* Etiqueta pequeña en negrita encima de cada caja */
+.form-panel label, .form-panel .etiqueta, .campo-fecha > span { display: block; font-size: 14px; font-weight: 600; color: #333; }
+.form-panel label { margin-bottom: 12px; }
+/* Cajas grises sin borde; al escribir, fondo azul claro y borde azul */
+.form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
+  display: block; width: 100%; margin-top: 6px; padding: 11px 13px; border: 1px solid transparent; border-radius: 4px;
+  background: #f2f3f5; color: #222; font: inherit; font-size: 16px; font-weight: normal;
+}
+.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: none; border-color: #4a8ee0; background: #eaf2fd; }
+.form-panel input::placeholder, .form-panel textarea::placeholder { color: #999; }
+.texto-largo { line-height: 1.6; resize: vertical; }
 .form-panel button { padding: 6px 12px; font: inherit; cursor: pointer; }
-.campo-foto { margin-bottom: 8px; }
-.campo-foto img { display: block; max-width: 120px; margin-bottom: 8px; border-radius: 4px; }
-.subtitulo { font-weight: bold; margin: 16px 0 8px; }
-.form-panel select { padding: 6px; margin-right: 8px; font: inherit; }
-.form-panel label > select { display: block; margin-top: 2px; }
-.campo-fecha { margin-bottom: 8px; }
-.campo-fecha > span { display: block; margin-bottom: 2px; }
-.form-panel .presente { display: inline-block; margin: 0; }
-.form-panel .presente input { display: inline; width: auto; margin: 0 4px 0 0; }
+
+/* Rejilla de dos columnas; .campo-completo ocupa las dos */
+.rejilla { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+.campo { position: relative; }
+.campo-completo { grid-column: 1 / -1; }
+/* Aspa para quitar un campo extra, en la esquina de arriba a la derecha */
+.form-panel .campo-quitar { position: absolute; top: -3px; right: 0; display: flex; padding: 2px; border: none; border-radius: 4px; background: transparent; color: #777; }
+.form-panel .campo-quitar:hover { background: #f2f3f5; color: #222; }
+.campo-quitar svg { width: 16px; height: 16px; }
+/* Campo personalizado: nombre | valor | aspa en la misma fila */
+.personalizado { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 12px; }
+.form-panel .personalizado input:not([type="checkbox"]) { margin-top: 0; }
+.form-panel .personalizado .campo-quitar { position: static; }
+
+/* Datos personales: la foto a la izquierda y nombre, apellidos y puesto a su lado */
+.personal-cabecera { display: grid; grid-template-columns: 128px 1fr; gap: 16px; }
+.campo-foto { position: relative; }
+.form-panel .foto-recuadro { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border-radius: 4px; background: #f2f3f5; color: #9aa0a6; cursor: pointer; }
+.foto-recuadro:hover { background: #e6e8eb; }
+.foto-recuadro svg { width: 48px; height: 48px; }
+.foto-recuadro img { width: 100%; height: 100%; object-fit: cover; }
+.foto-recuadro input { display: none; }
+.form-panel .foto-quitar { position: absolute; top: 30px; right: 6px; display: flex; padding: 4px; border: none; border-radius: 50%; background: white; color: #333; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); }
+.foto-quitar svg { width: 14px; height: 14px; }
+
+/* Botones redondeados "+ Campo" para abrir los campos escondidos */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid #9aa0a6; border-radius: 999px; background: white; color: #333; font-size: 15px; font-weight: 500; }
+.form-panel .chip:hover { background: #f2f3f5; }
+.chip svg { width: 16px; height: 16px; }
+
+/* Secciones con lista (todavía con el diseño antiguo, se rediseñarán) */
+.bloque { border: 1px solid #e3e5e8; border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+.form-panel .campo-fecha select { display: inline-block; width: auto; margin-right: 8px; }
+.campo-fecha { margin-bottom: 12px; }
+.form-panel .presente { display: inline-flex; align-items: center; gap: 4px; margin: 0; font-weight: normal; }
