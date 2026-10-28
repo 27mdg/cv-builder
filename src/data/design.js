@@ -38,6 +38,9 @@ export const steps = {
 
 export const lineHeight = { min: 1, max: 2, step: 0.05 }
 
+// Order of the date format menu; the formatting itself is formatDate in src/templates/format.js
+export const dateFormats = ['short', 'long', 'numeric']
+
 // One accent colour per option; each template derives the tones it needs from it
 export const colors = [
   { id: 'forest', value: '#3F5B4C' },

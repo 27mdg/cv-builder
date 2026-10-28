@@ -112,8 +112,10 @@
 .slider-row { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
 .slider-row input { flex: 1; accent-color: var(--brand-dark); }
 .slider-value { min-width: 32px; text-align: right; }
-.font-list button { justify-content: flex-start; text-align: left; }
-.font-list button.selected::before { content: '✓'; margin-right: 6px; }
+.option-list button { justify-content: flex-start; text-align: left; }
+/* The tick takes its room on every option, so the names stay aligned whichever is chosen */
+.option-list button::before { content: '✓'; margin-right: 6px; visibility: hidden; }
+.option-list button.selected::before { visibility: visible; }
 .color-menu { display: flex; flex-wrap: wrap; gap: 10px; width: 236px; padding: 8px; }
 .tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: 3px solid var(--surface); border-radius: 50%; box-shadow: 0 0 0 1px var(--border-strong); cursor: pointer; }
 .tool-menu .swatch.selected { box-shadow: 0 0 0 2px var(--text); }

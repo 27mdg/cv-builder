@@ -32,7 +32,7 @@ function FontMenu({ design, defaultFont, onChange }) {
         onChange={(value) => onChange('size', value)}
       />
       <p className="menu-subtitle">{texts.tools.font}</p>
-      <div className="font-list">
+      <div className="option-list">
         {fonts.map((font) => (
           <button
             key={font.id}

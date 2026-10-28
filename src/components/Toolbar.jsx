@@ -6,8 +6,9 @@ import TemplatePicker from './TemplatePicker.jsx'
 import FontMenu from './FontMenu.jsx'
 import SpacingMenu from './SpacingMenu.jsx'
 import ColorMenu from './ColorMenu.jsx'
+import DateMenu from './DateMenu.jsx'
 import {
-  TemplatesIcon, FontIcon, SpacingIcon, ColorsIcon,
+  TemplatesIcon, FontIcon, SpacingIcon, CalendarIcon, ColorsIcon,
   FullScreenIcon, ExitFullScreenIcon,
 } from './Icons.jsx'
 
@@ -26,6 +27,9 @@ function Toolbar({
       </ToolMenu>
       <ToolMenu icon={<SpacingIcon/>} label={texts.tools.spacing}>
         {() => <SpacingMenu design={design} onChange={onDesignChange}/>}
+      </ToolMenu>
+      <ToolMenu icon={<CalendarIcon/>} label={texts.tools.date}>
+        {(close) => <DateMenu design={design} onChange={onDesignChange} onClose={close}/>}
       </ToolMenu>
       <ToolMenu icon={<ColorsIcon/>} label={texts.tools.colors} alignRight>
         {() => <ColorMenu design={design} defaultColor={info.defaultColor} onChange={onDesignChange}/>}

@@ -2,17 +2,22 @@ import texts from '../locales/es.js'
 
 // Shared by every template, so each one only deals with layout.
 
-// { month: '3', year: '2024' } → '03/2024'. No month → '2024'. No year → ''
-export function formatDate(date) {
+/**
+ * { month: '3', year: '2024' } → '03/2024' ('numeric'), 'mar 2024' ('short') or 'marzo 2024' ('long').
+ * No month → '2024'. No year → ''.
+ */
+export function formatDate(date, dateFormat) {
   if (!date.year) return ''
   if (!date.month) return date.year
-  return date.month.padStart(2, '0') + '/' + date.year
+  const names = texts.common.dateMonths[dateFormat]
+  if (!names) return date.month.padStart(2, '0') + '/' + date.year
+  return `${names[date.month - 1]} ${date.year}`
 }
 
 // '03/2021 – Presente', '2019 – 2023', just one of them, or ''
-export function dateRange(item) {
-  const start = formatDate(item.start)
-  const end = item.current ? texts.common.current : formatDate(item.end)
+function dateRange(item, dateFormat) {
+  const start = formatDate(item.start, dateFormat)
+  const end = item.current ? texts.common.current : formatDate(item.end, dateFormat)
   return [start, end].filter(Boolean).join(' – ')
 }
 
@@ -36,17 +41,17 @@ export function join(parts, separator = ' · ') {
 // Title and detail of an item, e.g. ['Designer — Studio X', '03/2021 – Presente · Madrid']
 export function itemSummary(key, item) {
   if (key === 'education') {
-    return [join([item.degree, item.school], ' — '), join([dateRange(item), item.city])]
+    return [join([item.degree, item.school], ' — '), join([item.dates, item.city])]
   }
-  if (key === 'courses') return [item.course, dateRange(item)]
-  if (key === 'certificates') return [item.certificate, dateRange(item)]
-  return [join([item.position, item.employer], ' — '), join([dateRange(item), item.city])]
+  if (key === 'courses') return [item.course, item.dates]
+  if (key === 'certificates') return [item.certificate, item.dates]
+  return [join([item.position, item.employer], ' — '), join([item.dates, item.city])]
 }
 
 // The same item split into separate pieces, for templates that place them apart:
 // { title, subtitle, date, place }
 export function itemParts(key, item) {
-  const parts = { date: dateRange(item), place: item.city ?? '' }
+  const parts = { date: item.dates, place: item.city ?? '' }
   if (key === 'education') return { ...parts, title: item.degree, subtitle: item.school }
   if (key === 'courses') return { ...parts, title: item.course, subtitle: '' }
   if (key === 'certificates') return { ...parts, title: item.certificate, subtitle: '' }
@@ -84,11 +89,14 @@ export function personalDetails(personal) {
 }
 
 // The sections that have something to show, in the user's order:
-// [{ key, text }] for profile and achievements, [{ key, list }] for the rest
+// [{ key, text }] for profile and achievements, [{ key, list }] for the rest.
+// Each dated item gets its dates already written (`dates`) in the chosen format, so the
+// templates do not need to know about it.
 export function filledSections(cv) {
+  const withDates = (item) => (item.start ? { ...item, dates: dateRange(item, cv.design.dateFormat) } : item)
   return cv.sectionOrder
     .map((key) => (Array.isArray(cv[key])
-      ? { key, list: itemsWithContent(cv[key]) }
+      ? { key, list: itemsWithContent(cv[key]).map(withDates) }
       : { key, text: cv[key] }))
     .filter((section) => (section.list ? section.list.length > 0 : hasText(section.text)))
 }

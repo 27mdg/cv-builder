@@ -50,6 +50,14 @@ const es = {
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
     ],
+    // Month names inside the CV's dates (lower case, as Spanish writes them); see dateFormats in design.js
+    dateMonths: {
+      short: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'],
+      long: [
+        'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+        'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+      ],
+    },
     choose: 'Elige…',
     // The keys are stored in the CV: only change the texts
     skillLevels: {
@@ -144,6 +152,8 @@ const es = {
     font: 'Fuente',
     spacing: 'Espaciado',
     colors: 'Colores',
+    date: 'Fecha',
+    dateFormat: 'Formato de fecha',
     fullScreen: 'Pantalla completa',
     exitFullScreen: 'Salir de pantalla completa (Esc)',
     comingSoon: 'Próximamente',

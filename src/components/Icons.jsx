@@ -21,6 +21,10 @@ export function SpacingIcon() {
   return <Icon><path d="M11 6h10M11 12h10M11 18h10M5 4v16M3 6l2-2 2 2M3 18l2 2 2-2"/></Icon>
 }
 
+export function CalendarIcon() {
+  return <Icon><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></Icon>
+}
+
 export function ColorsIcon() {
   return <Icon><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></Icon>
 }

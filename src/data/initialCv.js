@@ -12,6 +12,7 @@ const initialCv = {
     margins: 3,
     color: '', // '' = each template's own; 'custom' = customColor
     customColor: '',
+    dateFormat: 'numeric', // 'numeric' (03/2024), 'short' (mar 2024) or 'long' (marzo 2024)
   },
   personal: {
     photo: '', // already resized, as a data URL
