@@ -18,6 +18,7 @@ const maxWidth = 800
 function Preview({ cv }) {
   const [pdfDocument, setPdfDocument] = useState(null)
   const [width, setWidth] = useState(0)
+  const [drawWidth, setDrawWidth] = useState(0)
   const container = useRef(null)
   // The first time it is generated without waiting
   const wait = useRef(0)
@@ -61,13 +62,20 @@ function Preview({ cv }) {
     return () => observer.disconnect()
   }, [])
 
+  // While the panel is being resized the page is only stretched; it is redrawn sharp once it
+  // stops, because redrawing on every pixel would make the drag stutter
+  useEffect(() => {
+    const timer = setTimeout(() => setDrawWidth(width), 150)
+    return () => clearTimeout(timer)
+  }, [width])
+
   const pages = pdfDocument ? Array.from({ length: pdfDocument.numPages }, (_, i) => i + 1) : []
 
   return (
     <div className="preview" ref={container}>
       {!pdfDocument && <p className="loading">{texts.preview.loading}</p>}
-      {width > 0 && pages.map((number) => (
-        <PdfPage key={number} pdfDocument={pdfDocument} number={number} width={width}/>
+      {drawWidth > 0 && pages.map((number) => (
+        <PdfPage key={number} pdfDocument={pdfDocument} number={number} width={width} drawWidth={drawWidth}/>
       ))}
     </div>
   )

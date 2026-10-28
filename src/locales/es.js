@@ -215,6 +215,12 @@ const es = {
     cancel: 'Cancelar',
     confirm: 'Sí, borrar todo',
   },
+  splitter: {
+    label: 'Ancho del formulario y de la vista previa',
+    hint: 'Arrastra para cambiar el ancho. Doble clic para volver al centro.',
+    // Read aloud by screen readers
+    value: (percent) => `El formulario ocupa el ${percent} % del ancho`,
+  },
   storage: {
     notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
   },

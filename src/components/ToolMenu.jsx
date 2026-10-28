@@ -32,10 +32,12 @@ function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
         type="button"
         disabled={disabled}
         aria-expanded={open}
+        // On a narrow preview only the icon shows: the title keeps the name for the mouse and screen readers
+        title={label}
         onClick={() => setOpen(!open)}
       >
         {icon}
-        {label}
+        <span className="tool-label">{label}</span>
         <ArrowIcon/>
       </button>
       {open && (

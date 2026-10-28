@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 
-function PdfPage({ pdfDocument, number, width }) {
+// width: shown size (CSS). drawWidth: the size it is drawn at, which catches up after resizing.
+function PdfPage({ pdfDocument, number, width, drawWidth }) {
   const canvas = useRef(null)
 
   useEffect(() => {
@@ -11,7 +12,7 @@ function PdfPage({ pdfDocument, number, width }) {
       const page = await pdfDocument.getPage(number)
       if (cancelled) return
       // devicePixelRatio: without it the page looks blurry on high-resolution screens
-      const scale = (width / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1)
+      const scale = (drawWidth / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1)
       const viewport = page.getViewport({ scale })
       // Drawn first on a separate canvas and then copied in one go to the visible one:
       // that way the previous page stays visible while the new one is drawn (no flicker)
@@ -33,7 +34,7 @@ function PdfPage({ pdfDocument, number, width }) {
       cancelled = true
       task?.cancel()
     }
-  }, [pdfDocument, number, width])
+  }, [pdfDocument, number, drawWidth])
 
   return <canvas ref={canvas} className="pdf-page" style={{ width }}/>
 }

@@ -17,6 +17,7 @@ import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
 import ConfirmDialog from './components/ConfirmDialog.jsx'
+import Splitter from './components/Splitter.jsx'
 import { LockIcon, PlusIcon } from './components/Icons.jsx'
 
 // The preview is loaded separately (lazy) because the PDF library is heavy:
@@ -187,6 +188,7 @@ function App() {
             onCancel={() => setRemovingSection(null)}
           />
         </section>
+        {!fullScreen && <Splitter/>}
         <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
           <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>
             <Preview cv={cv}/>
