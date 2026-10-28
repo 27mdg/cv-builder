@@ -1,116 +1,116 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import './App.css'
-import { cargarCv, guardarCv } from './datos/guardado.js'
-import { nombreBase } from './datos/archivo.js'
-import textos from './idiomas/es.js'
-import DatosPersonales from './componentes/formulario/DatosPersonales.jsx'
-import TextoLargo from './componentes/formulario/TextoLargo.jsx'
-import secciones from './datos/secciones.js'
-import Seccion from './componentes/formulario/Seccion.jsx'
-import SeccionLista from './componentes/formulario/SeccionLista.jsx'
-import BotonDescargar from './componentes/BotonDescargar.jsx'
-import BotonImportar from './componentes/BotonImportar.jsx'
-import BotonExportar from './componentes/BotonExportar.jsx'
-import BarraHerramientas from './componentes/BarraHerramientas.jsx'
+import { loadCv, saveCv } from './data/storage.js'
+import { baseName } from './data/file.js'
+import texts from './locales/es.js'
+import PersonalDetails from './components/form/PersonalDetails.jsx'
+import LongText from './components/form/LongText.jsx'
+import sections from './data/sections.js'
+import Section from './components/form/Section.jsx'
+import ListSection from './components/form/ListSection.jsx'
+import DownloadButton from './components/DownloadButton.jsx'
+import ImportButton from './components/ImportButton.jsx'
+import ExportButton from './components/ExportButton.jsx'
+import Toolbar from './components/Toolbar.jsx'
 
-// La vista previa se carga aparte (lazy) porque la librería de PDF pesa bastante:
-// así el formulario aparece al instante y el PDF un momento después.
-const VistaPrevia = lazy(() => import('./componentes/VistaPrevia.jsx'))
+// The preview is loaded separately (lazy) because the PDF library is heavy:
+// the form shows up instantly and the PDF a moment later.
+const Preview = lazy(() => import('./components/Preview.jsx'))
 
 function App() {
-  const [cv, setCv] = useState(cargarCv)
+  const [cv, setCv] = useState(loadCv)
 
   useEffect(() => {
-    guardarCv(cv)
+    saveCv(cv)
   }, [cv])
 
-  const [pantallaCompleta, setPantallaCompleta] = useState(false)
+  const [fullScreen, setFullScreen] = useState(false)
 
   useEffect(() => {
-    if (!pantallaCompleta) return
-    function alPulsarTecla(e) {
-      if (e.key === 'Escape') setPantallaCompleta(false)
+    if (!fullScreen) return
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') setFullScreen(false)
     }
-    window.addEventListener('keydown', alPulsarTecla)
-    return () => window.removeEventListener('keydown', alPulsarTecla)
-  }, [pantallaCompleta])
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [fullScreen])
 
-  // Los cambios parten siempre de la versión más reciente del CV (anterior), no de `cv`.
-  // Así, si llegan dos cambios casi a la vez (p. ej. la foto, que tarda un poco en
-  // reducirse), el segundo no borra el primero.
-  function cambiarSeccion(clave, valor) {
-    setCv((anterior) => ({ ...anterior, [clave]: valor }))
+  // Changes always start from the latest version of the CV (previous), not from `cv`.
+  // That way, if two changes arrive almost at once (e.g. the photo, which takes a moment
+  // to resize), the second one does not wipe out the first.
+  function changeSection(key, value) {
+    setCv((previous) => ({ ...previous, [key]: value }))
   }
 
-  function cambiarDiseno(campo, valor) {
-    setCv((anterior) => ({ ...anterior, diseno: { ...anterior.diseno, [campo]: valor } }))
+  function changeDesign(field, value) {
+    setCv((previous) => ({ ...previous, design: { ...previous.design, [field]: value } }))
   }
 
-  function cambiarPersonal(campo, valor) {
-    setCv((anterior) => ({ ...anterior, personal: { ...anterior.personal, [campo]: valor } }))
+  function changePersonal(field, value) {
+    setCv((previous) => ({ ...previous, personal: { ...previous.personal, [field]: value } }))
   }
 
   return (
     <div className="app">
       <header className="topbar">
-        {/* Logo provisional: cuando exista la página de inicio, este enlace llevará a ella */}
-        <a href="/" className="logo">{textos.app.titulo}</a>
-        {/* El placeholder enseña el nombre automático que se usará si se deja vacío */}
+        {/* Temporary logo: it will link to the home page once there is one */}
+        <a href="/" className="logo">{texts.app.title}</a>
+        {/* The placeholder shows the automatic name that is used if left empty */}
         <input
-          className="nombre-archivo"
-          aria-label={textos.archivo.nombre}
-          placeholder={nombreBase({ ...cv, nombreArchivo: '' })}
-          value={cv.nombreArchivo}
-          onChange={(e) => cambiarSeccion('nombreArchivo', e.target.value)}
+          className="file-name"
+          aria-label={texts.file.name}
+          placeholder={baseName({ ...cv, fileName: '' })}
+          value={cv.fileName}
+          onChange={(e) => changeSection('fileName', e.target.value)}
         />
-        <div className="acciones">
-          <BotonImportar cvActual={cv} alImportar={setCv}/>
-          <BotonExportar cv={cv}/>
-          <BotonDescargar cv={cv}/>
+        <div className="actions">
+          <ImportButton currentCv={cv} onImport={setCv}/>
+          <ExportButton cv={cv}/>
+          <DownloadButton cv={cv}/>
         </div>
       </header>
       <main className="workspace">
         <section className="form-panel">
-          <p className="aviso">{textos.guardado.aviso}</p>
-          <Seccion titulo={textos.personal.titulo} abierta>
-            <DatosPersonales datos={cv.personal} alCambiar={cambiarPersonal}/>
-          </Seccion>
-          <Seccion titulo={textos.perfil.titulo}>
-            <TextoLargo
-              valor={cv.perfil}
-              ayuda={textos.perfil.ayuda}
-              alCambiar={(valor) => cambiarSeccion('perfil', valor)}
+          <p className="notice">{texts.storage.notice}</p>
+          <Section title={texts.personal.title} open>
+            <PersonalDetails data={cv.personal} onChange={changePersonal}/>
+          </Section>
+          <Section title={texts.profile.title}>
+            <LongText
+              value={cv.profile}
+              hint={texts.profile.hint}
+              onChange={(value) => changeSection('profile', value)}
             />
-          </Seccion>
-          {secciones.map((seccion) => (
-            <Seccion key={seccion.clave} titulo={textos[seccion.clave].titulo}>
-              <SeccionLista
-                clave={seccion.clave}
-                campos={seccion.campos}
-                lista={cv[seccion.clave]}
-                alCambiar={(lista) => cambiarSeccion(seccion.clave, lista)}
+          </Section>
+          {sections.map((section) => (
+            <Section key={section.key} title={texts[section.key].title}>
+              <ListSection
+                sectionKey={section.key}
+                fields={section.fields}
+                list={cv[section.key]}
+                onChange={(list) => changeSection(section.key, list)}
               />
-            </Seccion>
+            </Section>
           ))}
-          <Seccion titulo={textos.logros.titulo}>
-            <TextoLargo
-              valor={cv.logros}
-              ayuda={textos.logros.ayuda}
-              alCambiar={(valor) => cambiarSeccion('logros', valor)}
+          <Section title={texts.achievements.title}>
+            <LongText
+              value={cv.achievements}
+              hint={texts.achievements.hint}
+              onChange={(value) => changeSection('achievements', value)}
             />
-          </Seccion>
+          </Section>
         </section>
-        <section className={pantallaCompleta ? 'preview-panel pantalla-completa' : 'preview-panel'}>
-          <Suspense fallback={<p className="cargando">{textos.vistaPrevia.cargando}</p>}>
-            <VistaPrevia cv={cv}/>
+        <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
+          <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>
+            <Preview cv={cv}/>
           </Suspense>
-          <BarraHerramientas
-            plantilla={cv.plantilla}
-            alCambiarPlantilla={(id) => cambiarSeccion('plantilla', id)}
-            diseno={cv.diseno}
-            alCambiarDiseno={cambiarDiseno}
-            pantallaCompleta={pantallaCompleta}
-            alCambiarPantallaCompleta={setPantallaCompleta}
+          <Toolbar
+            template={cv.template}
+            onTemplateChange={(id) => changeSection('template', id)}
+            design={cv.design}
+            onDesignChange={changeDesign}
+            fullScreen={fullScreen}
+            onFullScreenChange={setFullScreen}
           />
         </section>
       </main>

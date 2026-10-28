@@ -1,0 +1,187 @@
+// To add a language: copy this file (e.g. en.js) and translate the values.
+const es = {
+  app: {
+    title: 'CV Gratis',
+  },
+  personal: {
+    title: 'Datos personales',
+    photo: 'Foto',
+    removePhoto: 'Quitar foto',
+    choosePhoto: 'Elegir foto',
+    firstName: 'Nombre',
+    lastName: 'Apellidos',
+    jobTitle: 'Puesto de trabajo deseado',
+    email: 'Correo electrónico',
+    phone: 'Teléfono',
+    address: 'Dirección',
+    postalCode: 'Código postal',
+    city: 'Localidad',
+    birthDate: 'Fecha de nacimiento',
+    birthPlace: 'Lugar de nacimiento',
+    drivingLicense: 'Carné de conducir',
+    gender: 'Género',
+    nationality: 'Nacionalidad',
+    maritalStatus: 'Estado civil',
+    website: 'Página web',
+    linkedin: 'LinkedIn',
+  },
+  customFields: {
+    label: 'Nombre del campo (p. ej. Disponibilidad)',
+    value: 'Valor (p. ej. Inmediata)',
+    button: 'Campo personalizado',
+  },
+  profile: {
+    title: 'Perfil',
+    hint: 'Dos o tres frases sobre tu perfil y lo que buscas.',
+  },
+  achievements: {
+    title: 'Logros',
+    hint: 'Escribe tus logros, uno por línea.',
+  },
+  common: {
+    remove: 'Quitar',
+    description: 'Descripción',
+    toggle: 'Plegar o desplegar la sección',
+    current: 'Presente',
+    month: 'Mes',
+    year: 'Año',
+    months: [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+    ],
+    choose: 'Elige…',
+    // The keys are stored in the CV: only change the texts
+    skillLevels: {
+      1: 'Principiante',
+      2: 'Básico',
+      3: 'Intermedio',
+      4: 'Avanzado',
+      5: 'Experto',
+    },
+    languageLevels: {
+      native: 'Nativo',
+      C2: 'C2 – Maestría',
+      C1: 'C1 – Avanzado',
+      B2: 'B2 – Intermedio alto',
+      B1: 'B1 – Intermedio',
+      A2: 'A2 – Básico',
+      A1: 'A1 – Principiante',
+    },
+  },
+  // Used when the section has no label of its own with the same name
+  fields: {
+    position: 'Puesto',
+    employer: 'Empleador',
+    city: 'Localidad',
+    start: 'Inicio',
+    end: 'Fin',
+    description: 'Descripción',
+  },
+  education: {
+    title: 'Formación',
+    degree: 'Formación',
+    school: 'Centro de estudios',
+    add: '+ Añadir formación',
+  },
+  experience: {
+    title: 'Experiencia',
+    description: 'Qué hacías y qué lograste',
+    add: '+ Añadir experiencia',
+  },
+  skills: {
+    title: 'Habilidades',
+    skill: 'Habilidad',
+    level: 'Nivel',
+    add: '+ Añadir habilidad',
+  },
+  languages: {
+    title: 'Idiomas',
+    language: 'Idioma',
+    level: 'Nivel',
+    add: '+ Añadir idioma',
+  },
+  hobbies: {
+    title: 'Aficiones e intereses',
+    interest: 'Interés',
+    add: '+ Añadir interés',
+  },
+  courses: {
+    title: 'Cursos',
+    course: 'Curso',
+    add: '+ Añadir curso',
+  },
+  internships: {
+    title: 'Prácticas',
+    add: '+ Añadir prácticas',
+  },
+  activities: {
+    title: 'Actividades extracurriculares',
+    add: '+ Añadir actividad',
+  },
+  certificates: {
+    title: 'Certificados',
+    certificate: 'Certificado',
+    add: '+ Añadir certificado',
+  },
+  qualities: {
+    title: 'Aptitudes',
+    quality: 'Aptitud',
+    add: '+ Añadir aptitud',
+  },
+  preview: {
+    loading: 'Cargando vista previa…',
+  },
+  download: {
+    button: 'Descargar',
+    generating: 'Generando PDF…',
+    error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
+    fileName: 'CV',
+  },
+  tools: {
+    templates: 'Plantillas',
+    font: 'Fuente',
+    spacing: 'Espaciado',
+    colors: 'Colores',
+    fullScreen: 'Pantalla completa',
+    exitFullScreen: 'Salir de pantalla completa (Esc)',
+    comingSoon: 'Próximamente',
+    fontSize: 'Tamaño de fuente',
+    lineHeight: 'Alto de línea',
+    paragraphSpacing: 'Espaciado entre párrafos',
+    sectionSpacing: 'Espaciado entre secciones',
+    margins: 'Márgenes de página',
+    // "Arimo (tipo Arial)": a free font similar to a paid one
+    similarTo: 'tipo',
+    steps: ['XS', 'S', 'M', 'L', 'XL'],
+  },
+  // The ids must match `colors` in src/data/design.js
+  colorNames: {
+    'navy': 'Azul marino',
+    'teal': 'Verde azulado',
+    'red': 'Rojo',
+    'green': 'Verde',
+    'ochre': 'Ocre',
+    'purple': 'Morado',
+    'salmon-dark': 'Salmón sobre negro',
+    'sky-dark': 'Celeste sobre negro',
+    'custom': 'Color personalizado',
+  },
+  templates: {
+    classic: 'Clásica',
+    modern: 'Moderna',
+    contact: 'Contacto',
+  },
+  file: {
+    name: 'Nombre del archivo',
+    import: 'Importar',
+    export: 'Exportar',
+    confirmImport: 'Se sustituirá el CV actual por el del archivo. ¿Continuar?',
+    errorInvalid: 'Este archivo no es un CV de CV Gratis.',
+    errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',
+  },
+  storage: {
+    notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
+  },
+}
+
+export default es

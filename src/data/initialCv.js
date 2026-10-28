@@ -1,0 +1,51 @@
+const initialCv = {
+  template: 'classic',
+  // Empty = automatic ('CV - First Last')
+  fileName: '',
+  design: {
+    font: 'helvetica',
+    // size, paragraphs, sections and margins go from 1 to 5; 3 is normal
+    size: 3,
+    lineHeight: 1.4,
+    paragraphs: 3,
+    sections: 3,
+    margins: 3,
+    color: '', // '' = each template's own; 'custom' = customColor
+    customColor: '',
+  },
+  personal: {
+    photo: '', // already resized, as a data URL
+    firstName: '',
+    lastName: '',
+    jobTitle: '',
+    email: '',
+    phone: '',
+    address: '',
+    postalCode: '',
+    city: '',
+    birthDate: '', // 'YYYY-MM-DD'
+    birthPlace: '',
+    drivingLicense: '',
+    gender: '',
+    nationality: '',
+    maritalStatus: '',
+    website: '',
+    linkedin: '',
+    customFields: [], // { id, label, value }
+  },
+  profile: '',
+  // The fields of each item are in sections.js
+  education: [],
+  experience: [],
+  skills: [],
+  languages: [],
+  hobbies: [],
+  courses: [],
+  internships: [],
+  activities: [],
+  certificates: [],
+  qualities: [],
+  achievements: '',
+}
+
+export default initialCv

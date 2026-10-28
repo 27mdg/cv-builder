@@ -1,0 +1,81 @@
+import texts from '../locales/es.js'
+
+// Shared by every template, so each one only deals with layout.
+
+// { month: '3', year: '2024' } → '03/2024'. No month → '2024'. No year → ''
+export function formatDate(date) {
+  if (!date.year) return ''
+  if (!date.month) return date.year
+  return date.month.padStart(2, '0') + '/' + date.year
+}
+
+// '03/2021 – Presente', '2019 – 2023', just one of them, or ''
+export function dateRange(item) {
+  const start = formatDate(item.start)
+  const end = item.current ? texts.common.current : formatDate(item.end)
+  return [start, end].filter(Boolean).join(' – ')
+}
+
+// '1995-04-12' → '12/04/1995'
+export function formatBirthDate(date) {
+  if (!date) return ''
+  const [year, month, day] = date.split('-')
+  return `${day}/${month}/${year}`
+}
+
+// true if the text has more than whitespace
+export function hasText(text) {
+  return typeof text === 'string' && text.trim() !== ''
+}
+
+// join(['ana@mail.com', '', 'Madrid']) → 'ana@mail.com · Madrid'
+export function join(parts, separator = ' · ') {
+  return parts.filter(hasText).join(separator)
+}
+
+// Title and detail of an item, e.g. ['Designer — Studio X', '03/2021 – Presente · Madrid']
+export function itemSummary(key, item) {
+  if (key === 'education') {
+    return [join([item.degree, item.school], ' — '), join([dateRange(item), item.city])]
+  }
+  if (key === 'courses') return [item.course, dateRange(item)]
+  if (key === 'certificates') return [item.certificate, dateRange(item)]
+  return [join([item.position, item.employer], ' — '), join([dateRange(item), item.city])]
+}
+
+// { fullName, contact: [texts], otherDetails: ['Label: value'] }, without empty ones
+export function personalDetails(personal) {
+  const p = personal
+  const address = join([p.address, join([p.postalCode, p.city], ' ')], ', ')
+  const otherDetails = [
+    [texts.personal.birthDate, formatBirthDate(p.birthDate)],
+    [texts.personal.birthPlace, p.birthPlace],
+    [texts.personal.nationality, p.nationality],
+    [texts.personal.drivingLicense, p.drivingLicense],
+    [texts.personal.gender, p.gender],
+    [texts.personal.maritalStatus, p.maritalStatus],
+    ...itemsWithContent(p.customFields).map((field) => [field.label, field.value]),
+  ]
+    .filter(([, value]) => hasText(value))
+    .map(([label, value]) => (hasText(label) ? `${label}: ${value}` : value))
+
+  return {
+    fullName: join([p.firstName, p.lastName], ' '),
+    contact: [p.email, p.phone, address, p.website, p.linkedin].filter(hasText),
+    otherDetails,
+  }
+}
+
+function hasContent(item) {
+  return Object.entries(item).some(([name, value]) => {
+    if (name === 'id') return false
+    if (typeof value === 'string') return hasText(value)
+    if (typeof value === 'object') return value.year !== '' // a date without a year is not shown
+    return Boolean(value) // `current` or a numeric level
+  })
+}
+
+// Removes the items the user added but left empty
+export function itemsWithContent(list) {
+  return list.filter(hasContent)
+}
