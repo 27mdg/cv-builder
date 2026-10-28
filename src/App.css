@@ -85,6 +85,12 @@
 .toolbar button:hover:not(:disabled) { background: var(--background); }
 .toolbar button:disabled { color: var(--text-muted); cursor: not-allowed; }
 .full-screen-button { margin-left: 8px; }
+/* The menu's arrow turns up while it is open, like the form's dropdowns */
+.tool > button > svg:last-child { transition: rotate 0.2s ease; }
+.tool > button[aria-expanded="true"] > svg:last-child { rotate: 180deg; }
+@media (prefers-reduced-motion: reduce) {
+  .tool > button > svg:last-child { transition: none; }
+}
 .tool-menu { position: absolute; left: 0; bottom: calc(100% + 12px); min-width: 180px; padding: 8px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); box-shadow: 0 4px 16px var(--shadow); }
 .tool-menu.align-right { left: auto; right: 0; }
 .tool-menu button { width: 100%; }
