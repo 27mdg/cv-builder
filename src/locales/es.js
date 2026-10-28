@@ -195,6 +195,14 @@ const es = {
     dropped: (title) => `Has soltado ${title}.`,
     cancelled: (title) => `Cancelado. ${title} vuelve a su sitio.`,
   },
+  extraSections: {
+    title: 'Añadir secciones',
+    remove: 'Quitar sección',
+    confirmTitle: (title) => `¿Quitar ${title}?`,
+    confirmMessage: 'Se borrará todo lo que has escrito en esta sección. Podrás volver a añadirla, pero vacía.',
+    cancel: 'Cancelar',
+    confirm: 'Sí, quitar',
+  },
   clear: {
     button: 'Borrar todos los datos',
     tooltip: 'Vacía todo el formulario y borra tu CV de este navegador. No se puede deshacer.',

@@ -91,6 +91,11 @@
 .sortable { position: relative; background: white; }
 .sortable.dragging { z-index: 10; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); cursor: grabbing; }
 .sortable.dragging .drag-handle { cursor: grabbing; }
+.form-panel .section-remove { display: flex; margin-right: 10px; padding: 6px; border: none; border-radius: 50%; background: transparent; color: #777; }
+.form-panel .section-remove:hover { background: #f2f3f5; color: #c0392b; }
+.section-remove svg { width: 18px; height: 18px; }
+.extra-sections { padding: 24px 0 8px; }
+.extra-sections-title { font-size: 14px; font-weight: 600; color: #555; }
 .section-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid #9aa0a6; border-radius: 50%; color: #333; transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }
 .section[open] .section-arrow { transform: rotate(180deg); }

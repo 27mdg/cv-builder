@@ -1,3 +1,8 @@
+// Rarely used sections: hidden until the user adds them, so the form starts short
+export const optionalSections = [
+  'hobbies', 'courses', 'internships', 'activities', 'certificates', 'qualities', 'achievements',
+]
+
 // `key` must match initialCv.js and the locale file.
 // 'endDate' stores its switch in `current`; 'skillLevel' stores the number (1–5)
 // and 'languageLevel' the code ('B2'), so each template decides how to draw them.

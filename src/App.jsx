@@ -6,7 +6,8 @@ import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
-import sections from './data/sections.js'
+import sections, { optionalSections } from './data/sections.js'
+import { hasText } from './templates/format.js'
 import Section from './components/form/Section.jsx'
 import ListSection from './components/form/ListSection.jsx'
 import SortableSections from './components/form/SortableSections.jsx'
@@ -15,6 +16,8 @@ import ClearButton from './components/ClearButton.jsx'
 import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
+import ConfirmDialog from './components/ConfirmDialog.jsx'
+import { PlusIcon } from './components/Icons.jsx'
 
 // The preview is loaded separately (lazy) because the PDF library is heavy:
 // the form shows up instantly and the PDF a moment later.
@@ -28,6 +31,11 @@ function App() {
   }, [cv])
 
   const [fullScreen, setFullScreen] = useState(false)
+
+  // Optional sections the user added in this visit and has not filled yet. Those with content
+  // are always shown, so this does not need to be saved in the CV.
+  const [addedSections, setAddedSections] = useState([])
+  const [removingSection, setRemovingSection] = useState(null)
 
   useEffect(() => {
     if (!fullScreen) return
@@ -70,6 +78,39 @@ function App() {
       design: previous.design,
       sectionOrder: previous.sectionOrder,
     }))
+    setAddedSections([])
+  }
+
+  const hasContent = (key) => (Array.isArray(cv[key]) ? cv[key].length > 0 : hasText(cv[key]))
+  const visibleOrder = cv.sectionOrder.filter(
+    (key) => !optionalSections.includes(key) || hasContent(key) || addedSections.includes(key),
+  )
+  const hiddenSections = optionalSections.filter((key) => !visibleOrder.includes(key))
+
+  // Dragging only sees the visible sections; hidden ones keep their place in the full order
+  function reorderVisible(newVisible) {
+    let next = 0
+    changeSection('sectionOrder', cv.sectionOrder.map((key) => (visibleOrder.includes(key) ? newVisible[next++] : key)))
+  }
+
+  // The new section goes right after the last visible one, just above the "+" buttons the
+  // user clicked, instead of somewhere up the form
+  function addSection(key) {
+    const lastVisible = visibleOrder[visibleOrder.length - 1]
+    const order = cv.sectionOrder.filter((k) => k !== key)
+    order.splice(order.indexOf(lastVisible) + 1, 0, key)
+    changeSection('sectionOrder', order)
+    setAddedSections((added) => [...added, key])
+  }
+
+  function hideSection(key) {
+    changeSection(key, initialCv[key])
+    setAddedSections((added) => added.filter((k) => k !== key))
+  }
+
+  function removeSection(key) {
+    if (hasContent(key)) setRemovingSection(key)
+    else hideSection(key)
   }
 
   function sectionContent(key) {
@@ -114,9 +155,36 @@ function App() {
             <PersonalDetails data={cv.personal} onChange={changePersonal}/>
           </Section>
           <SortableSections
-            order={cv.sectionOrder}
-            onReorder={(order) => changeSection('sectionOrder', order)}
+            order={visibleOrder}
+            onReorder={reorderVisible}
             renderContent={sectionContent}
+            removable={optionalSections}
+            onRemove={removeSection}
+            openKeys={addedSections}
+          />
+          {hiddenSections.length > 0 && (
+            <div className="extra-sections">
+              <p className="extra-sections-title">{texts.extraSections.title}</p>
+              <div className="chips">
+                {hiddenSections.map((key) => (
+                  <button type="button" className="chip" key={key} onClick={() => addSection(key)}>
+                    <PlusIcon/>{texts[key].title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <ConfirmDialog
+            open={removingSection !== null}
+            title={removingSection ? texts.extraSections.confirmTitle(texts[removingSection].title) : ''}
+            message={texts.extraSections.confirmMessage}
+            cancelLabel={texts.extraSections.cancel}
+            confirmLabel={texts.extraSections.confirm}
+            onConfirm={() => {
+              hideSection(removingSection)
+              setRemovingSection(null)
+            }}
+            onCancel={() => setRemovingSection(null)}
           />
         </section>
         <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
