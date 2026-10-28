@@ -44,6 +44,16 @@ export function itemSummary(key, item) {
   return [join([item.position, item.employer], ' — '), join([dateRange(item), item.city])]
 }
 
+// The same item split into separate pieces, for templates that place them apart:
+// { title, subtitle, date, place }
+export function itemParts(key, item) {
+  const parts = { date: dateRange(item), place: item.city ?? '' }
+  if (key === 'education') return { ...parts, title: item.degree, subtitle: item.school }
+  if (key === 'courses') return { ...parts, title: item.course, subtitle: '' }
+  if (key === 'certificates') return { ...parts, title: item.certificate, subtitle: '' }
+  return { ...parts, title: item.position, subtitle: item.employer }
+}
+
 // { fullName, contact: [{ type, text }], otherDetails: ['Label: value'] }, without empty ones.
 // `type` (phone, email, website, address, linkedin) lets templates pick an icon.
 export function personalDetails(personal) {

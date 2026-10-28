@@ -174,6 +174,7 @@ const es = {
   templates: {
     arch: 'Arco',
     banner: 'Franja',
+    timeline: 'Trayectoria',
   },
   file: {
     name: 'Nombre del archivo',
