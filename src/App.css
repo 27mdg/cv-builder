@@ -6,8 +6,9 @@
 .logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--brand-dark); text-decoration: none; }
 .file-name { width: 280px; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface-sunken); color: var(--text); font: inherit; text-align: center; transition: background-color 0.15s ease; }
 .file-name::placeholder { color: var(--text-muted); }
-/* Grey so it stands out on the white bar; white like the bar while typing */
-.file-name:focus { background: var(--surface); }
+/* Grey so it stands out on the white bar while empty; white like the bar while typing or once
+   it has a name (the placeholder only shows while it is empty) */
+.file-name:focus, .file-name:not(:placeholder-shown) { background: var(--surface); }
 .actions { justify-self: end; display: flex; align-items: center; gap: 10px; }
 .import { display: flex; align-items: center; gap: 8px; }
 .error-message, .download-error { color: var(--danger); font-size: 14px; }
