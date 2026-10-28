@@ -148,7 +148,12 @@
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text); font-size: 15px; font-weight: 400; }
 .form-panel .chip:hover { border-color: var(--brand-dark); }
-.chip svg { width: 16px; height: 16px; color: var(--brand-dark); }
+.chip svg { width: 16px; height: 16px; color: var(--brand-dark); transition: transform 0.25s ease; }
+/* 90°, not 45°: a plus turned 45° would look like the × that removes things */
+.chip:hover svg { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  .chip svg { transition: none; }
+}
 
 /* Temporary: the list sections still need a redesign */
 .item { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
