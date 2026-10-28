@@ -59,6 +59,14 @@
 .splitter { --line: var(--border-strong); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat, linear-gradient(to right, var(--background) 50%, var(--surface-sunken) 50%); cursor: col-resize; touch-action: none; }
 .splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text-muted); box-shadow: 0 1px 4px var(--shadow); }
 .splitter-knob svg { width: 14px; height: 14px; }
+/* Gliding back to the middle when released, a little slower so the eye can follow it */
+.splitter-knob { transition: translate 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+/* While dragging, a short ease: it flies to the pointer on the first click and then
+   trails it smoothly instead of jumping pixel by pixel */
+.splitter.dragging .splitter-knob { transition-duration: 0.15s; }
+@media (prefers-reduced-motion: reduce) {
+  .splitter-knob { transition: none; }
+}
 .splitter:hover, .splitter.dragging { --line: var(--brand-dark); }
 .splitter:hover .splitter-knob, .splitter.dragging .splitter-knob { border-color: var(--brand-dark); color: var(--brand-dark); }
 /* No text gets selected while dragging across the form */

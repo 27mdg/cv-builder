@@ -11,6 +11,8 @@ const minWidth = 360
 const snapDistance = 24
 // In %, for the arrow keys. A divisor of 50, so the keys can land back on the middle.
 const keyStep = 5
+// In px: half the knob's height (App.css) plus a small gap, so it stops before the lane's ends
+const knobHalfHeight = 30
 
 function loadShare() {
   try {
@@ -25,6 +27,8 @@ function loadShare() {
 function Splitter() {
   const [share, setShare] = useState(loadShare)
   const [dragging, setDragging] = useState(false)
+  // In px from the middle of the lane
+  const [knobOffset, setKnobOffset] = useState(0)
   const bar = useRef(null)
 
   // Written straight onto the parent instead of going through App: otherwise the whole form
@@ -55,11 +59,30 @@ function Splitter() {
     setShare(clamp(value, limits()))
   }
 
+  // The knob follows the pointer up and down its lane while dragging, without leaving the lane
+  function followPointer(clientY) {
+    const lane = bar.current.getBoundingClientRect()
+    const room = lane.height / 2 - knobHalfHeight
+    setKnobOffset(Math.min(Math.max(clientY - lane.top - lane.height / 2, -room), room))
+  }
+
   function handlePointerDown(e) {
     if (e.button !== 0) return
     e.preventDefault()
     bar.current.setPointerCapture(e.pointerId)
     setDragging(true)
+    followPointer(e.clientY)
+  }
+
+  function handlePointerMove(e) {
+    if (!dragging) return
+    moveTo(e.clientX)
+    followPointer(e.clientY)
+  }
+
+  function stopDragging() {
+    setDragging(false)
+    setKnobOffset(0)
   }
 
   function handleKeyDown(e) {
@@ -81,13 +104,13 @@ function Splitter() {
       tabIndex={0}
       title={texts.splitter.hint}
       onPointerDown={handlePointerDown}
-      onPointerMove={(e) => dragging && moveTo(e.clientX)}
-      onPointerUp={() => setDragging(false)}
-      onPointerCancel={() => setDragging(false)}
+      onPointerMove={handlePointerMove}
+      onPointerUp={stopDragging}
+      onPointerCancel={stopDragging}
       onDoubleClick={() => setShare(50)}
       onKeyDown={handleKeyDown}
     >
-      <span className="splitter-knob"><ResizeIcon/></span>
+      <span className="splitter-knob" style={{ translate: `0 ${knobOffset}px` }}><ResizeIcon/></span>
     </div>
   )
 }
