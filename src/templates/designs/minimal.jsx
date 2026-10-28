@@ -12,7 +12,7 @@ import { KeepWithFirst } from '../parts/blocks.jsx'
 // skills and languages side by side.
 
 const sidebarWidth = 205
-const inSidebar = ['hobbies', 'qualities']
+const inSidebar = ['profile', 'hobbies', 'qualities']
 const sideBySide = ['skills', 'languages']
 
 function createStyles(v) {
@@ -152,12 +152,14 @@ function Minimal({ cv, template }) {
         <View style={s.main}>
           {hasText(details.fullName) && <Text style={s.name}>{details.fullName}</Text>}
           {hasText(p.jobTitle) && <Text style={s.jobTitle}>{p.jobTitle}</Text>}
-          {main.map(({ key, list }) => (
-            <Section key={key} s={s} title={texts[key].title} items={itemList(s, key, list)}/>
+          {main.map(({ key, list, text }) => (
+            <Section
+              key={key}
+              s={s}
+              title={texts[key].title}
+              items={list ? itemList(s, key, list) : [<Text key="text" style={s.item}>{text}</Text>]}
+            />
           ))}
-          {hasText(cv.achievements) && (
-            <Section s={s} title={texts.achievements.title} items={[<Text key="text" style={s.item}>{cv.achievements}</Text>]}/>
-          )}
           {columns.length > 0 && (
             <View style={s.columns}>
               {columns.map(({ key, list }, i) => (
@@ -177,23 +179,20 @@ function Minimal({ cv, template }) {
 
         <View style={s.sidebar}>
           {p.photo && <Image style={s.photo} src={p.photo}/>}
-          {hasText(cv.profile) && (
-            <SidebarSection s={s} title={texts.profile.title}>
-              <Text style={s.line}>{cv.profile}</Text>
+          {sidebar.map(({ key, list, text }) => (
+            <SidebarSection key={key} s={s} title={texts[key].title}>
+              {list
+                ? list.filter((item) => hasText(item[field[key]])).map((item) => (
+                  <Text key={item.id} style={s.line}>- {item[field[key]]}</Text>
+                ))
+                : <Text style={s.line}>{text}</Text>}
             </SidebarSection>
-          )}
+          ))}
           {details.otherDetails.length > 0 && (
             <SidebarSection s={s} title={texts.personal.title}>
               {details.otherDetails.map((line, i) => <Text key={i} style={s.line}>- {line}</Text>)}
             </SidebarSection>
           )}
-          {sidebar.map(({ key, list }) => (
-            <SidebarSection key={key} s={s} title={texts[key].title}>
-              {list.filter((item) => hasText(item[field[key]])).map((item) => (
-                <Text key={item.id} style={s.line}>- {item[field[key]]}</Text>
-              ))}
-            </SidebarSection>
-          ))}
           {details.contact.length > 0 && (
             <SidebarSection s={s} title={texts.common.contact}>
               {details.contact.map((c) => (

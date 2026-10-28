@@ -126,15 +126,11 @@ function Arch({ cv, template }) {
     })),
   ].filter(Boolean)
 
-  const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
-    ...main.map(({ key, list }) => ({
-      key,
-      title: texts[key].title,
-      items: sectionItems({ styles: s.mainText, sectionKey: key, list }),
-    })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
-  ].filter(Boolean)
+  const mainBlocks = main.map(({ key, list, text }) => ({
+    key,
+    title: texts[key].title,
+    items: list ? sectionItems({ styles: s.mainText, sectionKey: key, list }) : [<Text key="text">{text}</Text>],
+  }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>

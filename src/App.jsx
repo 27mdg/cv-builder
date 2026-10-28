@@ -9,6 +9,7 @@ import LongText from './components/form/LongText.jsx'
 import sections from './data/sections.js'
 import Section from './components/form/Section.jsx'
 import ListSection from './components/form/ListSection.jsx'
+import SortableSections from './components/form/SortableSections.jsx'
 import DownloadButton from './components/DownloadButton.jsx'
 import ClearButton from './components/ClearButton.jsx'
 import ImportButton from './components/ImportButton.jsx'
@@ -61,9 +62,29 @@ function App() {
     }))
   }
 
-  // Only what the user typed is cleared; the chosen template and design are not personal data
+  // Only what the user typed is cleared; template, design and section order are not personal data
   function clearCv() {
-    setCv((previous) => ({ ...initialCv, template: previous.template, design: previous.design }))
+    setCv((previous) => ({
+      ...initialCv,
+      template: previous.template,
+      design: previous.design,
+      sectionOrder: previous.sectionOrder,
+    }))
+  }
+
+  function sectionContent(key) {
+    const listSection = sections.find((section) => section.key === key)
+    if (!listSection) {
+      return <LongText value={cv[key]} hint={texts[key].hint} onChange={(value) => changeSection(key, value)}/>
+    }
+    return (
+      <ListSection
+        sectionKey={key}
+        fields={listSection.fields}
+        list={cv[key]}
+        onChange={(list) => changeSection(key, list)}
+      />
+    )
   }
 
   return (
@@ -92,30 +113,11 @@ function App() {
           <Section title={texts.personal.title} open>
             <PersonalDetails data={cv.personal} onChange={changePersonal}/>
           </Section>
-          <Section title={texts.profile.title}>
-            <LongText
-              value={cv.profile}
-              hint={texts.profile.hint}
-              onChange={(value) => changeSection('profile', value)}
-            />
-          </Section>
-          {sections.map((section) => (
-            <Section key={section.key} title={texts[section.key].title}>
-              <ListSection
-                sectionKey={section.key}
-                fields={section.fields}
-                list={cv[section.key]}
-                onChange={(list) => changeSection(section.key, list)}
-              />
-            </Section>
-          ))}
-          <Section title={texts.achievements.title}>
-            <LongText
-              value={cv.achievements}
-              hint={texts.achievements.hint}
-              onChange={(value) => changeSection('achievements', value)}
-            />
-          </Section>
+          <SortableSections
+            order={cv.sectionOrder}
+            onReorder={(order) => changeSection('sectionOrder', order)}
+            renderContent={sectionContent}
+          />
         </section>
         <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
           <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>

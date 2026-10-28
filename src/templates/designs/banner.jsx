@@ -165,22 +165,22 @@ function Banner({ cv, template }) {
   const sidebar = filled.filter(({ key }) => inSidebar.includes(key))
   const main = filled.filter(({ key }) => !inSidebar.includes(key))
 
-  const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
-    ...main.map(({ key, list }) => ({
-      key,
-      title: texts[key].title,
-      items: key === 'skills'
-        ? list.map((item) => (
-          <View key={item.id} style={s.skillRow} wrap={false}>
-            <Text style={s.skillName}>{item.skill}</Text>
-            {item.level !== '' && <Bar level={item.level} color={v.accent} trackColor="#dcdfe4" width={110}/>}
-          </View>
-        ))
-        : sectionItems({ styles: mainText, sectionKey: key, list }),
-    })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
-  ].filter(Boolean)
+  function mainItems(key, list, text) {
+    if (!list) return [<Text key="text">{text}</Text>]
+    if (key !== 'skills') return sectionItems({ styles: mainText, sectionKey: key, list })
+    return list.map((item) => (
+      <View key={item.id} style={s.skillRow} wrap={false}>
+        <Text style={s.skillName}>{item.skill}</Text>
+        {item.level !== '' && <Bar level={item.level} color={v.accent} trackColor="#dcdfe4" width={110}/>}
+      </View>
+    ))
+  }
+
+  const mainBlocks = main.map(({ key, list, text }) => ({
+    key,
+    title: texts[key].title,
+    items: mainItems(key, list, text),
+  }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>

@@ -186,6 +186,15 @@ const es = {
     errorInvalid: 'Este archivo no es un CV de CV Gratis.',
     errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',
   },
+  reorder: {
+    handle: 'Arrastra para cambiar el orden de la sección',
+    // Read aloud by screen readers while moving a section with the keyboard
+    instructions: 'Para mover una sección, pulsa espacio, muévela con las flechas arriba y abajo y pulsa espacio otra vez para soltarla. Escape cancela.',
+    picked: (title) => `Has cogido ${title}.`,
+    over: (title) => `Encima de ${title}.`,
+    dropped: (title) => `Has soltado ${title}.`,
+    cancelled: (title) => `Cancelado. ${title} vuelve a su sitio.`,
+  },
   clear: {
     button: 'Borrar todos los datos',
     tooltip: 'Vacía todo el formulario y borra tu CV de este navegador. No se puede deshacer.',

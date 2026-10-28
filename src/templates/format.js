@@ -1,5 +1,4 @@
 import texts from '../locales/es.js'
-import sections from '../data/sections.js'
 
 // Shared by every template, so each one only deals with layout.
 
@@ -84,11 +83,14 @@ export function personalDetails(personal) {
   }
 }
 
-// The list sections that have something to show, in form order: [{ key, list }]
+// The sections that have something to show, in the user's order:
+// [{ key, text }] for profile and achievements, [{ key, list }] for the rest
 export function filledSections(cv) {
-  return sections
-    .map(({ key }) => ({ key, list: itemsWithContent(cv[key]) }))
-    .filter(({ list }) => list.length > 0)
+  return cv.sectionOrder
+    .map((key) => (Array.isArray(cv[key])
+      ? { key, list: itemsWithContent(cv[key]) }
+      : { key, text: cv[key] }))
+    .filter((section) => (section.list ? section.list.length > 0 : hasText(section.text)))
 }
 
 function hasContent(item) {

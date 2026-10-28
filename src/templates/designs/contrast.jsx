@@ -191,11 +191,10 @@ function Contrast({ cv, template }) {
   const sidebar = filled.filter(({ key }) => inSidebar.includes(key))
   const main = filled.filter(({ key }) => !inSidebar.includes(key))
 
-  const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', items: [<Text key="text">{cv.profile}</Text>] },
-    ...main.map(({ key, list }) => ({ key, items: itemElements(s, key, list) })),
-    hasText(cv.achievements) && { key: 'achievements', items: [<Text key="text">{cv.achievements}</Text>] },
-  ].filter(Boolean)
+  const mainBlocks = main.map(({ key, list, text }) => ({
+    key,
+    items: list ? itemElements(s, key, list) : [<Text key="text">{text}</Text>],
+  }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>

@@ -8,6 +8,14 @@ const storageKey = 'cv-gratis'
 // Exported files use it too.
 export const version = 2
 
+// Keeps the saved order, drops unknown keys and adds sections that did not exist yet at the
+// end, so older or hand-edited CVs never lose a section
+function normalizeOrder(order) {
+  const known = initialCv.sectionOrder
+  const saved = Array.isArray(order) ? order.filter((key, i) => known.includes(key) && order.indexOf(key) === i) : []
+  return [...saved, ...known.filter((key) => !saved.includes(key))]
+}
+
 // { version, cv } → complete CV, or null if invalid (localStorage or imported file)
 export function cvFromData(data) {
   if (data?.version !== version || typeof data.cv?.personal !== 'object') return null
@@ -27,6 +35,7 @@ export function cvFromData(data) {
   if (!Array.isArray(cv.personal.customFields)) {
     cv.personal.customFields = []
   }
+  cv.sectionOrder = normalizeOrder(cv.sectionOrder)
   // Templates can be removed (e.g. the first 'classic' and 'modern')
   if (!templates.some((t) => t.id === cv.template)) {
     cv.template = initialCv.template

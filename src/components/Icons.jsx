@@ -37,6 +37,16 @@ export function PlusIcon() {
   return <Icon><path d="M12 5v14M5 12h14"/></Icon>
 }
 
+export function GripIcon() {
+  return (
+    <Icon>
+      {[6, 12, 18].map((y) => [9, 15].map((x) => (
+        <circle key={`${x}-${y}`} cx={x} cy={y} r="1.4" fill="currentColor" stroke="none"/>
+      )))}
+    </Icon>
+  )
+}
+
 export function TrashIcon() {
   return <Icon><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></Icon>
 }

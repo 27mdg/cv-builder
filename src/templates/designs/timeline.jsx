@@ -184,16 +184,14 @@ function TimelineTemplate({ cv, template }) {
   const main = filled.filter(({ key }) => !inSidebar.includes(key))
   const titleWidth = pageWidth - sidebarWidth - 24 - 32 * v.margins
 
-  const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
-    ...main.map(({ key, list }) => ({
+  const mainBlocks = main.map(({ key, list, text }) => (list
+    ? {
       key,
       title: texts[key].title,
       items: timelineItems(s, v, key, list),
       container: (children) => <Timeline color={v.accentText}>{children}</Timeline>,
-    })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
-  ].filter(Boolean)
+    }
+    : { key, title: texts[key].title, items: [<Text key="text">{text}</Text>] }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>
