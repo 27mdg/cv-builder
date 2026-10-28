@@ -176,6 +176,7 @@ const es = {
     banner: 'Franja',
     timeline: 'Trayectoria',
     contrast: 'Contraste',
+    minimal: 'Sereno',
   },
   file: {
     name: 'Nombre del archivo',

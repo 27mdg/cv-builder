@@ -2,7 +2,8 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, personalDetails, filledSections } from '../format.js'
-import { SectionItems } from '../parts/blocks.jsx'
+import { KeepWithFirst } from '../parts/blocks.jsx'
+import { sectionItems } from '../parts/sectionItems.jsx'
 import { Dots } from '../parts/levels.jsx'
 
 // Light sidebar with the photo inside an arch; name and contact at the top of the main column.
@@ -85,14 +86,15 @@ function SidebarSection({ s, title, divider, children }) {
   )
 }
 
-function Section({ s, title, first, children }) {
+function Section({ s, title, first, items }) {
+  const head = (
+    <View style={s.sectionHead}>
+      <Text style={s.sectionTitle}>{title}</Text>
+    </View>
+  )
   return (
     <View style={first ? [s.section, s.firstSection] : s.section}>
-      {/* The rule and the title move together, and never stay alone at the bottom of a page */}
-      <View style={s.sectionHead} wrap={false} minPresenceAhead={90}>
-        <Text style={s.sectionTitle}>{title}</Text>
-      </View>
-      {children}
+      <KeepWithFirst head={head} items={items}/>
     </View>
   )
 }
@@ -115,25 +117,23 @@ function Arch({ cv, template }) {
     ...sidebar.map(({ key, list }) => ({
       key,
       title: texts[key].title,
-      content: (
-        <SectionItems
-          styles={s.sidebarText}
-          sectionKey={key}
-          list={list}
-          renderLevel={(item) => <Dots level={item.level} color={v.accentText}/>}
-        />
-      ),
+      content: sectionItems({
+        styles: s.sidebarText,
+        sectionKey: key,
+        list,
+        renderLevel: (item) => <Dots level={item.level} color={v.accentText}/>,
+      }),
     })),
   ].filter(Boolean)
 
   const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, content: <Text>{cv.profile}</Text> },
+    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
     ...main.map(({ key, list }) => ({
       key,
       title: texts[key].title,
-      content: <SectionItems styles={s.mainText} sectionKey={key} list={list}/>,
+      items: sectionItems({ styles: s.mainText, sectionKey: key, list }),
     })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, content: <Text>{cv.achievements}</Text> },
+    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
   ].filter(Boolean)
 
   return (
@@ -152,9 +152,7 @@ function Arch({ cv, template }) {
             </View>
           )}
           {mainBlocks.map((block, i) => (
-            <Section key={block.key} s={s} title={block.title} first={i === 0}>
-              {block.content}
-            </Section>
+            <Section key={block.key} s={s} title={block.title} first={i === 0} items={block.items}/>
           ))}
         </View>
 

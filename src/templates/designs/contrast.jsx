@@ -3,6 +3,7 @@ import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts } from '../format.js'
 import { PdfIcon } from '../parts/icons.jsx'
+import { KeepWithFirst } from '../parts/blocks.jsx'
 
 // Very dark sidebar with icon headings; big two-line name with the surname in bold;
 // job title inside a dark bar; main sections hang from a round icon and a thin line.
@@ -140,21 +141,22 @@ function SidebarList({ s, sectionKey, list }) {
     .map((item) => <Bullet key={item.id} s={s}><Text>{item[field]}</Text></Bullet>)
 }
 
-// The heading and the first item form one block that cannot be split, so a heading is never
-// left alone at the bottom of a page. minPresenceAhead alone is not enough here: the empty
-// vertical line already counts as "something" after the heading.
 function Section({ s, v, icon, title, items }) {
-  const [first, ...rest] = items
+  const head = (
+    <View style={s.sectionHead}>
+      <View style={s.iconCircle}><PdfIcon name={icon} size={12} color={v.onAccent}/></View>
+      <Text style={s.sectionTitle}>{title}</Text>
+    </View>
+  )
   return (
     <View style={s.section}>
-      <View wrap={false}>
-        <View style={s.sectionHead}>
-          <View style={s.iconCircle}><PdfIcon name={icon} size={12} color={v.onAccent}/></View>
-          <Text style={s.sectionTitle}>{title}</Text>
-        </View>
-        <View style={s.sectionBody}>{first}</View>
-      </View>
-      {rest.length > 0 && <View style={[s.sectionBody, s.sectionBodyRest]}>{rest}</View>}
+      <KeepWithFirst
+        head={head}
+        items={items}
+        container={(children, isFirst) => (
+          <View style={isFirst ? s.sectionBody : [s.sectionBody, s.sectionBodyRest]}>{children}</View>
+        )}
+      />
     </View>
   )
 }

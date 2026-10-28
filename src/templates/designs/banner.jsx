@@ -2,7 +2,8 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, personalDetails, filledSections } from '../format.js'
-import { SectionItems } from '../parts/blocks.jsx'
+import { KeepWithFirst } from '../parts/blocks.jsx'
+import { sectionItems } from '../parts/sectionItems.jsx'
 import { Bar } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 
@@ -121,12 +122,10 @@ function SidebarSection({ s, title, children }) {
   )
 }
 
-function Section({ s, title, children }) {
+function Section({ s, title, items }) {
   return (
     <View style={s.section}>
-      {/* minPresenceAhead: keeps the title from being left alone at the bottom of a page */}
-      <Text style={s.sectionTitle} minPresenceAhead={90}>{title}</Text>
-      {children}
+      <KeepWithFirst head={<Text style={s.sectionTitle}>{title}</Text>} items={items}/>
     </View>
   )
 }
@@ -167,20 +166,20 @@ function Banner({ cv, template }) {
   const main = filled.filter(({ key }) => !inSidebar.includes(key))
 
   const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, content: <Text>{cv.profile}</Text> },
+    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
     ...main.map(({ key, list }) => ({
       key,
       title: texts[key].title,
-      content: key === 'skills'
+      items: key === 'skills'
         ? list.map((item) => (
           <View key={item.id} style={s.skillRow} wrap={false}>
             <Text style={s.skillName}>{item.skill}</Text>
             {item.level !== '' && <Bar level={item.level} color={v.accent} trackColor="#dcdfe4" width={110}/>}
           </View>
         ))
-        : <SectionItems styles={mainText} sectionKey={key} list={list}/>,
+        : sectionItems({ styles: mainText, sectionKey: key, list }),
     })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, content: <Text>{cv.achievements}</Text> },
+    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
   ].filter(Boolean)
 
   return (
@@ -201,7 +200,7 @@ function Banner({ cv, template }) {
         <View style={s.body}>
           <View style={s.main}>
             {mainBlocks.map((block) => (
-              <Section key={block.key} s={s} title={block.title}>{block.content}</Section>
+              <Section key={block.key} s={s} title={block.title} items={block.items}/>
             ))}
           </View>
 

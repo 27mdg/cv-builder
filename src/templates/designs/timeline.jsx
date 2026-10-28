@@ -6,6 +6,7 @@ import { Dots } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { Gradient } from '../parts/Gradient.jsx'
 import { Timeline, TimelineItem } from '../parts/Timeline.jsx'
+import { KeepWithFirst } from '../parts/blocks.jsx'
 
 // Dark gradient sidebar holding the photo, the name and the short lists; the main column
 // shows experience and education on a timeline. The name is in the sidebar, so the sidebar
@@ -141,39 +142,36 @@ function SidebarList({ s, v, sectionKey, list }) {
     .map((item) => <Bullet key={item.id} s={s}><Text>{item[field]}</Text></Bullet>)
 }
 
-function Section({ s, v, id, title, titleWidth, first, children }) {
+function Section({ s, v, id, title, titleWidth, first, items, container }) {
   // Same height as the title text: fontSize × lineHeight + vertical padding
   const barHeight = 10.5 * v.scale * 1.2 + 8
+  const head = (
+    <View style={s.sectionHead}>
+      <View style={s.sectionTitleBox}>
+        <Gradient width={titleWidth} height={barHeight} from={v.accentDark} to={v.accent} id={`bar-${id}`}/>
+      </View>
+      <Text style={s.sectionTitle}>{title}</Text>
+    </View>
+  )
   return (
     <View style={first ? [s.section, s.firstSection] : s.section}>
-      {/* The bar and its title move together, and never stay alone at the bottom of a page */}
-      <View style={s.sectionHead} wrap={false} minPresenceAhead={90}>
-        <View style={s.sectionTitleBox}>
-          <Gradient width={titleWidth} height={barHeight} from={v.accentDark} to={v.accent} id={`bar-${id}`}/>
-        </View>
-        <Text style={s.sectionTitle}>{title}</Text>
-      </View>
-      {children}
+      <KeepWithFirst head={head} items={items} container={container}/>
     </View>
   )
 }
 
-function TimelineSection({ s, v, sectionKey, list }) {
-  return (
-    <Timeline color={v.accentText}>
-      {list.map((item) => {
-        const parts = itemParts(sectionKey, item)
-        return (
-          <TimelineItem key={item.id} color={v.accentText} style={s.item}>
-            {hasText(parts.title) && <Text style={s.itemTitle}>{parts.title}</Text>}
-            {hasText(parts.subtitle) && <Text style={s.itemSubtitle}>{parts.subtitle}</Text>}
-            {hasText(join([parts.date, parts.place])) && <Text style={s.itemDate}>{join([parts.date, parts.place])}</Text>}
-            {hasText(item.description) && <Text style={s.description}>{item.description}</Text>}
-          </TimelineItem>
-        )
-      })}
-    </Timeline>
-  )
+function timelineItems(s, v, sectionKey, list) {
+  return list.map((item) => {
+    const parts = itemParts(sectionKey, item)
+    return (
+      <TimelineItem key={item.id} color={v.accentText} style={s.item}>
+        {hasText(parts.title) && <Text style={s.itemTitle}>{parts.title}</Text>}
+        {hasText(parts.subtitle) && <Text style={s.itemSubtitle}>{parts.subtitle}</Text>}
+        {hasText(join([parts.date, parts.place])) && <Text style={s.itemDate}>{join([parts.date, parts.place])}</Text>}
+        {hasText(item.description) && <Text style={s.description}>{item.description}</Text>}
+      </TimelineItem>
+    )
+  })
 }
 
 function TimelineTemplate({ cv, template }) {
@@ -187,13 +185,14 @@ function TimelineTemplate({ cv, template }) {
   const titleWidth = pageWidth - sidebarWidth - 24 - 32 * v.margins
 
   const mainBlocks = [
-    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, content: <Text>{cv.profile}</Text> },
+    hasText(cv.profile) && { key: 'profile', title: texts.profile.title, items: [<Text key="text">{cv.profile}</Text>] },
     ...main.map(({ key, list }) => ({
       key,
       title: texts[key].title,
-      content: <TimelineSection s={s} v={v} sectionKey={key} list={list}/>,
+      items: timelineItems(s, v, key, list),
+      container: (children) => <Timeline color={v.accentText}>{children}</Timeline>,
     })),
-    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, content: <Text>{cv.achievements}</Text> },
+    hasText(cv.achievements) && { key: 'achievements', title: texts.achievements.title, items: [<Text key="text">{cv.achievements}</Text>] },
   ].filter(Boolean)
 
   return (
@@ -231,9 +230,17 @@ function TimelineTemplate({ cv, template }) {
 
         <View style={s.main}>
           {mainBlocks.map((block, i) => (
-            <Section key={block.key} s={s} v={v} id={block.key} title={block.title} titleWidth={titleWidth} first={i === 0}>
-              {block.content}
-            </Section>
+            <Section
+              key={block.key}
+              s={s}
+              v={v}
+              id={block.key}
+              title={block.title}
+              titleWidth={titleWidth}
+              first={i === 0}
+              items={block.items}
+              container={block.container}
+            />
           ))}
         </View>
       </Page>

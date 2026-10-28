@@ -7,6 +7,7 @@ const templates = [
   { id: 'banner', defaultColor: 'navy', defaultFont: 'poppins' },
   { id: 'timeline', defaultColor: 'slate', defaultFont: 'montserrat' },
   { id: 'contrast', defaultColor: 'black', defaultFont: 'raleway' },
+  { id: 'minimal', defaultColor: 'midnight', defaultFont: 'raleway' },
 ]
 
 export function templateInfo(id) {
