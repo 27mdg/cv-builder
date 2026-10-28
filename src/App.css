@@ -116,6 +116,11 @@
   display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
   background: var(--surface); color: var(--text); font: inherit; font-size: 16px; font-weight: 400;
 }
+/* The browser's own arrow sits against the edge and ignores padding, so we draw our own */
+.form-panel select {
+  appearance: none; padding-right: 44px; cursor: pointer;
+  background-image: var(--select-arrow); background-repeat: no-repeat; background-position: right 16px center; background-size: 14px;
+}
 /* Fields show the ring on any focus, not just keyboard focus: it tells where you are typing */
 .form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
