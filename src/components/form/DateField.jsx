@@ -1,4 +1,5 @@
 import texts from '../../locales/es.js'
+import Select from './Select.jsx'
 
 // Includes future years for studies that have not finished yet
 const currentYear = new Date().getFullYear()
@@ -13,7 +14,7 @@ function DateField({ label, value, onChange, hideDate, children }) {
       <span>{label}</span>
       {!hideDate && (
         <>
-          <select
+          <Select
             aria-label={texts.common.month}
             value={value.month}
             onChange={(e) => onChange({ ...value, month: e.target.value })}
@@ -22,8 +23,8 @@ function DateField({ label, value, onChange, hideDate, children }) {
             {texts.common.months.map((name, i) => (
               <option key={name} value={String(i + 1)}>{name}</option>
             ))}
-          </select>
-          <select
+          </Select>
+          <Select
             aria-label={texts.common.year}
             value={value.year}
             onChange={(e) => onChange({ ...value, year: e.target.value })}
@@ -32,7 +33,7 @@ function DateField({ label, value, onChange, hideDate, children }) {
             {years.map((year) => (
               <option key={year} value={year}>{year}</option>
             ))}
-          </select>
+          </Select>
         </>
       )}
       {children}

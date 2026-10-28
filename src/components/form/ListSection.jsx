@@ -1,5 +1,6 @@
 import texts from '../../locales/es.js'
 import DateField from './DateField.jsx'
+import Select from './Select.jsx'
 import { PlusIcon } from '../Icons.jsx'
 
 function labelFor(sectionKey, name) {
@@ -61,7 +62,7 @@ function Field({ sectionKey, field, item, onChange }) {
     return (
       <label>
         {label}
-        <select
+        <Select
           value={value}
           onChange={(e) => {
             // A number, not text: each template decides how to draw it (e.g. dots)
@@ -73,7 +74,7 @@ function Field({ sectionKey, field, item, onChange }) {
           {Object.entries(options).map(([code, name]) => (
             <option key={code} value={code}>{name}</option>
           ))}
-        </select>
+        </Select>
       </label>
     )
   }
