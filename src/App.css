@@ -57,7 +57,9 @@
 .form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: 28px 48px 48px; background: var(--background); container-type: inline-size; scrollbar-color: var(--scrollbar-thumb) var(--background); }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
 .form-panel > * { max-width: 760px; margin-inline: auto; }
-.preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--surface-sunken); container-type: inline-size; }
+/* clip: if something ever gets wider than the panel, it is cut instead of spilling over the
+   splitter and widening the page */
+.preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--surface-sunken); container-type: inline-size; overflow-x: clip; }
 
 /* Its own lane, so the knob never covers the form's scrollbar; the knob is a pill that fits
    inside it. The visible 1 px line is a background in the middle of the lane, and each half
@@ -126,8 +128,9 @@
 .tool-menu.wide { left: 50%; transform: translateX(-50%); width: min(820px, calc(100cqw - 32px)); padding: 12px 14px; }
 .preview-panel.full-screen .tool-menu.wide { width: min(1100px, 92cqw); }
 
-/* Narrow preview: icons only, and every menu centred on the toolbar so it does not leave the panel */
-@container (max-width: 620px) {
+/* Narrow preview: icons only, and every menu centred on the toolbar so it does not leave the panel.
+   The width is the full toolbar with labels (~720 px with a long font name) plus some margin. */
+@container (max-width: 780px) {
   .toolbar .tool-label, .toolbar .tool > button > svg:last-child { display: none; }
   .toolbar .tool { position: static; }
   .toolbar .tool-menu, .toolbar .tool-menu.align-right { left: 50%; right: auto; transform: translateX(-50%); }
