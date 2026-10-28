@@ -46,17 +46,18 @@
 .workspace { flex: 1; display: flex; min-height: 0; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */
-.form-panel { flex: 0 1 auto; width: var(--form-share, 50%); min-width: max(360px, 25%); overflow-y: auto; padding: 28px 48px 48px; background: var(--background); container-type: inline-size; }
+/* Half the splitter's lane comes off the form, so at 50% the lane sits exactly mid-page */
+.form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: 28px 48px 48px; background: var(--background); container-type: inline-size; }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
 .form-panel > * { max-width: 760px; margin-inline: auto; }
 .preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--surface-sunken); container-type: inline-size; }
 
-/* Zero width and the line drawn by ::before, so it takes no room: the panels already add up to 100% */
-.splitter { --line: var(--border-strong); position: relative; z-index: 5; flex: none; width: 0; cursor: col-resize; touch-action: none; }
-/* 13 px wide so it is easy to grab, with the visible 1 px line in its middle */
-.splitter::before { content: ''; position: absolute; inset: 0 -6px; background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; }
-.splitter-knob { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--surface); color: var(--text-muted); box-shadow: 0 1px 4px var(--shadow); }
-.splitter-knob svg { width: 16px; height: 16px; }
+/* Its own lane, so the knob never covers the form's scrollbar; the knob is a pill that fits
+   inside it. The visible 1 px line is a background in the middle of the lane. */
+.workspace { --gutter: 18px; }
+.splitter { --line: var(--border-strong); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: var(--background) linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; cursor: col-resize; touch-action: none; }
+.splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text-muted); box-shadow: 0 1px 4px var(--shadow); }
+.splitter-knob svg { width: 14px; height: 14px; }
 .splitter:hover, .splitter.dragging { --line: var(--brand-dark); }
 .splitter:hover .splitter-knob, .splitter.dragging .splitter-knob { border-color: var(--brand-dark); color: var(--brand-dark); }
 /* No text gets selected while dragging across the form */
