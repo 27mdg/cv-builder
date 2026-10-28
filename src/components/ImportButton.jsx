@@ -3,9 +3,10 @@ import texts from '../locales/es.js'
 import initialCv from '../data/initialCv.js'
 import { readFile } from '../data/file.js'
 
-// Having chosen a template does not count as data that could be lost
+// Having chosen a template or a design does not count as data that could be lost
 function hasData(cv) {
-  return JSON.stringify({ ...cv, template: initialCv.template }) !== JSON.stringify(initialCv)
+  const onlyContent = { ...cv, template: initialCv.template, design: initialCv.design }
+  return JSON.stringify(onlyContent) !== JSON.stringify(initialCv)
 }
 
 function ImportButton({ currentCv, onImport }) {

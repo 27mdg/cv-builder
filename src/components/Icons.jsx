@@ -37,6 +37,10 @@ export function PlusIcon() {
   return <Icon><path d="M12 5v14M5 12h14"/></Icon>
 }
 
+export function TrashIcon() {
+  return <Icon><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></Icon>
+}
+
 export function CloseIcon() {
   return <Icon><path d="M6 6l12 12M18 6L6 18"/></Icon>
 }

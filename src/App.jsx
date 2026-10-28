@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import './App.css'
 import { loadCv, saveCv } from './data/storage.js'
 import { baseName } from './data/file.js'
+import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
@@ -9,6 +10,7 @@ import sections from './data/sections.js'
 import Section from './components/form/Section.jsx'
 import ListSection from './components/form/ListSection.jsx'
 import DownloadButton from './components/DownloadButton.jsx'
+import ClearButton from './components/ClearButton.jsx'
 import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
@@ -59,6 +61,11 @@ function App() {
     }))
   }
 
+  // Only what the user typed is cleared; the chosen template and design are not personal data
+  function clearCv() {
+    setCv((previous) => ({ ...initialCv, template: previous.template, design: previous.design }))
+  }
+
   return (
     <div className="app">
       <header className="topbar">
@@ -73,6 +80,7 @@ function App() {
           onChange={(e) => changeSection('fileName', e.target.value)}
         />
         <div className="actions">
+          <ClearButton onClear={clearCv}/>
           <ImportButton currentCv={cv} onImport={setCv}/>
           <ExportButton cv={cv}/>
           <DownloadButton cv={cv}/>

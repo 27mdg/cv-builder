@@ -186,6 +186,14 @@ const es = {
     errorInvalid: 'Este archivo no es un CV de CV Gratis.',
     errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',
   },
+  clear: {
+    button: 'Borrar todos los datos',
+    tooltip: 'Vacía todo el formulario y borra tu CV de este navegador. No se puede deshacer.',
+    title: '¿Borrar todos los datos?',
+    message: 'Se vaciará todo el formulario, foto incluida, y tu CV dejará de estar guardado en este navegador. Si quieres conservar una copia, usa antes «Exportar».',
+    cancel: 'Cancelar',
+    confirm: 'Sí, borrar todo',
+  },
   storage: {
     notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
   },
