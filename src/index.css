@@ -18,7 +18,7 @@
   --brand-dark: #4F6F55;
   --brand-light: #E6EEE7;
 
-  /* Terracotta only on the main button. White text needs the deeper tone (5.3:1);
+  /* Terracotta only on Download and the confirm button of dialogs. White text needs the deeper tone (5.3:1);
      on the base #D9825B it would be 2.9:1. */
   --accent: #D9825B;
   --accent-strong: #A9532F;
@@ -26,8 +26,6 @@
   --text-on-accent: #FFFFFF;
 
   --danger: #B3261E;
-  --danger-hover: #96201A;
-  --text-on-danger: #FFFFFF;
   --shadow: rgba(43, 38, 34, 0.10);
   --overlay: rgba(43, 38, 34, 0.45);
   /* Warm grey, 3:1 against the page so the scrollbar is easy to spot */
