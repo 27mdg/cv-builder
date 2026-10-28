@@ -18,6 +18,9 @@
 /* The little arrow pointing up at the button: a rotated white square half hidden behind the box */
 .tooltip::before { content: ''; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; background: white; transform: translateX(-50%) rotate(45deg); box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.06); }
 .has-tooltip:hover .tooltip, .has-tooltip:focus-within .tooltip { opacity: 1; visibility: visible; }
+/* For the last button: a centred bubble would go off the right edge of the screen */
+.tooltip.align-right { left: auto; right: 0; transform: none; }
+.tooltip.align-right::before { left: auto; right: 44px; transform: rotate(45deg); }
 
 /* margin: auto centres it; index.css sets margin: 0 on everything, which would pin it top left */
 .confirm-dialog { margin: auto; width: min(420px, calc(100vw - 32px)); padding: 24px; border: none; border-radius: 10px; color: #222; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }

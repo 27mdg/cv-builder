@@ -2,13 +2,14 @@ import { useState } from 'react'
 import texts from '../locales/es.js'
 import { TrashIcon } from './Icons.jsx'
 import ConfirmDialog from './ConfirmDialog.jsx'
+import Tooltip from './Tooltip.jsx'
 
 function ClearButton({ onClear }) {
   const [confirming, setConfirming] = useState(false)
 
   return (
     <>
-      <span className="has-tooltip">
+      <Tooltip id="clear-tooltip" text={texts.clear.tooltip}>
         <button
           type="button"
           className="secondary-button icon-button"
@@ -18,8 +19,7 @@ function ClearButton({ onClear }) {
         >
           <TrashIcon/>
         </button>
-        <span className="tooltip" id="clear-tooltip" role="tooltip">{texts.clear.tooltip}</span>
-      </span>
+      </Tooltip>
 
       <ConfirmDialog
         open={confirming}

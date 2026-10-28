@@ -137,6 +137,7 @@ const es = {
     generating: 'Generando PDF…',
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     fileName: 'CV',
+    tooltip: 'Descarga tu CV en PDF, listo para enviar.',
   },
   tools: {
     templates: 'Plantillas',
@@ -181,7 +182,9 @@ const es = {
   file: {
     name: 'Nombre del archivo',
     import: 'Importar',
+    importTooltip: 'Abre un archivo que exportaste antes y continúa tu CV justo donde lo dejaste.',
     export: 'Exportar',
+    exportTooltip: 'Guarda en tu equipo un archivo con todo lo que has rellenado hasta ahora. Con «Importar» podrás seguir más tarde, también en otro ordenador.',
     confirmImport: 'Se sustituirá el CV actual por el del archivo. ¿Continuar?',
     errorInvalid: 'Este archivo no es un CV de CV Gratis.',
     errorVersion: 'Este archivo es de una versión de CV Gratis que no se puede abrir.',

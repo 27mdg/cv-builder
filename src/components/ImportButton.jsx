@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import texts from '../locales/es.js'
 import initialCv from '../data/initialCv.js'
 import { readFile } from '../data/file.js'
+import Tooltip from './Tooltip.jsx'
 
 // Having chosen a template or a design does not count as data that could be lost
 function hasData(cv) {
@@ -31,9 +32,16 @@ function ImportButton({ currentCv, onImport }) {
   return (
     <div className="import">
       {error && <span className="error-message">{error}</span>}
-      <button type="button" className="secondary-button" onClick={() => picker.current.click()}>
-        {texts.file.import}
-      </button>
+      <Tooltip id="import-tooltip" text={texts.file.importTooltip}>
+        <button
+          type="button"
+          className="secondary-button"
+          aria-describedby="import-tooltip"
+          onClick={() => picker.current.click()}
+        >
+          {texts.file.import}
+        </button>
+      </Tooltip>
       <input ref={picker} type="file" accept=".json,application/json" hidden onChange={handleChange}/>
     </div>
   )
