@@ -4,10 +4,10 @@
 // defaultColor: an id from `colors` and defaultFont: an id from `fonts` (src/data/design.js).
 const templates = [
   { id: 'arch', defaultColor: 'taupe', defaultFont: 'arimo' },
-  { id: 'banner', defaultColor: 'navy', defaultFont: 'poppins' },
-  { id: 'timeline', defaultColor: 'slate', defaultFont: 'montserrat' },
+  { id: 'banner', defaultColor: 'forest', defaultFont: 'poppins' },
+  { id: 'timeline', defaultColor: 'forest', defaultFont: 'montserrat' },
   { id: 'contrast', defaultColor: 'black', defaultFont: 'raleway' },
-  { id: 'minimal', defaultColor: 'midnight', defaultFont: 'raleway' },
+  { id: 'minimal', defaultColor: 'forest', defaultFont: 'raleway' },
 ]
 
 export function templateInfo(id) {

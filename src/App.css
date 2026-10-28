@@ -1,148 +1,165 @@
 .app { height: 100vh; display: flex; flex-direction: column; }
-.topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 8px 16px; background: #222; color: white; }
-.logo { justify-self: start; color: white; font-weight: bold; text-decoration: none; }
-.file-name { width: 280px; padding: 6px 10px; border: 1px solid #555; border-radius: 4px; background: #333; color: white; font: inherit; text-align: center; }
-.file-name::placeholder { color: #aaa; }
-.actions { justify-self: end; display: flex; align-items: center; gap: 8px; }
+.topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--brand-dark); text-decoration: none; }
+.file-name { width: 280px; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; text-align: center; }
+.file-name::placeholder { color: var(--text-muted); }
+.actions { justify-self: end; display: flex; align-items: center; gap: 10px; }
 .import { display: flex; align-items: center; gap: 8px; }
-.error-message { color: #ffb4a9; font-size: 14px; }
-.secondary-button { padding: 8px 16px; border: 1px solid #888; border-radius: 4px; background: transparent; color: white; font: inherit; cursor: pointer; }
+.error-message, .download-error { color: var(--danger); font-size: 14px; }
+.secondary-button { padding: 8px 18px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+.secondary-button:hover { border-color: var(--brand-dark); background: var(--background); }
 /* Same height for every top bar button: the icon-only one would otherwise be shorter than text */
-.actions .secondary-button, .download button { height: 38px; }
-.icon-button { display: flex; align-items: center; justify-content: center; width: 38px; padding: 0; }
-.icon-button:hover { background: #3a3a3a; }
+.actions .secondary-button, .download button { height: 40px; }
+.icon-button { display: flex; align-items: center; justify-content: center; width: 40px; padding: 0; }
 
 /* Shown on hover and also on keyboard focus, so it is not mouse-only */
 .has-tooltip { position: relative; display: flex; }
-.tooltip { position: absolute; top: calc(100% + 12px); left: 50%; z-index: 200; width: 240px; padding: 10px 12px; border-radius: 6px; background: white; color: #222; font-size: 14px; line-height: 1.4; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); transform: translateX(-50%); opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none; }
-/* The little arrow pointing up at the button: a rotated white square half hidden behind the box */
-.tooltip::before { content: ''; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; background: white; transform: translateX(-50%) rotate(45deg); box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.06); }
+.tooltip { position: absolute; top: calc(100% + 12px); left: 50%; z-index: 200; width: 240px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; font-weight: 400; line-height: 1.45; box-shadow: 0 6px 20px var(--shadow); transform: translateX(-50%); opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none; }
+/* The little arrow pointing up at the button: a rotated square half hidden behind the box,
+   with only its two outer sides bordered so it joins the box's border */
+.tooltip::before { content: ''; position: absolute; top: -7px; left: 50%; width: 12px; height: 12px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); background: var(--surface); transform: translateX(-50%) rotate(45deg); }
 .has-tooltip:hover .tooltip, .has-tooltip:focus-within .tooltip { opacity: 1; visibility: visible; }
 /* For the last button: a centred bubble would go off the right edge of the screen */
 .tooltip.align-right { left: auto; right: 0; transform: none; }
 .tooltip.align-right::before { left: auto; right: 44px; transform: rotate(45deg); }
 
 /* margin: auto centres it; index.css sets margin: 0 on everything, which would pin it top left */
-.confirm-dialog { margin: auto; width: min(420px, calc(100vw - 32px)); padding: 24px; border: none; border-radius: 10px; color: #222; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }
-.confirm-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
-.confirm-dialog h2 { margin-bottom: 10px; font-size: 20px; }
-.confirm-dialog p { line-height: 1.5; color: #444; }
-.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-.confirm-actions button { padding: 9px 16px; border-radius: 6px; font: inherit; cursor: pointer; }
-.cancel-button { border: 1px solid #c9ced4; background: white; color: #222; }
-.cancel-button:hover { background: #f2f3f5; }
-.danger-button { border: none; background: #c0392b; color: white; font-weight: 600; }
-.danger-button:hover { background: #a93226; }
+.confirm-dialog { margin: auto; width: min(440px, calc(100vw - 32px)); padding: 28px; border: none; border-radius: var(--radius); background: var(--surface); color: var(--text); box-shadow: 0 16px 48px var(--shadow); }
+.confirm-dialog::backdrop { background: var(--overlay); }
+.confirm-dialog h2 { margin-bottom: 12px; font-size: 22px; }
+.confirm-dialog p { line-height: 1.55; color: var(--text-muted); }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+.confirm-actions button { padding: 10px 18px; border-radius: var(--radius); font: inherit; font-weight: 600; cursor: pointer; }
+.cancel-button { border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); }
+.cancel-button:hover { border-color: var(--brand-dark); background: var(--background); }
+.danger-button { border: none; background: var(--danger); color: var(--text-on-danger); }
+.danger-button:hover { background: var(--danger-hover); }
 
-.notice { margin: 0 0 12px; font-size: 14px; color: #555; }
+.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 8px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; }
+.notice svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--brand-dark); }
 .download { display: flex; align-items: center; gap: 12px; }
-.download button { padding: 8px 16px; border: none; border-radius: 4px; background: #1f4e79; color: white; font: inherit; cursor: pointer; }
+/* The only coloured button: terracotta marks the main action */
+.download button { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border: none; border-radius: var(--radius); background: var(--accent-strong); color: var(--text-on-accent); font: inherit; font-weight: 600; cursor: pointer; }
+.download button svg { width: 18px; height: 18px; }
+.download button:hover:not(:disabled) { background: var(--accent-strong-hover); }
 .download button:disabled { opacity: 0.6; cursor: wait; }
-.download-error { color: #ffb4a9; font-size: 14px; }
 .workspace { flex: 1; display: flex; min-height: 0; }
-.form-panel { width: 50%; overflow-y: auto; padding: 16px 32px 32px; background: white; }
-.preview-panel { position: relative; width: 50%; background: #e9ebee; }
+.form-panel { width: 50%; overflow-y: auto; padding: 28px 48px 48px; background: var(--background); }
+.preview-panel { position: relative; width: 50%; background: var(--surface-sunken); }
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
-.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: 24px 24px 96px; }
-.pdf-page { display: block; margin: 0 auto 24px; background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
-.loading { padding: 16px; color: #555; }
+.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: 32px 32px 104px; }
+.pdf-page { display: block; margin: 0 auto 28px; background: var(--surface); box-shadow: 0 2px 12px var(--shadow); }
+.loading { padding: 16px; color: var(--text-muted); }
 .preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; }
 
-.toolbar { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; align-items: center; gap: 2px; padding: 6px; background: white; border-radius: 10px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); white-space: nowrap; }
+.toolbar { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 8px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); box-shadow: 0 4px 16px var(--shadow); white-space: nowrap; }
 .tool { position: relative; }
-.toolbar button { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border: none; border-radius: 6px; background: transparent; color: #222; font: inherit; cursor: pointer; }
-.toolbar button:hover:not(:disabled) { background: #eef0f3; }
-.toolbar button:disabled { color: #aaa; cursor: not-allowed; }
+.toolbar button { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: none; border-radius: var(--radius); background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+.toolbar button:hover:not(:disabled) { background: var(--background); }
+.toolbar button:disabled { color: var(--text-muted); cursor: not-allowed; }
 .full-screen-button { margin-left: 8px; }
-.tool-menu { position: absolute; left: 0; bottom: calc(100% + 10px); min-width: 180px; padding: 6px; background: white; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); }
+.tool-menu { position: absolute; left: 0; bottom: calc(100% + 12px); min-width: 180px; padding: 8px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); box-shadow: 0 4px 16px var(--shadow); }
 .tool-menu.align-right { left: auto; right: 0; }
 .tool-menu button { width: 100%; }
-.tool-menu button.selected { font-weight: bold; background: #eef0f3; }
+.tool-menu button.selected { font-weight: 600; background: var(--brand-light); }
 .design-menu { width: 260px; max-height: 60vh; overflow-y: auto; padding: 6px; white-space: normal; }
-.menu-subtitle, .slider-title { display: block; margin: 8px 4px 4px; font-size: 12px; font-weight: bold; color: #555; text-transform: uppercase; }
-.slider { display: block; margin-bottom: 8px; }
+.menu-subtitle, .slider-title { display: block; margin: 10px 4px 4px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+.slider { display: block; margin-bottom: 10px; }
 .slider-row { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
-.slider-row input { flex: 1; accent-color: #1f4e79; }
+.slider-row input { flex: 1; accent-color: var(--brand-dark); }
 .slider-value { min-width: 32px; text-align: right; }
 .font-list button { justify-content: flex-start; text-align: left; }
 .font-list button.selected::before { content: '✓'; margin-right: 6px; }
 .color-menu { display: flex; flex-wrap: wrap; gap: 10px; width: 236px; padding: 8px; }
-.tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 0 1px #c9ced4; cursor: pointer; }
-.tool-menu .swatch.selected { box-shadow: 0 0 0 2px #222; }
+.tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: 3px solid var(--surface); border-radius: 50%; box-shadow: 0 0 0 1px var(--border-strong); cursor: pointer; }
+.tool-menu .swatch.selected { box-shadow: 0 0 0 2px var(--text); }
 
 /* Positioned against the whole toolbar instead of its own button */
 .tool.wide { position: static; }
-.tool-menu.wide { left: 50%; transform: translateX(-50%); width: min(820px, 46vw); padding: 10px 12px; }
+.tool-menu.wide { left: 50%; transform: translateX(-50%); width: min(820px, 46vw); padding: 12px 14px; }
 .preview-panel.full-screen .tool-menu.wide { width: min(1100px, 92vw); }
 .template-picker { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
-.toolbar .template-card { flex: 0 0 auto; flex-direction: column; gap: 8px; width: auto; padding: 6px; scroll-snap-align: start; font-weight: normal; }
-.toolbar .template-card.selected { background: #eef0f3; font-weight: bold; }
-.template-thumbnail { display: block; width: 150px; aspect-ratio: 210 / 297; overflow: hidden; border: 2px solid #dde1e6; border-radius: 6px; background: #f2f3f5; }
-.template-card.selected .template-thumbnail { border-color: #1f4e79; }
+.toolbar .template-card { flex: 0 0 auto; flex-direction: column; gap: 8px; width: auto; padding: 8px; scroll-snap-align: start; font-weight: 400; }
+.toolbar .template-card.selected { background: var(--brand-light); font-weight: 600; }
+.template-thumbnail { display: block; width: 150px; aspect-ratio: 210 / 297; overflow: hidden; border: 2px solid var(--border); border-radius: var(--radius); background: var(--surface-sunken); }
+.template-card.selected .template-thumbnail { border-color: var(--brand-dark); }
 .template-thumbnail img { display: block; width: 100%; height: 100%; }
+/* A rainbow, on purpose: it stands for "any colour" in the colour menu */
 .swatch-rainbow { position: relative; background: conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red); }
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-.section { border-bottom: 1px solid #e3e5e8; }
-.section > summary { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; cursor: pointer; list-style: none; }
+.section { border-bottom: 1px solid var(--border); }
+.section > summary { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section > summary h2 { flex: 1; font-size: 22px; color: #222; }
+.section > summary h2 { flex: 1; font-size: 20px; color: var(--text); }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
-.form-panel .drag-handle { display: flex; margin: 0 8px 0 -6px; padding: 4px; border: none; border-radius: 4px; background: transparent; color: #9aa0a6; cursor: grab; touch-action: none; }
-.form-panel .drag-handle:hover { background: #f2f3f5; color: #333; }
-.sortable { position: relative; background: white; }
-.sortable.dragging { z-index: 10; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); cursor: grabbing; }
+.form-panel .drag-handle { display: flex; margin: 0 8px 0 -6px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
+.form-panel .drag-handle:hover { background: var(--surface); color: var(--text); }
+.sortable { position: relative; background: var(--background); }
+.sortable.dragging { z-index: 10; border-radius: var(--radius); box-shadow: 0 10px 28px var(--shadow); cursor: grabbing; }
 .sortable.dragging .drag-handle { cursor: grabbing; }
-.form-panel .section-remove { display: flex; margin-right: 10px; padding: 6px; border: none; border-radius: 50%; background: transparent; color: #777; }
-.form-panel .section-remove:hover { background: #f2f3f5; color: #c0392b; }
+.form-panel .section-remove { display: flex; margin-right: 10px; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
+.form-panel .section-remove:hover { background: var(--surface); color: var(--danger); }
 .section-remove svg { width: 18px; height: 18px; }
-.extra-sections { padding: 24px 0 8px; }
-.extra-sections-title { font-size: 14px; font-weight: 600; color: #555; }
-.section-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid #9aa0a6; border-radius: 50%; color: #333; transition: transform 0.2s; }
+.extra-sections { padding: 28px 0 8px; }
+.extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+.section-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }
 .section[open] .section-arrow { transform: rotate(180deg); }
-.section > summary:hover .section-arrow { background: #f2f3f5; }
-.section-content { padding-bottom: 28px; }
+.section > summary:hover .section-arrow { background: var(--surface); }
+.section-content { padding-bottom: 32px; }
 
-.form-panel label, .form-panel .label, .date-field > span { display: block; font-size: 14px; font-weight: 600; color: #333; }
-.form-panel label { margin-bottom: 12px; }
+.form-panel label, .form-panel .label, .date-field > span { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+.form-panel label { margin-bottom: 16px; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
-  display: block; width: 100%; margin-top: 6px; padding: 11px 13px; border: 1px solid transparent; border-radius: 4px;
-  background: #f2f3f5; color: #222; font: inherit; font-size: 16px; font-weight: normal;
+  display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 16px; font-weight: 400;
 }
-.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: none; border-color: #4a8ee0; background: #eaf2fd; }
-.form-panel input::placeholder, .form-panel textarea::placeholder { color: #999; }
+/* Fields show the ring on any focus, not just keyboard focus: it tells where you are typing */
+.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); }
+.form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
+.form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
-.form-panel button { padding: 6px 12px; font: inherit; cursor: pointer; }
+.form-panel button { padding: 8px 14px; border-radius: var(--radius); font: inherit; cursor: pointer; }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
 .field { position: relative; }
 .field-full { grid-column: 1 / -1; }
-.form-panel .field-remove { position: absolute; top: -3px; right: 0; display: flex; padding: 2px; border: none; border-radius: 4px; background: transparent; color: #777; }
-.form-panel .field-remove:hover { background: #f2f3f5; color: #222; }
+.form-panel .field-remove { position: absolute; top: -3px; right: 0; display: flex; padding: 2px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
+.form-panel .field-remove:hover { background: var(--background); color: var(--text); }
 .field-remove svg { width: 16px; height: 16px; }
-.custom-field { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 12px; }
+.custom-field { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 16px; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }
 
-.personal-header { display: grid; grid-template-columns: 128px 1fr; gap: 16px; }
+.personal-header { display: grid; grid-template-columns: 128px 1fr; gap: 20px; }
 .photo-field { position: relative; }
-.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border-radius: 4px; background: #f2f3f5; color: #9aa0a6; cursor: pointer; }
-.photo-box:hover { background: #e6e8eb; }
+.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text-muted); cursor: pointer; }
+.photo-box:hover { border-color: var(--brand-dark); }
+.photo-box:focus-within { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
 .photo-box svg { width: 48px; height: 48px; }
 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-.photo-box input { display: none; }
-.form-panel .photo-remove { position: absolute; top: 30px; right: 6px; display: flex; padding: 4px; border: none; border-radius: 50%; background: white; color: #333; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); }
+/* Visually hidden but still reachable with the keyboard (display: none would remove it) */
+.photo-box input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.form-panel .photo-remove { position: absolute; top: 30px; right: 6px; display: flex; padding: 4px; border: none; border-radius: 50%; background: var(--surface); color: var(--text); box-shadow: 0 1px 4px var(--shadow); }
 .photo-remove svg { width: 14px; height: 14px; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid #9aa0a6; border-radius: 999px; background: white; color: #333; font-size: 15px; font-weight: 500; }
-.form-panel .chip:hover { background: #f2f3f5; }
-.chip svg { width: 16px; height: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text); font-size: 15px; font-weight: 400; }
+.form-panel .chip:hover { border-color: var(--brand-dark); }
+.chip svg { width: 16px; height: 16px; color: var(--brand-dark); }
 
 /* Temporary: the list sections still need a redesign */
-.item { border: 1px solid #e3e5e8; border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+.item { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
 .form-panel .date-field select { display: inline-block; width: auto; margin-right: 8px; }
-.date-field { margin-bottom: 12px; }
-.form-panel .current { display: inline-flex; align-items: center; gap: 4px; margin: 0; font-weight: normal; }
+.date-field { margin-bottom: 16px; }
+.form-panel .current { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-weight: 400; }
+
+/* Small screens: the real mobile layout is a separate task; this keeps the top bar usable */
+@media (max-width: 760px) {
+  .topbar { grid-template-columns: 1fr; justify-items: start; padding: 12px 16px; }
+  .file-name { width: 100%; }
+  .actions { justify-self: stretch; flex-wrap: wrap; }
+  .tooltip { display: none; }
+}

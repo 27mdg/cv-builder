@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import texts from '../locales/es.js'
 import Tooltip from './Tooltip.jsx'
+import { DownloadIcon } from './Icons.jsx'
 
 function DownloadButton({ cv }) {
   const [generating, setGenerating] = useState(false)
@@ -25,6 +26,7 @@ function DownloadButton({ cv }) {
       {error && <span className="download-error">{texts.download.error}</span>}
       <Tooltip id="download-tooltip" text={texts.download.tooltip} alignRight>
         <button type="button" aria-describedby="download-tooltip" onClick={download} disabled={generating}>
+          {!generating && <DownloadIcon/>}
           {generating ? texts.download.generating : texts.download.button}
         </button>
       </Tooltip>

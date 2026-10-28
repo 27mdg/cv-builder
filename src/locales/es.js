@@ -158,6 +158,7 @@ const es = {
   },
   // The ids must match `colors` in src/data/design.js
   colorNames: {
+    forest: 'Verde bosque',
     navy: 'Azul marino',
     midnight: 'Azul noche',
     slate: 'Pizarra',

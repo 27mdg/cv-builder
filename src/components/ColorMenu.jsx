@@ -26,7 +26,7 @@ function ColorMenu({ design, defaultColor, onChange }) {
         <input
           type="color"
           aria-label={texts.colorNames.custom}
-          value={design.customColor || '#1f4e79'}
+          value={design.customColor || '#3F5B4C'}
           onChange={(e) => {
             onChange('customColor', e.target.value)
             onChange('color', 'custom')

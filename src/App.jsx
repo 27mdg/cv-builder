@@ -17,7 +17,7 @@ import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
 import ConfirmDialog from './components/ConfirmDialog.jsx'
-import { PlusIcon } from './components/Icons.jsx'
+import { LockIcon, PlusIcon } from './components/Icons.jsx'
 
 // The preview is loaded separately (lazy) because the PDF library is heavy:
 // the form shows up instantly and the PDF a moment later.
@@ -150,7 +150,7 @@ function App() {
       </header>
       <main className="workspace">
         <section className="form-panel">
-          <p className="notice">{texts.storage.notice}</p>
+          <p className="notice"><LockIcon/><span>{texts.storage.notice}</span></p>
           <Section title={texts.personal.title} open>
             <PersonalDetails data={cv.personal} onChange={changePersonal}/>
           </Section>

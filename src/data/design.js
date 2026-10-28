@@ -40,6 +40,7 @@ export const lineHeight = { min: 1, max: 2, step: 0.05 }
 
 // One accent colour per option; each template derives the tones it needs from it
 export const colors = [
+  { id: 'forest', value: '#3F5B4C' },
   { id: 'navy', value: '#233a5c' },
   { id: 'midnight', value: '#0b2545' },
   { id: 'slate', value: '#2b4466' },
