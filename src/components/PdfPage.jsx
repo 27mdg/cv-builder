@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-// width: shown size (CSS). drawWidth: the size it is drawn at, which catches up after resizing.
-function PdfPage({ pdfDocument, number, width, drawWidth }) {
+// The shown size comes from CSS (.pdf-page), so it is right at once when the panel changes size,
+// which the full-screen animation needs. drawWidth: the size it is drawn at, which catches up later.
+function PdfPage({ pdfDocument, number, drawWidth }) {
   const canvas = useRef(null)
 
   useEffect(() => {
@@ -36,7 +37,8 @@ function PdfPage({ pdfDocument, number, width, drawWidth }) {
     }
   }, [pdfDocument, number, drawWidth])
 
-  return <canvas ref={canvas} className="pdf-page" style={{ width }}/>
+  // Each page gets its own name so the full-screen animation can move it on its own
+  return <canvas ref={canvas} className="pdf-page" style={{ viewTransitionName: `pdf-page-${number}` }}/>
 }
 
 export default PdfPage

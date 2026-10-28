@@ -10,7 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 
 // In ms. Generating the PDF is costly: it is not done on every keystroke, only after typing stops.
 const delay = 500
-// So pages do not look huge on large screens
+// So pages do not look huge on large screens. Same as the max-width of .pdf-page in App.css.
 const maxWidth = 800
 
 // Drawn with pdf.js on <canvas> instead of the browser's PDF viewer,
@@ -75,7 +75,7 @@ function Preview({ cv }) {
     <div className="preview" ref={container}>
       {!pdfDocument && <p className="loading">{texts.preview.loading}</p>}
       {drawWidth > 0 && pages.map((number) => (
-        <PdfPage key={number} pdfDocument={pdfDocument} number={number} width={width} drawWidth={drawWidth}/>
+        <PdfPage key={number} pdfDocument={pdfDocument} number={number} drawWidth={drawWidth}/>
       ))}
     </div>
   )

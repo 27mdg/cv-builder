@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import './App.css'
 import { loadCv, saveCv } from './data/storage.js'
 import { baseName } from './data/file.js'
@@ -24,6 +25,18 @@ import { LockIcon, PlusIcon } from './components/Icons.jsx'
 // the form shows up instantly and the PDF a moment later.
 const Preview = lazy(() => import('./components/Preview.jsx'))
 
+// The browser animates from a snapshot of the page before to the page after (for full screen:
+// pages and toolbar glide, the form fades out). flushSync: React must finish the change inside
+// the callback, or the "after" snapshot would still be the old page. Without support it just switches.
+function withTransition(update) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!document.startViewTransition || reducedMotion) {
+    update()
+    return
+  }
+  document.startViewTransition(() => flushSync(update))
+}
+
 function App() {
   const [cv, setCv] = useState(loadCv)
 
@@ -38,10 +51,14 @@ function App() {
   const [addedSections, setAddedSections] = useState([])
   const [removingSection, setRemovingSection] = useState(null)
 
+  function changeFullScreen(value) {
+    withTransition(() => setFullScreen(value))
+  }
+
   useEffect(() => {
     if (!fullScreen) return
     function handleKeyDown(e) {
-      if (e.key === 'Escape') setFullScreen(false)
+      if (e.key === 'Escape') withTransition(() => setFullScreen(false))
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -199,7 +216,7 @@ function App() {
             design={cv.design}
             onDesignChange={changeDesign}
             fullScreen={fullScreen}
-            onFullScreenChange={setFullScreen}
+            onFullScreenChange={changeFullScreen}
           />
         </section>
       </main>
