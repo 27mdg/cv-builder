@@ -46,10 +46,10 @@
 .workspace { flex: 1; display: flex; min-height: 0; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */
-.form-panel { flex: none; width: var(--form-share, 50%); min-width: 360px; overflow-y: auto; padding: 28px 48px 48px; background: var(--background); container-type: inline-size; }
+.form-panel { flex: none; width: var(--form-share, 50%); min-width: max(360px, 25%); overflow-y: auto; padding: 28px 48px 48px; background: var(--background); container-type: inline-size; }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
 .form-panel > * { max-width: 760px; margin-inline: auto; }
-.preview-panel { position: relative; flex: 1; min-width: 360px; background: var(--surface-sunken); container-type: inline-size; }
+.preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--surface-sunken); container-type: inline-size; }
 
 /* Zero width, so it takes no room from the panels; ::before widens the area that can be grabbed */
 .splitter { position: relative; z-index: 5; flex: none; width: 0; border-left: 1px solid var(--border-strong); cursor: col-resize; touch-action: none; }

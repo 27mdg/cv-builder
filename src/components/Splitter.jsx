@@ -4,7 +4,8 @@ import { ResizeIcon } from './Icons.jsx'
 
 // Separate from the CV: it is a screen preference, so it is neither exported nor cleared
 const storageKey = 'cv-gratis-split'
-// In px: neither side may get narrower than this
+// Neither side may get narrower than the larger of these: the % on big screens, the px on small ones
+const minShare = 25
 const minWidth = 360
 // In px: this close to the middle, the bar sticks to it
 const snapDistance = 24
@@ -39,8 +40,8 @@ function Splitter() {
   }, [share])
 
   function limits() {
-    const width = bar.current.parentElement.getBoundingClientRect().width
-    return { width, min: (minWidth / width) * 100, max: 100 - (minWidth / width) * 100 }
+    const min = Math.max(minShare, (minWidth / bar.current.parentElement.getBoundingClientRect().width) * 100)
+    return { min, max: 100 - min }
   }
 
   function clamp(value, { min, max }) {
