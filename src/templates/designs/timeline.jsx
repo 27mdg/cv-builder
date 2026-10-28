@@ -147,7 +147,7 @@ function Section({ s, v, id, title, titleWidth, first, children }) {
   return (
     <View style={first ? [s.section, s.firstSection] : s.section}>
       {/* The bar and its title move together, and never stay alone at the bottom of a page */}
-      <View style={s.sectionHead} wrap={false} minPresenceAhead={40}>
+      <View style={s.sectionHead} wrap={false} minPresenceAhead={90}>
         <View style={s.sectionTitleBox}>
           <Gradient width={titleWidth} height={barHeight} from={v.accentDark} to={v.accent} id={`bar-${id}`}/>
         </View>

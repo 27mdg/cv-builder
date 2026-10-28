@@ -125,7 +125,7 @@ function Section({ s, title, children }) {
   return (
     <View style={s.section}>
       {/* minPresenceAhead: keeps the title from being left alone at the bottom of a page */}
-      <Text style={s.sectionTitle} minPresenceAhead={40}>{title}</Text>
+      <Text style={s.sectionTitle} minPresenceAhead={90}>{title}</Text>
       {children}
     </View>
   )

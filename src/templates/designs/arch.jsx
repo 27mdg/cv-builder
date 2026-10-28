@@ -89,7 +89,7 @@ function Section({ s, title, first, children }) {
   return (
     <View style={first ? [s.section, s.firstSection] : s.section}>
       {/* The rule and the title move together, and never stay alone at the bottom of a page */}
-      <View style={s.sectionHead} wrap={false} minPresenceAhead={40}>
+      <View style={s.sectionHead} wrap={false} minPresenceAhead={90}>
         <Text style={s.sectionTitle}>{title}</Text>
       </View>
       {children}

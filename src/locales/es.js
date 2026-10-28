@@ -175,6 +175,7 @@ const es = {
     arch: 'Arco',
     banner: 'Franja',
     timeline: 'Trayectoria',
+    contrast: 'Contraste',
   },
   file: {
     name: 'Nombre del archivo',
