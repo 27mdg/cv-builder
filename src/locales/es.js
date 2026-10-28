@@ -173,6 +173,7 @@ const es = {
   // Only template names: the ids must match src/templates/list.js
   templates: {
     arch: 'Arco',
+    banner: 'Franja',
   },
   file: {
     name: 'Nombre del archivo',

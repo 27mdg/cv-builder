@@ -27,3 +27,7 @@ for (const font of fonts) {
     ],
   })
 }
+
+// react-pdf hyphenates with English rules ("planifi-cación"), which looks wrong in Spanish
+// and makes ATS read broken words. Lines break only between words.
+Font.registerHyphenationCallback((word) => [word])

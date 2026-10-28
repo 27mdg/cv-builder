@@ -4,6 +4,7 @@
 // defaultColor: an id from `colors` and defaultFont: an id from `fonts` (src/data/design.js).
 const templates = [
   { id: 'arch', defaultColor: 'taupe', defaultFont: 'arimo' },
+  { id: 'banner', defaultColor: 'navy', defaultFont: 'poppins' },
 ]
 
 export function templateInfo(id) {
