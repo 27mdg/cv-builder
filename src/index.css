@@ -30,10 +30,8 @@
   --text-on-danger: #FFFFFF;
   --shadow: rgba(43, 38, 34, 0.10);
   --overlay: rgba(43, 38, 34, 0.45);
-  /* Warm grey, 3:1 against the page so the scrollbar is easy to spot */
-  --scrollbar-thumb: #938D84;
-  /* Darker and less warm for the grey preview background, where a light one looks faded (5.8:1) */
-  --scrollbar-thumb-dark: #5C5853;
+  /* Dark and barely warm: lighter greys looked faded on the grey preview background */
+  --scrollbar-thumb: #5C5853;
   /* Shape of the dropdown arrow, used as a mask: its colour comes from App.css */
   --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
 
