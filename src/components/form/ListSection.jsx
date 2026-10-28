@@ -1,5 +1,6 @@
 import texts from '../../locales/es.js'
 import DateField from './DateField.jsx'
+import { PlusIcon } from '../Icons.jsx'
 
 function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
@@ -110,10 +111,10 @@ function ListSection({ sectionKey, fields, list, onChange }) {
               onChange={(name, value) => change(item.id, name, value)}
             />
           ))}
-          <button type="button" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+          <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
         </div>
       ))}
-      <button type="button" onClick={add}>{texts[sectionKey].add}</button>
+      <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
     </>
   )
 }
