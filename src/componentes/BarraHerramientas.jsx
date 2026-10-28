@@ -10,14 +10,6 @@ import {
   IconoPantallaCompleta, IconoSalirPantallaCompleta,
 } from './Iconos.jsx'
 
-// Barra flotante abajo de la vista previa: Plantillas, Fuente, Espaciado, Colores
-// y Pantalla completa. Las que aún no funcionan llevan `desactivada` ("Próximamente").
-// plantilla: id de la plantilla elegida
-// alCambiarPlantilla: función que recibe el id de la nueva plantilla
-// diseno: cv.diseno (fuente, tamaño, espaciado, colores)
-// alCambiarDiseno: función que recibe (campo, valor), p. ej. ('fuente', 'lato')
-// pantallaCompleta: true si la vista previa ocupa toda la ventana
-// alCambiarPantallaCompleta: función que recibe true / false
 function BarraHerramientas({
   plantilla, alCambiarPlantilla, diseno, alCambiarDiseno, pantallaCompleta, alCambiarPantallaCompleta,
 }) {
@@ -39,7 +31,6 @@ function BarraHerramientas({
           </button>
         ))}
       </MenuHerramienta>
-      {/* El botón muestra el nombre de la fuente elegida, p. ej. "Lato" */}
       <MenuHerramienta icono={<IconoFuente/>} texto={fuenteDe(diseno).nombre}>
         {() => <MenuFuente diseno={diseno} alCambiar={alCambiarDiseno}/>}
       </MenuHerramienta>

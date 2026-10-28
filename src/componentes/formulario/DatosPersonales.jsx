@@ -3,10 +3,7 @@ import textos from '../../idiomas/es.js'
 import CampoFoto from './CampoFoto.jsx'
 import { IconoCerrar, IconoMas } from '../Iconos.jsx'
 
-// Campos que siempre se ven, en orden. El texto de cada etiqueta sale de textos.personal
-// tipo: el tipo del <input> ('date' muestra un calendario)
-// completo: si es true, ocupa las dos columnas de la rejilla
-// (nombre, apellidos y puesto van aparte, junto a la foto)
+// `completo`: ocupa las dos columnas de la rejilla
 const campos = [
   { nombre: 'email', tipo: 'email' },
   { nombre: 'telefono', tipo: 'tel' },
@@ -16,7 +13,7 @@ const campos = [
   { nombre: 'fechaNacimiento', tipo: 'date', completo: true },
 ]
 
-// Campos que se usan menos: empiezan escondidos y se abren con su botón "+"
+// Poco usados: escondidos tras un botón "+" para no alargar el formulario
 const camposExtra = [
   { nombre: 'lugarNacimiento', tipo: 'text' },
   { nombre: 'carne', tipo: 'text' },
@@ -27,8 +24,6 @@ const camposExtra = [
   { nombre: 'linkedin', tipo: 'text' },
 ]
 
-// Un campo de una línea con su etiqueta encima
-// enfocar: si es true, el cursor se pone en él al aparecer
 function Campo({ campo, datos, alCambiar, enfocar, children }) {
   return (
     <div className={campo.completo ? 'campo campo-completo' : 'campo'}>
@@ -46,7 +41,6 @@ function Campo({ campo, datos, alCambiar, enfocar, children }) {
   )
 }
 
-// Botón "×" de la esquina de un campo extra
 function BotonQuitar({ alPulsar }) {
   return (
     <button type="button" className="campo-quitar" title={textos.comun.quitar}
@@ -56,13 +50,11 @@ function BotonQuitar({ alPulsar }) {
   )
 }
 
-// datos: el objeto cv.personal
-// alCambiar: función que recibe (campo, valor)
 function DatosPersonales({ datos, alCambiar }) {
-  // Campos extra que el usuario ha abierto con su botón "+" (aunque sigan vacíos).
-  // Los que tienen algo escrito se ven siempre, también al volver a abrir la web.
+  // Solo los abiertos y aún vacíos: los que tienen algo se ven siempre (ver `visibles`),
+  // así no hace falta guardar esto en el CV
   const [abiertos, setAbiertos] = useState([])
-  // id del último campo personalizado añadido, para poner el cursor en él
+  // Para poner el cursor en el campo personalizado recién añadido
   const [nuevoPersonalizado, setNuevoPersonalizado] = useState(null)
 
   const visibles = camposExtra.filter((c) => datos[c.nombre] !== '' || abiertos.includes(c.nombre))
@@ -89,7 +81,6 @@ function DatosPersonales({ datos, alCambiar }) {
 
   return (
     <>
-      {/* Arriba: la foto a la izquierda y, a su lado, nombre, apellidos y puesto */}
       <div className="personal-cabecera">
         <CampoFoto valor={datos.foto} alCambiar={(foto) => alCambiar('foto', foto)}/>
         <div className="rejilla">
@@ -109,7 +100,6 @@ function DatosPersonales({ datos, alCambiar }) {
             <BotonQuitar alPulsar={() => quitarExtra(campo.nombre)}/>
           </Campo>
         ))}
-        {/* Cada campo personalizado ocupa una fila: su nombre y su valor */}
         {datos.personalizados.map((p) => (
           <div className="campo campo-completo personalizado" key={p.id}>
             <input
@@ -130,7 +120,6 @@ function DatosPersonales({ datos, alCambiar }) {
         ))}
       </div>
 
-      {/* Botones "+" de los campos que aún no se ven */}
       <div className="chips">
         {escondidos.map((campo) => (
           <button type="button" className="chip" key={campo.nombre}

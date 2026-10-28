@@ -1,8 +1,8 @@
 import textos from '../idiomas/es.js'
 import { fuentes } from '../datos/diseno.js'
 import Deslizador from './Deslizador.jsx'
-// Estilos de las fuentes (@font-face) para que cada nombre se vea con su propia letra.
-// Los archivos se sirven desde nuestra web y solo se descargan al abrir este menú.
+// Para que cada nombre de la lista se vea con su propia letra. Se sirven desde nuestra
+// web (RGPD) y el navegador solo las descarga al abrir este menú.
 import '@fontsource/arimo/400.css'
 import '@fontsource/carlito/400.css'
 import '@fontsource/cousine/400.css'
@@ -16,8 +16,6 @@ import '@fontsource/poppins/400.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/tinos/400.css'
 
-// Contenido del menú Fuente: tamaño de letra y lista de fuentes.
-// diseno: cv.diseno · alCambiar: función que recibe (campo, valor), p. ej. ('fuente', 'lato')
 function MenuFuente({ diseno, alCambiar }) {
   return (
     <div className="menu-diseno">

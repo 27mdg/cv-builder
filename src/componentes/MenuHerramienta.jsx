@@ -2,18 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import textos from '../idiomas/es.js'
 import { IconoFlecha } from './Iconos.jsx'
 
-// Una herramienta de la barra de la vista previa: un botón que abre un menú hacia arriba.
-// icono: el icono del botón
-// texto: el nombre de la herramienta
-// desactivada: si es true, el botón se ve en gris y no hace nada ("Próximamente")
-// aDerecha: si es true, el menú se abre alineado a la derecha del botón (para que no se
-//   salga del panel en las herramientas que están más a la derecha)
-// children: el contenido del menú. Recibe la función cerrar: children(cerrar)
+// children es una función que recibe `cerrar`, para que el menú pueda cerrarse al elegir.
+// aDerecha: para las herramientas del borde derecho, cuyo menú se saldría del panel.
 function MenuHerramienta({ icono, texto, desactivada, aDerecha, children }) {
   const [abierto, setAbierto] = useState(false)
   const caja = useRef(null)
 
-  // Con el menú abierto: se cierra al pulsar fuera de él o la tecla Esc
   useEffect(() => {
     if (!abierto) return
     function alPulsarFuera(e) {

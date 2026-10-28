@@ -5,19 +5,12 @@ import { valoresDiseno } from '../datos/diseno.js'
 import { colorPorDefecto } from './lista.js'
 import { tieneTexto, elementosConContenido, resumenElemento, datosPersonales } from './formato.js'
 
-// Plantilla "Moderna": dos columnas. A la izquierda un lateral de color con los datos
-// cortos (contacto, habilidades, idiomas...); a la derecha lo largo (experiencia, formación...).
-// Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
-// Ancho del lateral en puntos (el A4 mide 595 pt de ancho)
+// En puntos; el A4 mide 595 pt de ancho
 const anchoLateral = 180
 
-// Secciones con lista que van en el lateral; el resto va en la columna principal
 const enLateral = ['habilidades', 'idiomas', 'aficiones', 'aptitudes']
 
-// Estilos de la plantilla según el diseño elegido en la barra de herramientas.
-// v: valores de valoresDiseno() (fuente, escala de letra, espacios, márgenes, colores)
 function crearEstilos(v) {
-  // Tamaño de letra escalado: letra(10) = 10 pt con tamaño M
   const letra = (pt) => pt * v.escala
   return StyleSheet.create({
     pagina: {
@@ -28,7 +21,7 @@ function crearEstilos(v) {
       lineHeight: v.altoLinea,
       color: '#222',
     },
-    // Fondo del lateral: se dibuja en todas las páginas (fixed) y ocupa todo el alto
+    // Va aparte del lateral y con `fixed` para que el color se repita en todas las páginas
     fondo: { position: 'absolute', top: 0, bottom: 0, left: 0, width: anchoLateral, backgroundColor: v.lateral },
     lateral: { width: anchoLateral, paddingHorizontal: 18 * v.margenes, fontSize: letra(9), color: v.textoLateral },
     principal: { flex: 1, paddingHorizontal: 28 * v.margenes },
@@ -69,7 +62,6 @@ function crearEstilos(v) {
   })
 }
 
-// Nivel de habilidad (1–5) pintado como cinco puntitos: ●●●○○
 function Puntos({ estilos, nivel }) {
   return (
     <View style={estilos.puntos}>
@@ -80,7 +72,6 @@ function Puntos({ estilos, nivel }) {
   )
 }
 
-// Sección del lateral: título pequeño y contenido
 function SeccionLateral({ estilos, titulo, children }) {
   return (
     <View style={estilos.seccionLateral}>
@@ -90,19 +81,17 @@ function SeccionLateral({ estilos, titulo, children }) {
   )
 }
 
-// Sección de la columna principal: título con raya debajo
 function Seccion({ estilos, titulo, children }) {
   return (
     <View style={estilos.seccion}>
-      {/* minPresenceAhead: si el título quedaría solo al final de la página, pasa a la siguiente */}
+      {/* minPresenceAhead: evita que el título quede solo al final de una página */}
       <Text style={estilos.tituloSeccion} minPresenceAhead={40}>{titulo}</Text>
       {children}
     </View>
   )
 }
 
-// Un elemento con título, detalle (fechas, lugar) y descripción.
-// wrap={false}: no se parte entre dos páginas
+// wrap={false}: un puesto o estudio partido entre dos páginas se lee mal
 function Elemento({ estilos, titulo, detalle, descripcion }) {
   return (
     <View style={estilos.elemento} wrap={false}>
@@ -113,7 +102,6 @@ function Elemento({ estilos, titulo, detalle, descripcion }) {
   )
 }
 
-// Contenido de las secciones del lateral
 function ContenidoLateral({ estilos, clave, lista }) {
   if (clave === 'habilidades') {
     return lista.map((item) => (
@@ -131,20 +119,17 @@ function ContenidoLateral({ estilos, clave, lista }) {
       </View>
     ))
   }
-  // Aficiones y Aptitudes: uno por línea
   const campo = clave === 'aficiones' ? 'interes' : 'aptitud'
   return lista
     .filter((item) => tieneTexto(item[campo]))
     .map((item) => <Text key={item.id} style={estilos.linea}>{item[campo]}</Text>)
 }
 
-// cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Moderna({ cv }) {
   const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto.moderna))
   const p = cv.personal
   const datos = datosPersonales(p)
 
-  // Secciones con lista que tienen algo, separadas en lateral y principal
   const conContenido = secciones
     .map(({ clave }) => ({ clave, lista: elementosConContenido(cv[clave]) }))
     .filter(({ lista }) => lista.length > 0)

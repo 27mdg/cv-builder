@@ -1,4 +1,3 @@
-// Todos los textos visibles de la web y del PDF en español.
 // Para añadir otro idioma: copiar este archivo (p. ej. en.js) y traducir los valores.
 const es = {
   app: {
@@ -29,7 +28,6 @@ const es = {
   personalizados: {
     etiqueta: 'Nombre del campo (p. ej. Disponibilidad)',
     valor: 'Valor (p. ej. Inmediata)',
-    // Botón "+" de Datos personales
     boton: 'Campo personalizado',
   },
   perfil: {
@@ -40,7 +38,6 @@ const es = {
     titulo: 'Logros',
     ayuda: 'Escribe tus logros, uno por línea.',
   },
-  // Textos que usan varias secciones
   comun: {
     quitar: 'Quitar',
     descripcion: 'Descripción',
@@ -53,7 +50,7 @@ const es = {
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
     ],
     elegir: 'Elige…',
-    // El número (1–5) es lo que se guarda
+    // Las claves se guardan en el CV: no cambiarlas, solo los textos
     nivelesHabilidad: {
       1: 'Principiante',
       2: 'Básico',
@@ -61,7 +58,6 @@ const es = {
       4: 'Avanzado',
       5: 'Experto',
     },
-    // El código de la izquierda es lo que se guarda
     nivelesIdioma: {
       nativo: 'Nativo',
       C2: 'C2 – Maestría',
@@ -72,8 +68,7 @@ const es = {
       A1: 'A1 – Principiante',
     },
   },
-  // Etiquetas de campos que se repiten en varias secciones.
-  // Una sección puede poner la suya propia con el mismo nombre.
+  // Se usan cuando la sección no tiene su propia etiqueta con el mismo nombre
   campos: {
     puesto: 'Puesto',
     empleador: 'Empleador',
@@ -157,10 +152,9 @@ const es = {
     margenes: 'Márgenes de página',
     // "Arimo (tipo Arial)": fuente libre parecida a una de pago
     tipo: 'tipo',
-    // Pasos de los deslizadores, del 1 al 5
     pasos: ['XS', 'S', 'M', 'L', 'XL'],
   },
-  // Nombres de las combinaciones de colores (los ids están en src/datos/diseno.js)
+  // Los ids deben coincidir con `colores` en src/datos/diseno.js
   nombresColores: {
     'azul': 'Azul marino',
     'verde-azulado': 'Verde azulado',
@@ -175,7 +169,6 @@ const es = {
   plantillas: {
     clasica: 'Clásica',
     moderna: 'Moderna',
-    // Títulos que solo usa alguna plantilla
     contacto: 'Contacto',
   },
   archivo: {

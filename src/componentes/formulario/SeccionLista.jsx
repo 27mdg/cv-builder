@@ -1,14 +1,12 @@
 import textos from '../../idiomas/es.js'
 import CampoFecha from './CampoFecha.jsx'
 
-// Etiqueta de un campo: la propia de la sección si existe; si no, la común
 function etiqueta(clave, nombre) {
   return textos[clave][nombre] ?? textos.campos[nombre]
 }
 
-// Elemento nuevo y vacío con todos los campos de la sección
 function elementoVacio(campos) {
-  // id: identificador único para que React sepa qué bloque es cada uno
+  // El índice no sirve de key: al quitar un elemento, React mezclaría los campos de otro
   const nuevo = { id: crypto.randomUUID() }
   for (const campo of campos) {
     if (campo.tipo === 'fecha' || campo.tipo === 'fechaFin') {
@@ -23,8 +21,6 @@ function elementoVacio(campos) {
   return nuevo
 }
 
-// Un campo de un elemento. Se pinta de una forma u otra según su tipo.
-// alCambiar: función que recibe (nombreDelCampo, valor)
 function Campo({ clave, campo, item, alCambiar }) {
   const texto = etiqueta(clave, campo.nombre)
   const valor = item[campo.nombre]
@@ -67,7 +63,7 @@ function Campo({ clave, campo, item, alCambiar }) {
         <select
           value={valor}
           onChange={(e) => {
-            // El nivel de habilidad se guarda como número (1–5); cada plantilla decide cómo pintarlo
+            // Número, no texto: así cada plantilla decide cómo pintarlo (p. ej. puntitos)
             const elegido = e.target.value
             alCambiar(campo.nombre, campo.tipo === 'nivelHabilidad' && elegido !== '' ? Number(elegido) : elegido)
           }}
@@ -80,7 +76,6 @@ function Campo({ clave, campo, item, alCambiar }) {
       </label>
     )
   }
-  // 'texto': una sola línea
   return (
     <label>
       {texto}
@@ -89,11 +84,6 @@ function Campo({ clave, campo, item, alCambiar }) {
   )
 }
 
-// Sección con varios elementos y botones Añadir / Quitar.
-// clave: nombre de la sección en el CV y en los textos, p. ej. 'experiencia'
-// campos: los campos de cada elemento (ver src/datos/secciones.js)
-// lista: el array de esa sección, p. ej. cv.experiencia
-// alCambiar: función que recibe la lista nueva entera
 function SeccionLista({ clave, campos, lista, alCambiar }) {
   function anadir() {
     alCambiar([...lista, elementoVacio(campos)])
@@ -103,7 +93,6 @@ function SeccionLista({ clave, campos, lista, alCambiar }) {
     alCambiar(lista.filter((item) => item.id !== id))
   }
 
-  // Cambia un campo de un solo elemento y deja los demás igual
   function cambiar(id, nombre, valor) {
     alCambiar(lista.map((item) => (item.id === id ? { ...item, [nombre]: valor } : item)))
   }

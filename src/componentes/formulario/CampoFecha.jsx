@@ -1,18 +1,12 @@
 import textos from '../../idiomas/es.js'
 
-// Años del desplegable: desde unos años en el futuro (estudios que aún no han
-// terminado) hasta 1950
+// Incluye años futuros para estudios que aún no han terminado
 const anioActual = new Date().getFullYear()
 const anios = []
 for (let anio = anioActual + 6; anio >= 1950; anio--) {
   anios.push(String(anio))
 }
 
-// etiqueta: texto que se muestra delante de los desplegables
-// valor: { mes, anio } (textos vacíos si no se ha elegido nada)
-// alCambiar: función que recibe el nuevo { mes, anio }
-// ocultarFecha: si es true, no se muestran los desplegables (p. ej. con "Presente")
-// children: lo que vaya detrás de los desplegables (p. ej. la casilla "Presente")
 function CampoFecha({ etiqueta, valor, alCambiar, ocultarFecha, children }) {
   return (
     <div className="campo-fecha">

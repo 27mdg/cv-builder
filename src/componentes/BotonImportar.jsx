@@ -3,16 +3,12 @@ import textos from '../idiomas/es.js'
 import cvInicial from '../datos/cvInicial.js'
 import { leerArchivo } from '../datos/archivo.js'
 
-// true si el CV tiene algo escrito (la plantilla elegida no cuenta)
+// Haber elegido plantilla no cuenta como datos que se puedan perder
 function tieneDatos(cv) {
   return JSON.stringify({ ...cv, plantilla: cvInicial.plantilla }) !== JSON.stringify(cvInicial)
 }
 
-// Botón para cargar un CV guardado antes con "Exportar".
-// cvActual: el CV que hay ahora (para avisar antes de sustituirlo)
-// alImportar: función que recibe el CV leído del archivo
 function BotonImportar({ cvActual, alImportar }) {
-  // useRef: una referencia al <input type="file"> oculto, para "pulsarlo" desde el botón
   const selector = useRef(null)
   const [error, setError] = useState('')
 
@@ -24,7 +20,6 @@ function BotonImportar({ cvActual, alImportar }) {
     setError('')
     try {
       const cv = await leerArchivo(archivo)
-      // window.confirm muestra una ventanita del navegador con Aceptar / Cancelar
       if (tieneDatos(cvActual) && !window.confirm(textos.archivo.confirmarImportar)) return
       alImportar(cv)
     } catch (err) {

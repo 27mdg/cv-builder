@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { pdf } from '@react-pdf/renderer'
 import * as pdfjs from 'pdfjs-dist'
-// El "worker" de pdf.js: la parte que lee el PDF en segundo plano sin bloquear la página.
-// `?url` le pide a Vite la dirección del archivo.
 import urlWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import textos from '../idiomas/es.js'
 import { documentoPdf } from '../plantillas/documento.jsx'
@@ -10,27 +8,20 @@ import PaginaPdf from './PaginaPdf.jsx'
 
 pdfjs.GlobalWorkerOptions.workerSrc = urlWorker
 
-// Milisegundos que se espera tras el último cambio antes de regenerar el PDF
+// En ms. Generar el PDF cuesta: no se hace en cada tecla, sino al dejar de escribir.
 const espera = 500
-// Ancho máximo de las hojas, para que en pantallas grandes no se vean enormes
+// Para que en pantallas grandes las hojas no se vean enormes
 const anchoMaximo = 800
 
-// Muestra el CV como hojas limpias, sin la barra del visor de PDF del navegador:
-// 1. se genera el PDF (igual que al descargar), 2. pdf.js lo abre, 3. cada página
-// se dibuja en un <canvas> (ver PaginaPdf.jsx).
-// Como generar el PDF cuesta un poco, no se hace en cada tecla: se espera a que
-// el usuario deje de escribir medio segundo.
-// cv: todos los datos del CV
+// Se dibuja con pdf.js en <canvas> en vez de usar el visor del navegador,
+// para que no salga su barra ni parpadee al regenerar.
 function VistaPrevia({ cv }) {
-  // documento: el PDF abierto con pdf.js (null hasta que está el primero)
   const [documento, setDocumento] = useState(null)
-  // ancho: ancho disponible para las hojas, según el tamaño del panel
   const [ancho, setAncho] = useState(0)
   const contenedor = useRef(null)
   // La primera vez se genera sin esperar
   const retraso = useRef(0)
 
-  // Genera el PDF cuando cambia el CV
   useEffect(() => {
     let cancelado = false
     const temporizador = setTimeout(async () => {
@@ -62,7 +53,6 @@ function VistaPrevia({ cv }) {
     }
   }, [documento])
 
-  // Mide el panel, y vuelve a medirlo si cambia de tamaño (ventana, pantalla completa...)
   useEffect(() => {
     const observador = new ResizeObserver(([entrada]) => {
       setAncho(Math.floor(Math.min(entrada.contentRect.width, anchoMaximo)))
@@ -71,7 +61,6 @@ function VistaPrevia({ cv }) {
     return () => observador.disconnect()
   }, [])
 
-  // Números de página: 1, 2, 3...
   const paginas = documento ? Array.from({ length: documento.numPages }, (_, i) => i + 1) : []
 
   return (

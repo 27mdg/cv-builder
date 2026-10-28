@@ -2,12 +2,7 @@ import textos from '../idiomas/es.js'
 import { colores } from '../datos/diseno.js'
 import { colorPorDefecto } from '../plantillas/lista.js'
 
-// Contenido del menú Colores: una muestra por combinación (el cuadrado es el fondo del
-// lateral y el círculo el color principal) y una muestra arcoíris para elegir un color a mano.
-// diseno: cv.diseno · plantilla: id de la plantilla elegida (para saber su color por defecto)
-// alCambiar: función que recibe (campo, valor), p. ej. ('color', 'rojo')
 function MenuColores({ diseno, plantilla, alCambiar }) {
-  // Combinación que se está usando: la elegida o, si no hay, la de la plantilla
   const actual = diseno.color || colorPorDefecto[plantilla]
 
   return (
@@ -26,7 +21,7 @@ function MenuColores({ diseno, plantilla, alCambiar }) {
           <span className="muestra-circulo" style={{ backgroundColor: color.principal }}/>
         </button>
       ))}
-      {/* Color a mano: el <label> abre el selector de color del navegador al pulsarlo */}
+      {/* <label> en vez de botón: al pulsarlo abre el selector de color del navegador */}
       <label
         className={actual === 'propio' ? 'muestra muestra-arcoiris elegida' : 'muestra muestra-arcoiris'}
         title={textos.nombresColores.propio}

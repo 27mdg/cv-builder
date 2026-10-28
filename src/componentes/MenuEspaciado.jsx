@@ -2,11 +2,7 @@ import textos from '../idiomas/es.js'
 import { altoLinea } from '../datos/diseno.js'
 import Deslizador from './Deslizador.jsx'
 
-// Contenido del menú Espaciado: alto de línea, espacio entre párrafos y entre secciones,
-// y márgenes de la página.
-// diseno: cv.diseno · alCambiar: función que recibe (campo, valor), p. ej. ('margenes', 4)
 function MenuEspaciado({ diseno, alCambiar }) {
-  // Deslizadores de 5 pasos (XS, S, M, L, XL): campo del CV y su título
   const conPasos = [
     { campo: 'parrafos', titulo: textos.herramientas.espaciadoParrafos },
     { campo: 'secciones', titulo: textos.herramientas.espaciadoSecciones },

@@ -18,18 +18,14 @@ import BarraHerramientas from './componentes/BarraHerramientas.jsx'
 const VistaPrevia = lazy(() => import('./componentes/VistaPrevia.jsx'))
 
 function App() {
-  // Al abrir la web se carga el CV guardado en el navegador (o uno vacío)
   const [cv, setCv] = useState(cargarCv)
 
-  // Cada vez que cambia el CV, se guarda
   useEffect(() => {
     guardarCv(cv)
   }, [cv])
 
-  // true cuando la vista previa ocupa toda la ventana
   const [pantallaCompleta, setPantallaCompleta] = useState(false)
 
-  // En pantalla completa, la tecla Esc la cierra
   useEffect(() => {
     if (!pantallaCompleta) return
     function alPulsarTecla(e) {
@@ -42,18 +38,14 @@ function App() {
   // Los cambios parten siempre de la versión más reciente del CV (anterior), no de `cv`.
   // Así, si llegan dos cambios casi a la vez (p. ej. la foto, que tarda un poco en
   // reducirse), el segundo no borra el primero.
-
-  // Cambia una sección entera, p. ej. cambiarSeccion('perfil', 'Soy...')
   function cambiarSeccion(clave, valor) {
     setCv((anterior) => ({ ...anterior, [clave]: valor }))
   }
 
-  // Cambia una opción de diseño, p. ej. cambiarDiseno('fuente', 'lato')
   function cambiarDiseno(campo, valor) {
     setCv((anterior) => ({ ...anterior, diseno: { ...anterior.diseno, [campo]: valor } }))
   }
 
-  // Cambia un campo de los datos personales, p. ej. cambiarPersonal('nombre', 'Ana')
   function cambiarPersonal(campo, valor) {
     setCv((anterior) => ({ ...anterior, personal: { ...anterior.personal, [campo]: valor } }))
   }
@@ -63,7 +55,7 @@ function App() {
       <header className="topbar">
         {/* Logo provisional: cuando exista la página de inicio, este enlace llevará a ella */}
         <a href="/" className="logo">{textos.app.titulo}</a>
-        {/* Nombre de los archivos descargados; si está vacío se ve (y se usa) el automático */}
+        {/* El placeholder enseña el nombre automático que se usará si se deja vacío */}
         <input
           className="nombre-archivo"
           aria-label={textos.archivo.nombre}
@@ -109,7 +101,6 @@ function App() {
           </Seccion>
         </section>
         <section className={pantallaCompleta ? 'preview-panel pantalla-completa' : 'preview-panel'}>
-          {/* Suspense muestra el texto "Cargando…" mientras llega la vista previa */}
           <Suspense fallback={<p className="cargando">{textos.vistaPrevia.cargando}</p>}>
             <VistaPrevia cv={cv}/>
           </Suspense>

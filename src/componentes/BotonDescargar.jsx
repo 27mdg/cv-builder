@@ -1,10 +1,7 @@
 import { useState } from 'react'
 import textos from '../idiomas/es.js'
 
-// Botón que genera el PDF con los datos actuales y lo descarga.
-// cv: todos los datos del CV
 function BotonDescargar({ cv }) {
-  // generando: true mientras se crea el PDF (el botón se desactiva)
   const [generando, setGenerando] = useState(false)
   const [error, setError] = useState(false)
 
@@ -12,7 +9,7 @@ function BotonDescargar({ cv }) {
     setGenerando(true)
     setError(false)
     try {
-      // import(): carga la librería de PDF solo ahora, al pulsar
+      // import(): la librería de PDF pesa mucho y solo se carga al pulsar
       const { descargarPdf } = await import('../plantillas/descargar.jsx')
       await descargarPdf(cv)
     } catch (e) {

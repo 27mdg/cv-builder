@@ -1,9 +1,5 @@
 import { useEffect, useRef } from 'react'
 
-// Dibuja una página de un PDF en un <canvas> (un "lienzo" donde se puede pintar).
-// documento: el PDF ya abierto con pdf.js
-// numero: qué página dibujar (empieza en 1)
-// ancho: ancho en píxeles con el que se ve la página
 function PaginaPdf({ documento, numero, ancho }) {
   const lienzo = useRef(null)
 
@@ -14,8 +10,7 @@ function PaginaPdf({ documento, numero, ancho }) {
     async function dibujar() {
       const pagina = await documento.getPage(numero)
       if (cancelado) return
-      // Escala para que la página ocupe `ancho`, multiplicada por la densidad de la
-      // pantalla (devicePixelRatio) para que se vea nítida en pantallas de alta resolución
+      // devicePixelRatio: sin él, la página se ve borrosa en pantallas de alta resolución
       const escala = (ancho / pagina.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1)
       const viewport = pagina.getViewport({ scale: escala })
       // Se dibuja primero en un lienzo aparte y luego se copia de golpe al visible:
@@ -34,7 +29,6 @@ function PaginaPdf({ documento, numero, ancho }) {
     dibujar().catch(() => {
       // Dibujo cancelado porque llegó otra versión del CV: no pasa nada
     })
-    // Si cambia algo antes de terminar, se cancela este dibujo
     return () => {
       cancelado = true
       tarea?.cancel()

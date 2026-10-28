@@ -5,14 +5,7 @@ import { valoresDiseno } from '../datos/diseno.js'
 import { colorPorDefecto } from './lista.js'
 import { tieneTexto, elementosConContenido, unir, resumenElemento, datosPersonales } from './formato.js'
 
-// Plantilla "Clásica": una columna, sobria.
-// Aquí solo está el diseño; los textos se preparan con las funciones de formato.js.
-
-// Estilos de la plantilla según el diseño elegido en la barra de herramientas.
-// v: valores de valoresDiseno() (fuente, escala de letra, espacios, márgenes, colores)
-// Medidas en puntos (pt): 1 pt ≈ 0,35 mm. Un A4 mide 595 × 842 pt.
 function crearEstilos(v) {
-  // Tamaño de letra escalado: letra(10) = 10 pt con tamaño M
   const letra = (pt) => pt * v.escala
   return StyleSheet.create({
     pagina: {
@@ -50,19 +43,17 @@ function crearEstilos(v) {
   })
 }
 
-// Una sección del CV con su título
 function Seccion({ estilos, titulo, children }) {
   return (
     <View style={estilos.seccion}>
-      {/* minPresenceAhead: si el título quedaría solo al final de la página, pasa a la siguiente */}
+      {/* minPresenceAhead: evita que el título quede solo al final de una página */}
       <Text style={estilos.tituloSeccion} minPresenceAhead={40}>{titulo}</Text>
       {children}
     </View>
   )
 }
 
-// Un elemento con título, detalle (fechas, lugar) y descripción.
-// wrap={false}: no se parte entre dos páginas
+// wrap={false}: un puesto o estudio partido entre dos páginas se lee mal
 function Elemento({ estilos, titulo, detalle, descripcion }) {
   return (
     <View style={estilos.elemento} wrap={false}>
@@ -73,7 +64,6 @@ function Elemento({ estilos, titulo, detalle, descripcion }) {
   )
 }
 
-// Contenido de una sección con lista, según de qué sección se trate
 function ContenidoLista({ estilos, clave, lista }) {
   if (clave === 'habilidades') {
     return lista.map((item) => (
@@ -97,13 +87,11 @@ function ContenidoLista({ estilos, clave, lista }) {
   })
 }
 
-// cv: todos los datos del CV (ver src/datos/cvInicial.js)
 function Clasica({ cv }) {
   const estilos = crearEstilos(valoresDiseno(cv.diseno, colorPorDefecto.clasica))
   const p = cv.personal
   const datos = datosPersonales(p)
   const nombreCompleto = datos.nombreCompleto
-  // En esta plantilla, contacto y otros datos van cada uno en una línea
   const contacto = unir(datos.contacto)
   const otrosDatos = unir(datos.otrosDatos)
 
@@ -130,7 +118,6 @@ function Clasica({ cv }) {
           </Seccion>
         )}
 
-        {/* Secciones con lista, en el mismo orden que el formulario */}
         {secciones.map(({ clave }) => {
           const lista = elementosConContenido(cv[clave])
           if (lista.length === 0) return null

@@ -1,7 +1,6 @@
 import textos from '../idiomas/es.js'
 
-// Funciones que convierten los datos del CV en textos listos para el PDF.
-// Las usan todas las plantillas, así cada plantilla solo se ocupa del diseño.
+// Común a todas las plantillas, para que cada una solo se ocupe del diseño.
 
 // { mes: '3', anio: '2024' } → '03/2024'. Sin mes → '2024'. Sin año → ''
 export function formatearFecha(fecha) {
@@ -14,7 +13,6 @@ export function formatearFecha(fecha) {
 export function rangoFechas(item) {
   const inicio = formatearFecha(item.inicio)
   const fin = item.presente ? textos.comun.presente : formatearFecha(item.fin)
-  // filter(Boolean) quita los textos vacíos
   return [inicio, fin].filter(Boolean).join(' – ')
 }
 
@@ -44,17 +42,13 @@ export function resumenElemento(clave, item) {
   }
   if (clave === 'cursos') return [item.curso, rangoFechas(item)]
   if (clave === 'certificados') return [item.certificado, rangoFechas(item)]
-  // Experiencia, Prácticas y Actividades extracurriculares
   return [unir([item.puesto, item.empleador], ' — '), unir([rangoFechas(item), item.localidad])]
 }
 
-// Datos personales listos para la cabecera de una plantilla:
-// nombreCompleto (texto), contacto y otrosDatos (listas de textos, sin vacíos).
-// Cada plantilla decide si los pinta en una línea o uno debajo de otro.
+// { nombreCompleto, contacto: [textos], otrosDatos: ['Etiqueta: valor'] }, sin vacíos
 export function datosPersonales(personal) {
   const p = personal
   const direccion = unir([p.direccion, unir([p.codigoPostal, p.localidad], ' ')], ', ')
-  // Otros datos y campos personalizados, como 'Etiqueta: valor'
   const otrosDatos = [
     [textos.personal.fechaNacimiento, formatearNacimiento(p.fechaNacimiento)],
     [textos.personal.lugarNacimiento, p.lugarNacimiento],
@@ -74,7 +68,6 @@ export function datosPersonales(personal) {
   }
 }
 
-// Un elemento tiene contenido si algún campo tiene algo escrito o elegido
 function tieneContenido(item) {
   return Object.entries(item).some(([nombre, valor]) => {
     if (nombre === 'id') return false

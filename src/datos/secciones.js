@@ -1,14 +1,6 @@
-// Secciones del formulario que son listas (con botones Añadir / Quitar).
-// clave: nombre de la sección en cvInicial.js y en el archivo de idioma.
-// campos: los campos de cada elemento, en orden. Tipos:
-//   'texto'      una línea
-//   'textoLargo' varias líneas
-//   'fecha'      mes (opcional) + año
-//   'fechaFin'   mes + año con interruptor "Presente" (se guarda en `presente`)
-//   'nivelHabilidad' desplegable 1–5 (se guarda el número)
-//   'nivelIdioma'    desplegable Nativo, C2 … A1 (se guarda el código, p. ej. 'B2')
-
-// Campos comunes a Experiencia, Prácticas y Actividades extracurriculares
+// `clave` debe coincidir con cvInicial.js y con el archivo de idioma.
+// 'fechaFin' guarda el interruptor en `presente`; 'nivelHabilidad' guarda el número (1–5)
+// y 'nivelIdioma' el código ('B2'), para que cada plantilla decida cómo pintarlos.
 const camposPuesto = [
   { nombre: 'puesto', tipo: 'texto' },
   { nombre: 'empleador', tipo: 'texto' },

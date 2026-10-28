@@ -1,12 +1,8 @@
-// Opciones de diseño del CV (barra de herramientas: Fuente, Espaciado y Colores)
-// y su traducción a números que entienden las plantillas.
 // Este archivo no importa la librería de PDF, así los menús cargan rápido.
 
-// Fuentes disponibles. Todas con licencia libre y servidas desde nuestra propia web.
-// id: lo que se guarda en el CV · nombre: lo que se ve en el menú
-// pista: fuente de pago a la que se parece (se muestra "Arimo (tipo Arial)")
-// familia: nombre de la fuente en el PDF · css: cómo se pinta su nombre en el menú
-// Para añadir una fuente: `npm install @fontsource/<id>`, añadirla aquí y en src/plantillas/fuentes.js.
+// Solo fuentes libres, servidas desde nuestra web (RGPD). `pista`: la fuente de pago a la
+// que se parece, para el menú ("Arimo (tipo Arial)").
+// Para añadir una: `npm install @fontsource/<id>`, añadirla aquí y su CSS en MenuFuente.jsx.
 export const fuentes = [
   // Helvetica viene dentro de todos los lectores de PDF: no hay que añadir ningún archivo
   { id: 'helvetica', nombre: 'Helvetica', familia: 'Helvetica', css: 'Helvetica, Arial, sans-serif' },
@@ -29,8 +25,7 @@ export function fuenteDe(diseno) {
   return fuentes.find((f) => f.id === diseno.fuente) ?? fuentes[0]
 }
 
-// Valores de los pasos 1–5 de los deslizadores (XS, S, M, L, XL). El 3 (M) es el normal.
-// Son multiplicadores: cada plantilla los aplica a sus propias medidas.
+// Multiplicadores de los pasos 1–5 (el 3 es el normal); cada plantilla los aplica a sus medidas
 export const pasos = {
   tamano: [0.85, 0.92, 1, 1.08, 1.16],
   parrafos: [0.35, 0.65, 1, 1.5, 2],
@@ -38,12 +33,9 @@ export const pasos = {
   margenes: [0.5, 0.75, 1, 1.3, 1.6],
 }
 
-// Alto de línea: mínimo, máximo y salto del deslizador
 export const altoLinea = { minimo: 1, maximo: 2, salto: 0.05 }
 
-// Combinaciones de colores.
-// principal: títulos, rayas y puntitos · lateral: fondo del lateral (plantillas con lateral)
-// oscuro: true si el lateral es oscuro (entonces su texto va en claro para que se lea)
+// `oscuro`: el lateral es oscuro y su texto tiene que ir en claro para que se lea
 export const colores = [
   { id: 'azul', principal: '#1f4e79', lateral: '#e6edf4' },
   { id: 'verde-azulado', principal: '#2c5f5d', lateral: '#e8f0ef' },
@@ -55,16 +47,13 @@ export const colores = [
   { id: 'celeste-oscuro', principal: '#8bb8de', lateral: '#1f2633', oscuro: true },
 ]
 
-// Mezcla un color con blanco: cantidad 0 = el mismo color, 1 = blanco.
-// Sirve para sacar un fondo muy claro a partir de un color elegido a mano.
+// Mezcla un color con blanco: cantidad 0 = el mismo color, 1 = blanco
 export function aclarar(hex, cantidad) {
   const canales = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
   const claros = canales.map((c) => Math.round(c + (255 - c) * cantidad))
   return '#' + claros.map((c) => c.toString(16).padStart(2, '0')).join('')
 }
 
-// Colores que usa la plantilla según lo elegido.
-// colorPorDefecto: id de la combinación propia de cada plantilla (si el usuario no elige)
 function coloresDe(diseno, colorPorDefecto) {
   let combinacion
   if (diseno.color === 'propio' && /^#[0-9a-f]{6}$/i.test(diseno.colorPropio)) {
@@ -80,11 +69,10 @@ function coloresDe(diseno, colorPorDefecto) {
   }
 }
 
-// Números concretos para las plantillas a partir de lo elegido en la barra de herramientas.
-// diseno: cv.diseno · colorPorDefecto: ver coloresDe
+// Convierte cv.diseno en los números que usan las plantillas
 export function valoresDiseno(diseno, colorPorDefecto) {
   const fuente = fuenteDe(diseno)
-  // Si un valor guardado no es válido, se usa el normal (1)
+  // Un valor guardado no válido (archivo importado a mano) se trata como el normal
   const paso = (lista, n) => lista[n - 1] ?? 1
   return {
     fuente: fuente.familia,
