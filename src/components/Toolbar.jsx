@@ -1,7 +1,8 @@
 import texts from '../locales/es.js'
-import templates from '../templates/list.js'
+import { templateInfo } from '../templates/list.js'
 import { fontOf } from '../data/design.js'
 import ToolMenu from './ToolMenu.jsx'
+import TemplatePicker from './TemplatePicker.jsx'
 import FontMenu from './FontMenu.jsx'
 import SpacingMenu from './SpacingMenu.jsx'
 import ColorMenu from './ColorMenu.jsx'
@@ -13,32 +14,21 @@ import {
 function Toolbar({
   template, onTemplateChange, design, onDesignChange, fullScreen, onFullScreenChange,
 }) {
+  const info = templateInfo(template)
+
   return (
     <div className="toolbar">
-      <ToolMenu icon={<TemplatesIcon/>} label={texts.tools.templates}>
-        {(close) => templates.map((id) => (
-          <button
-            key={id}
-            type="button"
-            className={id === template ? 'selected' : ''}
-            aria-pressed={id === template}
-            onClick={() => {
-              onTemplateChange(id)
-              close()
-            }}
-          >
-            {texts.templates[id]}
-          </button>
-        ))}
+      <ToolMenu icon={<TemplatesIcon/>} label={texts.tools.templates} wide>
+        {() => <TemplatePicker selected={info.id} onSelect={onTemplateChange}/>}
       </ToolMenu>
-      <ToolMenu icon={<FontIcon/>} label={fontOf(design).name}>
-        {() => <FontMenu design={design} onChange={onDesignChange}/>}
+      <ToolMenu icon={<FontIcon/>} label={fontOf(design, info.defaultFont).name}>
+        {() => <FontMenu design={design} defaultFont={info.defaultFont} onChange={onDesignChange}/>}
       </ToolMenu>
       <ToolMenu icon={<SpacingIcon/>} label={texts.tools.spacing}>
         {() => <SpacingMenu design={design} onChange={onDesignChange}/>}
       </ToolMenu>
       <ToolMenu icon={<ColorsIcon/>} label={texts.tools.colors} alignRight>
-        {() => <ColorMenu design={design} template={template} onChange={onDesignChange}/>}
+        {() => <ColorMenu design={design} defaultColor={info.defaultColor} onChange={onDesignChange}/>}
       </ToolMenu>
       <button
         type="button"

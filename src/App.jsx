@@ -50,6 +50,15 @@ function App() {
     setCv((previous) => ({ ...previous, personal: { ...previous.personal, [field]: value } }))
   }
 
+  // A new template starts with its own colour and font, so it looks like its thumbnail
+  function changeTemplate(id) {
+    setCv((previous) => ({
+      ...previous,
+      template: id,
+      design: { ...previous.design, color: '', font: '' },
+    }))
+  }
+
   return (
     <div className="app">
       <header className="topbar">
@@ -106,7 +115,7 @@ function App() {
           </Suspense>
           <Toolbar
             template={cv.template}
-            onTemplateChange={(id) => changeSection('template', id)}
+            onTemplateChange={changeTemplate}
             design={cv.design}
             onDesignChange={changeDesign}
             fullScreen={fullScreen}

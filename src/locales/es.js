@@ -43,6 +43,7 @@ const es = {
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',
+    contact: 'Contacto',
     month: 'Mes',
     year: 'Año',
     months: [
@@ -156,20 +157,22 @@ const es = {
   },
   // The ids must match `colors` in src/data/design.js
   colorNames: {
-    'navy': 'Azul marino',
-    'teal': 'Verde azulado',
-    'red': 'Rojo',
-    'green': 'Verde',
-    'ochre': 'Ocre',
-    'purple': 'Morado',
-    'salmon-dark': 'Salmón sobre negro',
-    'sky-dark': 'Celeste sobre negro',
-    'custom': 'Color personalizado',
+    navy: 'Azul marino',
+    midnight: 'Azul noche',
+    slate: 'Pizarra',
+    blue: 'Azul',
+    teal: 'Verde azulado',
+    green: 'Verde',
+    burgundy: 'Burdeos',
+    ochre: 'Ocre',
+    taupe: 'Topo',
+    purple: 'Morado',
+    black: 'Negro',
+    custom: 'Color personalizado',
   },
+  // Only template names: the ids must match src/templates/list.js
   templates: {
-    classic: 'Clásica',
-    modern: 'Moderna',
-    contact: 'Contacto',
+    arch: 'Arco',
   },
   file: {
     name: 'Nombre del archivo',

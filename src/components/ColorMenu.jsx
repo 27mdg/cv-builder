@@ -1,9 +1,8 @@
 import texts from '../locales/es.js'
 import { colors } from '../data/design.js'
-import { defaultColor } from '../templates/list.js'
 
-function ColorMenu({ design, template, onChange }) {
-  const current = design.color || defaultColor[template]
+function ColorMenu({ design, defaultColor, onChange }) {
+  const current = design.color || defaultColor
 
   return (
     <div className="color-menu">
@@ -12,14 +11,12 @@ function ColorMenu({ design, template, onChange }) {
           key={color.id}
           type="button"
           className={color.id === current ? 'swatch selected' : 'swatch'}
-          style={{ backgroundColor: color.sidebar }}
+          style={{ backgroundColor: color.value }}
           aria-label={texts.colorNames[color.id]}
           title={texts.colorNames[color.id]}
           aria-pressed={color.id === current}
           onClick={() => onChange('color', color.id)}
-        >
-          <span className="swatch-circle" style={{ backgroundColor: color.main }}/>
-        </button>
+        />
       ))}
       {/* <label> instead of a button: clicking it opens the browser's colour picker */}
       <label

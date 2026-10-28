@@ -4,7 +4,8 @@ import { ArrowIcon } from './Icons.jsx'
 
 // children is a function that receives `close`, so the menu can close after a choice.
 // alignRight: for the tools on the right edge, whose menu would overflow the panel.
-function ToolMenu({ icon, label, disabled, alignRight, children }) {
+// wide: the menu spans the whole toolbar area instead of hanging from its button.
+function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
   const [open, setOpen] = useState(false)
   const box = useRef(null)
 
@@ -26,7 +27,7 @@ function ToolMenu({ icon, label, disabled, alignRight, children }) {
 
   return (
     // The "coming soon" hint goes on the span: disabled buttons do not show their title
-    <span className="tool" ref={box} title={disabled ? texts.tools.comingSoon : undefined}>
+    <span className={wide ? 'tool wide' : 'tool'} ref={box} title={disabled ? texts.tools.comingSoon : undefined}>
       <button
         type="button"
         disabled={disabled}
@@ -38,7 +39,7 @@ function ToolMenu({ icon, label, disabled, alignRight, children }) {
         <ArrowIcon/>
       </button>
       {open && (
-        <div className={alignRight ? 'tool-menu align-right' : 'tool-menu'}>
+        <div className={['tool-menu', alignRight && 'align-right', wide && 'wide'].filter(Boolean).join(' ')}>
           {children(() => setOpen(false))}
         </div>
       )}

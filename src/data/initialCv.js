@@ -1,9 +1,9 @@
 const initialCv = {
-  template: 'classic',
+  template: 'arch',
   // Empty = automatic ('CV - First Last')
   fileName: '',
   design: {
-    font: 'helvetica',
+    font: '', // '' = the template's own
     // size, paragraphs, sections and margins go from 1 to 5; 3 is normal
     size: 3,
     lineHeight: 1.4,

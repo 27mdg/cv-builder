@@ -1,4 +1,5 @@
 import texts from '../locales/es.js'
+import sections from '../data/sections.js'
 
 // Shared by every template, so each one only deals with layout.
 
@@ -43,7 +44,8 @@ export function itemSummary(key, item) {
   return [join([item.position, item.employer], ' — '), join([dateRange(item), item.city])]
 }
 
-// { fullName, contact: [texts], otherDetails: ['Label: value'] }, without empty ones
+// { fullName, contact: [{ type, text }], otherDetails: ['Label: value'] }, without empty ones.
+// `type` (phone, email, website, address, linkedin) lets templates pick an icon.
 export function personalDetails(personal) {
   const p = personal
   const address = join([p.address, join([p.postalCode, p.city], ' ')], ', ')
@@ -61,9 +63,22 @@ export function personalDetails(personal) {
 
   return {
     fullName: join([p.firstName, p.lastName], ' '),
-    contact: [p.email, p.phone, address, p.website, p.linkedin].filter(hasText),
+    contact: [
+      { type: 'phone', text: p.phone },
+      { type: 'email', text: p.email },
+      { type: 'website', text: p.website },
+      { type: 'linkedin', text: p.linkedin },
+      { type: 'address', text: address },
+    ].filter((c) => hasText(c.text)),
     otherDetails,
   }
+}
+
+// The list sections that have something to show, in form order: [{ key, list }]
+export function filledSections(cv) {
+  return sections
+    .map(({ key }) => ({ key, list: itemsWithContent(cv[key]) }))
+    .filter(({ list }) => list.length > 0)
 }
 
 function hasContent(item) {

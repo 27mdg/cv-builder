@@ -1,4 +1,5 @@
 import initialCv from './initialCv.js'
+import templates from '../templates/list.js'
 
 // Only in localStorage: the data never leaves the browser (GDPR).
 
@@ -25,6 +26,10 @@ export function cvFromData(data) {
   }
   if (!Array.isArray(cv.personal.customFields)) {
     cv.personal.customFields = []
+  }
+  // Templates can be removed (e.g. the first 'classic' and 'modern')
+  if (!templates.some((t) => t.id === cv.template)) {
+    cv.template = initialCv.template
   }
   return cv
 }
