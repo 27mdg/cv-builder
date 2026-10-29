@@ -24,6 +24,11 @@ const extraFields = [
   { name: 'gender', type: 'text' },
   { name: 'nationality', type: 'text' },
   { name: 'maritalStatus', type: 'text' },
+  { name: 'availability', type: 'text' },
+  { name: 'ownVehicle', type: 'text' },
+  { name: 'workPermit', type: 'text' },
+  { name: 'idNumber', type: 'text' },
+  { name: 'travel', type: 'text' },
 ]
 
 function Field({ field, data, onChange, autoFocus, children }) {

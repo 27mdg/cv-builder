@@ -30,6 +30,12 @@ const initialCv = {
     gender: '',
     nationality: '',
     maritalStatus: '',
+    // Common in Spanish CVs
+    availability: '',
+    ownVehicle: '',
+    workPermit: '',
+    idNumber: '',
+    travel: '',
     links: [], // { id, type (see texts.links.types), url }
     customFields: [], // { id, label, value }
   },
