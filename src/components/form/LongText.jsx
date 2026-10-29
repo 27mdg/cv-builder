@@ -1,18 +1,9 @@
 import texts from '../../locales/es.js'
+import RichTextEditor from './RichTextEditor.jsx'
 
+// Profile, achievements and free-text custom sections
 function LongText({ value, hint, onChange }) {
-  return (
-    <label>
-      {texts.common.description}
-      <textarea
-        className="long-text"
-        rows={6}
-        placeholder={hint}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </label>
-  )
+  return <RichTextEditor label={texts.common.description} value={value} placeholder={hint} onChange={onChange}/>
 }
 
 export default LongText

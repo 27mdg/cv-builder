@@ -36,7 +36,7 @@ const es = {
   },
   achievements: {
     title: 'Logros',
-    hint: 'Escribe tus logros, uno por línea.',
+    hint: 'Escribe tus logros; con el botón de lista quedan uno por viñeta.',
   },
   common: {
     remove: 'Quitar',
@@ -294,6 +294,14 @@ const es = {
     hint: 'Arrastra para cambiar el ancho. Doble clic para volver al centro.',
     // Read aloud by screen readers
     value: (percent) => `El formulario ocupa el ${percent} % del ancho`,
+  },
+  richText: {
+    bold: 'Negrita (Ctrl+B)',
+    list: 'Lista con viñetas',
+    link: 'Enlace',
+    linkPlaceholder: 'Dirección del enlace, p. ej. tuweb.es',
+    applyLink: 'Añadir enlace',
+    removeLink: 'Quitar enlace',
   },
   datePicker: {
     placeholder: 'dd/mm/aaaa',

@@ -3,6 +3,7 @@ import texts from '../../locales/es.js'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
 import DateField from './DateField.jsx'
+import RichTextEditor from './RichTextEditor.jsx'
 import Select from './Select.jsx'
 import { PlusIcon, VisibilityIcon } from '../Icons.jsx'
 
@@ -31,12 +32,7 @@ function Field({ sectionKey, field, item, onChange }) {
   const value = item[field.name]
 
   if (field.type === 'longText') {
-    return (
-      <label>
-        {label}
-        <textarea rows={4} value={value} onChange={(e) => onChange(field.name, e.target.value)}/>
-      </label>
-    )
+    return <RichTextEditor label={label} value={value} onChange={(text) => onChange(field.name, text)}/>
   }
   if (field.type === 'date') {
     return <DateField label={label} value={value} onChange={(date) => onChange(field.name, date)}/>

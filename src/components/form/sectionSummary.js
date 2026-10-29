@@ -1,5 +1,5 @@
 import texts from '../../locales/es.js'
-import { hasText, join, itemSummary, itemsWithContent, formatBirthDate } from '../../templates/format.js'
+import { hasText, join, itemSummary, itemsWithContent, formatBirthDate, plainText } from '../../templates/format.js'
 
 // Sections whose items are a single field instead of a title built by itemSummary
 const simpleField = { skills: 'skill', languages: 'language', hobbies: 'interest', qualities: 'quality' }
@@ -7,7 +7,8 @@ const simpleField = { skills: 'skill', languages: 'language', hobbies: 'interest
 const maxLength = 70
 
 function shorten(text) {
-  const line = text.trim().split('\n')[0]
+  // Without the formatting marks (**bold**, links…)
+  const line = plainText(text).trim().split('\n')[0]
   return line.length > maxLength ? line.slice(0, maxLength).trimEnd() + '…' : line
 }
 
