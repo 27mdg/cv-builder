@@ -267,6 +267,16 @@ button:hover .trash-lid { rotate: -16deg; }
 .section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
 /* The + spins on hover (like the other chips); the eye and the copy icon have their own effects */
 .item-actions .chip[aria-pressed]:hover svg, .item-actions .copy-chip:hover svg { transform: none; }
+.list-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+/* .form-panel: to win over the turn of the other chips' icons */
+.form-panel .sort-chip:hover svg { transform: none; }
+/* Its arrow drops out of sight and comes back in from above. Started on hover by ListSection.jsx
+   (.dropping), so it always finishes. */
+.dropping .sort-arrow { animation: arrow-drop 0.6s ease-in-out; }
+@keyframes arrow-drop {
+  45% { translate: 0 8px; opacity: 0; }
+  55% { translate: 0 -8px; opacity: 0; }
+}
 .copy-front, .copy-back { transition: translate 0.25s var(--ease-out); }
 .copy-chip:hover .copy-front { translate: 1.5px 1.5px; }
 .copy-chip:hover .copy-back { translate: -1.5px -1.5px; }

@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import texts from '../../locales/es.js'
 import Animated from '../Animated.jsx'
-import { useLeaving } from '../useLeaving.js'
+import { prefersReducedMotion, useLeaving } from '../useLeaving.js'
 import { insertAt, useUndo } from '../undo.js'
 import DateField from './DateField.jsx'
 import RichTextEditor from './RichTextEditor.jsx'
@@ -9,7 +10,7 @@ import Select from './Select.jsx'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { CloseIcon, CopyIcon, GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
+import { CloseIcon, CopyIcon, GripIcon, PlusIcon, SortIcon, VisibilityIcon } from '../Icons.jsx'
 import { useDragSensors } from './useDragSensors.js'
 
 function labelFor(sectionKey, name) {
@@ -107,9 +108,36 @@ function groupPairs(fields) {
   return groups
 }
 
+// Months since year 0, to compare dates; null without a year. A date with no month counts as
+// January, so "03/2024" goes before a plain "2024".
+function dateValue(date) {
+  const year = Number(date?.year)
+  return year ? year * 12 + (Number(date.month) || 1) - 1 : null
+}
+
+// Bigger first; also right with Infinity, where a subtraction would give NaN
+const descending = (a, b) => (a === b ? 0 : a < b ? 1 : -1)
+
+// Newest first: what is still going on ("Presente"), then by end date, then by start date.
+// Items with no dates go last, in the order they had (sort is stable).
+function sortedByDate(list, fields) {
+  const start = fields.find((field) => field.type === 'date')?.name
+  const end = fields.find((field) => field.type === 'endDate')?.name
+  const keyOf = (item) => {
+    const from = dateValue(item[start]) ?? -Infinity
+    if (end && item.current) return [Infinity, from]
+    return [(end && dateValue(item[end])) ?? from, from]
+  }
+  return list
+    .map((item) => ({ item, key: keyOf(item) }))
+    .sort((a, b) => descending(a.key[0], b.key[0]) || descending(a.key[1], b.key[1]))
+    .map(({ item }) => item)
+}
+
 // An item that can be dragged by its handle. children(handle) draws the item with the handle
 // inside; with a single item there is nothing to reorder, so no handle.
-function SortableItem({ id, draggable, children }) {
+// transitionName: only while sorting by date, so the browser can slide each item to its new place
+function SortableItem({ id, draggable, transitionName, children }) {
   const {
     attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging,
   } = useSortable({ id })
@@ -133,7 +161,7 @@ function SortableItem({ id, draggable, children }) {
       ref={setNodeRef}
       className={isDragging ? 'sortable-item dragging' : 'sortable-item'}
       // Translate, not Transform: items have different heights and would be stretched
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      style={{ transform: CSS.Translate.toString(transform), transition, viewTransitionName: transitionName }}
     >
       {children(handle)}
     </div>
@@ -177,6 +205,28 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     onChange(insertAt(list, index + 1, copy))
   }
 
+  const hasDates = fields.some((field) => field.type === 'date')
+  const [sorting, setSorting] = useState(false)
+  // The arrow of its icon: started by the mouse, ended by the animation, so it is never cut short
+  const [arrowDropping, setArrowDropping] = useState(false)
+
+  function sortByDate() {
+    const sorted = sortedByDate(list, fields)
+    if (sorted.every((item, i) => item === list[i])) return
+    const before = list.map((item) => item.id)
+    const position = (item) => (before.includes(item.id) ? before.indexOf(item.id) : Infinity)
+    offerUndo(texts.undo.sorted, () => onChange((current) => [...current].sort((a, b) => position(a) - position(b))))
+    if (!document.startViewTransition || prefersReducedMotion()) {
+      onChange(sorted)
+      return
+    }
+    // Each item gets a name first; then the browser animates every named item from its old
+    // place to its new one
+    flushSync(() => setSorting(true))
+    document.startViewTransition(() => flushSync(() => onChange(sorted)))
+      .finished.finally(() => setSorting(false))
+  }
+
   function change(id, name, value) {
     onChange(list.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
   }
@@ -207,7 +257,12 @@ function ListSection({ sectionKey, fields, list, onChange }) {
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} accessibility={accessibility}>
         <SortableContext items={list.map((item) => item.id)} strategy={verticalListSortingStrategy}>
           {list.map((item) => (
-            <SortableItem key={item.id} id={item.id} draggable={list.length > 1}>
+            <SortableItem
+              key={item.id}
+              id={item.id}
+              draggable={list.length > 1}
+              transitionName={sorting ? `item-${item.id}` : undefined}
+            >
               {(handle) => (
                 <Animated
                   appear={added.includes(item.id)}
@@ -278,7 +333,20 @@ function ListSection({ sectionKey, fields, list, onChange }) {
           ))}
         </SortableContext>
       </DndContext>
-      <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
+      <div className="list-actions">
+        <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
+        {hasDates && list.length > 1 && (
+          <button
+            type="button"
+            className={arrowDropping ? 'chip sort-chip dropping' : 'chip sort-chip'}
+            onClick={sortByDate}
+            onMouseEnter={() => setArrowDropping(!prefersReducedMotion())}
+            onAnimationEnd={(e) => e.animationName === 'arrow-drop' && setArrowDropping(false)}
+          >
+            <SortIcon/>{texts.common.sortByDate}
+          </button>
+        )}
+      </div>
     </>
   )
 }

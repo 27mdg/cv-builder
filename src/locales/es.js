@@ -68,6 +68,7 @@ const es = {
   common: {
     remove: 'Quitar',
     duplicate: 'Duplicar',
+    sortByDate: 'Ordenar por fecha',
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',
@@ -354,6 +355,7 @@ const es = {
     close: 'Cerrar aviso',
     section: (title) => `Has quitado «${title}».`,
     item: 'Has quitado un elemento.',
+    sorted: 'Has ordenado por fecha.',
     link: 'Has quitado un enlace.',
     field: 'Has quitado un campo.',
     photo: 'Has quitado la foto.',

@@ -80,6 +80,16 @@ export function TrashIcon() {
   )
 }
 
+// Its arrow nudges down on hover (App.css)
+export function SortIcon() {
+  return (
+    <Icon>
+      <path className="sort-arrow" d="M7 4v16M3 16l4 4 4-4"/>
+      <path d="M13 6h8M13 12h6M13 18h4"/>
+    </Icon>
+  )
+}
+
 // Its two sheets move apart on hover (App.css), as if the copy came out of the original
 export function CopyIcon() {
   return (
