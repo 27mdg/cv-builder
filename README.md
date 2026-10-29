@@ -1,4 +1,4 @@
-# CV Gratis
+# CV Builder
 
 A free CV builder that aims to be the most complete one you can use: fill in a form, pick a
 template and download your CV as a PDF. No sign-up, no watermark, no payment, and no data
