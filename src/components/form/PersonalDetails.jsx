@@ -131,8 +131,6 @@ function PersonalDetails({ data, onChange }) {
         {visible.map((field) => (
           <Animated
             key={field.name}
-            // The licence buttons need the whole row
-            className={field.name === 'drivingLicense' ? 'field-full' : undefined}
             appear={opened.includes(field.name)}
             leaving={isLeaving(field.name)}
             onLeft={() => left(field.name)}

@@ -393,13 +393,22 @@
 .custom-field { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 16px; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }
-/* Driving licence categories: small buttons that light up when chosen */
-.license-options { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-.form-panel .license-option { min-width: 44px; height: 34px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--field); color: var(--text); font-size: 14px; font-weight: 600; transition: background-color 0.15s ease, color 0.15s ease; }
-.form-panel .license-option:hover { border-color: var(--brand-dark); }
-.form-panel .license-option[aria-pressed="true"] { border-color: var(--brand-dark); background: var(--brand-dark); color: var(--text-on-brand); }
+/* Driving licence (LicenseField.jsx): a field with small tags inside and suggestions below */
+.tags-input { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; margin-top: 6px; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--field); cursor: text; }
+.tags-input:focus-within { border-color: var(--brand-dark); outline: 1px solid var(--brand-dark); }
+.tag { display: inline-flex; align-items: center; gap: 2px; height: 28px; padding: 0 4px 0 10px; border-radius: 999px; background: var(--brand-light); color: var(--brand-dark); font-size: 14px; font-weight: 600; animation: badge-in 0.2s var(--ease-out); }
+.form-panel .tag button { display: flex; padding: 3px; border: none; border-radius: 50%; background: transparent; color: inherit; }
+.form-panel .tag button:hover { background: var(--surface); }
+.tag svg { width: 12px; height: 12px; }
+/* The typing spot inside the box: no box of its own. The :not() parts outweigh the general field rule. */
+.form-panel .tags-input input:not([type="checkbox"]):not([type="file"]) { flex: 1; width: auto; min-width: 70px; margin: 0; padding: 4px 2px; border: none; background: transparent; font-size: 16px; }
+.form-panel .tags-input input:focus { outline: none; }
+.tags-suggestions { position: absolute; top: calc(100% - 10px); right: 0; left: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 24px var(--shadow); animation: rise-in 0.18s var(--ease-out); }
+.tags-suggestions-title { flex-basis: 100%; color: var(--text-muted); font-size: 12px; font-weight: 600; }
+.form-panel .tag-suggestion { height: 28px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--field); color: var(--text); font-size: 13px; font-weight: 600; }
+.form-panel .tag-suggestion:hover { border-color: var(--brand-dark); }
 @media (prefers-reduced-motion: reduce) {
-  .form-panel .license-option { transition: none; }
+  .tag, .tags-suggestions { animation: none; }
 }
 /* A link: its kind, its address and its × on one row */
 .link-field { display: grid; grid-template-columns: minmax(130px, 180px) 1fr auto; align-items: center; gap: 12px; margin-bottom: 16px; }

@@ -30,6 +30,11 @@ const es = {
     website: 'Página web',
     linkedin: 'LinkedIn',
   },
+  licence: {
+    placeholder: 'Elige o escribe, p. ej. B',
+    suggestions: 'Categorías habituales',
+    remove: (category) => `Quitar ${category}`,
+  },
   links: {
     button: 'Red o enlace',
     type: 'Tipo de enlace',
