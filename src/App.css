@@ -47,8 +47,6 @@
 .danger-button { border: none; background: var(--accent-strong); color: var(--text-on-accent); }
 .danger-button:hover { background: var(--accent-strong-hover); }
 
-.notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 8px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; }
-.notice svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--brand-dark); }
 .download { display: flex; align-items: center; gap: 12px; }
 /* The only coloured button: terracotta marks the main action */
 .download button { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border: none; border-radius: var(--radius); background: var(--accent-strong); color: var(--text-on-accent); font: inherit; font-weight: 600; cursor: pointer; }

@@ -232,6 +232,7 @@ const es = {
     // Read aloud by screen readers
     value: (percent) => `El formulario ocupa el ${percent} % del ancho`,
   },
+  // Not shown at the moment: kept for the future home page
   storage: {
     notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
   },
