@@ -362,9 +362,11 @@
 .form-panel .rich-toolbar button:hover, .form-panel .rich-toolbar button[aria-expanded="true"] { background: var(--surface-sunken); }
 .form-panel .rich-toolbar .rich-bold { font-family: var(--font-body); font-size: 16px; font-weight: 700; }
 .rich-toolbar svg { width: 18px; height: 18px; }
-.rich-link { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; border-bottom: 1px solid var(--border); }
-.form-panel .rich-link input { flex: 1; min-width: 180px; margin: 0; padding: 8px 10px; font-size: 14px; }
-.form-panel .rich-link .chip { padding: 6px 12px; font-size: 14px; }
+/* Small and flat: it is a quick extra step, not a main field. The :not() parts match the
+   general field rule's weight, so these sizes win over it. */
+.rich-link { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.form-panel .rich-link input:not([type="checkbox"]):not([type="file"]) { flex: 1; width: auto; min-width: 160px; height: 30px; margin: 0; padding: 0 10px; font-size: 13px; }
+.form-panel .rich-link .chip { height: 30px; padding: 0 12px; font-size: 13px; line-height: 1; }
 .rich-content { min-height: 120px; padding: 12px 14px; color: var(--text); font-size: 16px; line-height: 1.6; outline: none; overflow-wrap: anywhere; }
 .rich-content ul { margin: 0; padding-left: 22px; }
 .rich-content a { color: var(--brand-dark); text-decoration: underline; }
