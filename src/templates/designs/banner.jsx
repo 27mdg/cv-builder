@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, personalDetails, filledSections } from '../format.js'
+import { hasText, personalDetails, filledSections, sectionTitle } from '../format.js'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
 import { Bar } from '../parts/levels.jsx'
@@ -178,7 +178,7 @@ function Banner({ cv, template }) {
 
   const mainBlocks = main.map(({ key, list, text }) => ({
     key,
-    title: texts[key].title,
+    title: sectionTitle(cv, key),
     items: mainItems(key, list, text),
   }))
 
@@ -221,7 +221,7 @@ function Banner({ cv, template }) {
               </SidebarSection>
             )}
             {sidebar.map(({ key, list }) => (
-              <SidebarSection key={key} s={s} title={texts[key].title}>
+              <SidebarSection key={key} s={s} title={sectionTitle(cv, key)}>
                 <SidebarList s={s} sectionKey={key} list={list}/>
               </SidebarSection>
             ))}

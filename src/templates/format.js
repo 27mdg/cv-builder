@@ -29,6 +29,12 @@ export function formatBirthDate(date) {
   return `${day}/${month}/${year}`
 }
 
+/** The title a section has in the CV: the one the user wrote, or the usual one. */
+export function sectionTitle(cv, key) {
+  const custom = cv.sectionSettings?.[key]?.title
+  return hasText(custom) ? custom.trim() : texts[key].title
+}
+
 // true if the text has more than whitespace
 export function hasText(text) {
   return typeof text === 'string' && text.trim() !== ''

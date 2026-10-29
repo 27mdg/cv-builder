@@ -185,6 +185,8 @@
 .section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
 /* The + spins on hover, the eye does not */
 .item-actions .chip:hover svg { transform: none; }
+.form-panel .rename-field { margin-bottom: 20px; }
+.field-hint { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
 .section-badge { padding: 2px 8px; border-radius: 999px; background: var(--surface-sunken); color: var(--text-muted); font-family: var(--font-body); font-size: 12px; font-weight: 600; }
 /* Spins on hover like the + of the add buttons. 90°, not 45°: a × turned 45° would become a + */
 .section-remove svg { width: 18px; height: 18px; transition: transform 0.25s ease; }

@@ -156,7 +156,9 @@ function App() {
       summary,
       done: summary !== '',
       hidden,
-      // The personal details always go in the CV
+      customTitle: cv.sectionSettings[key]?.title ?? '',
+      // The personal details always go in the CV, with their usual title
+      onRename: key === 'personal' ? undefined : (title) => changeSectionSetting(key, 'title', title),
       onToggleHidden: key === 'personal' ? undefined : () => changeSectionSetting(key, 'hidden', !hidden),
     }
   }

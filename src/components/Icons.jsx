@@ -170,6 +170,10 @@ export function EyeOffIcon() {
   )
 }
 
+export function PencilIcon() {
+  return <Icon><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4zM13.5 6.5l4 4"/></Icon>
+}
+
 export function ArrowIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"

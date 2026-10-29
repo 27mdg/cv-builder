@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle } from '../format.js'
 import { Dots } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { Gradient } from '../parts/Gradient.jsx'
@@ -187,11 +187,11 @@ function TimelineTemplate({ cv, template }) {
   const mainBlocks = main.map(({ key, list, text }) => (list
     ? {
       key,
-      title: texts[key].title,
+      title: sectionTitle(cv, key),
       items: timelineItems(s, v, key, list),
       container: (children) => <Timeline color={v.accentText}>{children}</Timeline>,
     }
-    : { key, title: texts[key].title, items: [<Text key="text">{text}</Text>] }))
+    : { key, title: sectionTitle(cv, key), items: [<Text key="text">{text}</Text>] }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>
@@ -220,7 +220,7 @@ function TimelineTemplate({ cv, template }) {
             </SidebarSection>
           )}
           {sidebar.map(({ key, list }) => (
-            <SidebarSection key={key} s={s} title={texts[key].title}>
+            <SidebarSection key={key} s={s} title={sectionTitle(cv, key)}>
               <SidebarList s={s} v={v} sectionKey={key} list={list}/>
             </SidebarSection>
           ))}

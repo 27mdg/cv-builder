@@ -1,5 +1,6 @@
+import { useRef, useState } from 'react'
 import texts from '../../locales/es.js'
-import { ArrowIcon, CheckIcon, CloseIcon, EyeIcon, EyeOffIcon } from '../Icons.jsx'
+import { ArrowIcon, CheckIcon, CloseIcon, EyeIcon, EyeOffIcon, PencilIcon } from '../Icons.jsx'
 
 // <details> folds and unfolds without JavaScript or state.
 // `handle`: the drag handle of sections that can be reordered (see SortableSections.jsx).
@@ -7,22 +8,44 @@ import { ArrowIcon, CheckIcon, CloseIcon, EyeIcon, EyeOffIcon } from '../Icons.j
 // `icon`: the section's icon component; `summary`: what it holds, shown while closed;
 // `done`: it has content (a tick next to the title).
 // `hidden` + `onToggleHidden`: an eye button that leaves the section out of the PDF without deleting it.
+// `customTitle` + `onRename`: a pencil button to give the section another title in the CV.
 function Section({
-  title, icon: Icon, summary, done, hidden, onToggleHidden, open, handle, onRemove, children,
+  title, icon: Icon, summary, done, hidden, onToggleHidden, customTitle, onRename, open, handle, onRemove, children,
 }) {
+  const [renaming, setRenaming] = useState(false)
+  const details = useRef(null)
+  const shownTitle = customTitle?.trim() || title
+
   return (
-    <details className={hidden ? 'section is-hidden' : 'section'} open={open}>
+    <details ref={details} className={hidden ? 'section is-hidden' : 'section'} open={open}>
       <summary>
         {handle}
         {Icon && <span className="section-icon"><Icon/></span>}
         <div className="section-heading">
           <h2>
-            {title}
+            {shownTitle}
             {done && <span className="section-done" role="img" aria-label={texts.summary.done}><CheckIcon/></span>}
             {hidden && <span className="section-badge">{texts.visibility.hidden}</span>}
           </h2>
           {summary && <p className="section-summary">{summary}</p>}
         </div>
+        {onRename && (
+          <button
+            type="button"
+            className="section-action"
+            title={texts.rename.button}
+            aria-label={`${texts.rename.button}: ${shownTitle}`}
+            aria-expanded={renaming}
+            onClick={(e) => {
+              e.preventDefault()
+              // The title field lives inside the section, so it must be open to show it
+              details.current.open = true
+              setRenaming(!renaming)
+            }}
+          >
+            <PencilIcon/>
+          </button>
+        )}
         {onToggleHidden && (
           <button
             type="button"
@@ -55,7 +78,22 @@ function Section({
         )}
         <span className="section-arrow" title={texts.common.toggle}><ArrowIcon/></span>
       </summary>
-      <div className="section-content">{children}</div>
+      <div className="section-content">
+        {renaming && (
+          <label className="rename-field">
+            {texts.rename.label}
+            <input
+              value={customTitle}
+              placeholder={title}
+              autoFocus
+              onChange={(e) => onRename(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && setRenaming(false)}
+            />
+            <span className="field-hint">{texts.rename.hint(title)}</span>
+          </label>
+        )}
+        {children}
+      </div>
     </details>
   )
 }

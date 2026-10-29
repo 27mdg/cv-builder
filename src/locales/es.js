@@ -290,6 +290,11 @@ const es = {
     hideItem: 'Ocultar en el CV',
     showItem: 'Mostrar en el CV',
   },
+  rename: {
+    button: 'Cambiar el título',
+    label: 'Título de la sección en el CV',
+    hint: (title) => `Déjalo vacío para usar «${title}».`,
+  },
   // The line under the title of a closed form section
   summary: {
     more: (count) => `+${count} más`,

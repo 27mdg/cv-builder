@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle } from '../format.js'
 import { PdfIcon } from '../parts/icons.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 
@@ -210,7 +210,7 @@ function Contrast({ cv, template }) {
             </View>
           )}
           {mainBlocks.map((block) => (
-            <Section key={block.key} s={s} v={v} icon={sectionIcons[block.key]} title={texts[block.key].title} items={block.items}/>
+            <Section key={block.key} s={s} v={v} icon={sectionIcons[block.key]} title={sectionTitle(cv, block.key)} items={block.items}/>
           ))}
         </View>
 
@@ -227,7 +227,7 @@ function Contrast({ cv, template }) {
             </SidebarSection>
           )}
           {sidebar.map(({ key, list }) => (
-            <SidebarSection key={key} s={s} v={v} icon={sectionIcons[key]} title={texts[key].title}>
+            <SidebarSection key={key} s={s} v={v} icon={sectionIcons[key]} title={sectionTitle(cv, key)}>
               <SidebarList s={s} sectionKey={key} list={list}/>
             </SidebarSection>
           ))}

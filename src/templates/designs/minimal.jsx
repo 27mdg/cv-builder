@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle } from '../format.js'
 import { PdfIcon } from '../parts/icons.jsx'
 import { Dots } from '../parts/levels.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
@@ -156,7 +156,7 @@ function Minimal({ cv, template }) {
             <Section
               key={key}
               s={s}
-              title={texts[key].title}
+              title={sectionTitle(cv, key)}
               items={list ? itemList(s, key, list) : [<Text key="text" style={s.item}>{text}</Text>]}
             />
           ))}
@@ -167,7 +167,7 @@ function Minimal({ cv, template }) {
                   {i > 0 && <View style={s.columnGap}/>}
                   <Section
                     s={s}
-                    title={texts[key].title}
+                    title={sectionTitle(cv, key)}
                     style={s.column}
                     items={key === 'skills' ? skillItems(s, v, list) : languageItems(s, list)}
                   />
@@ -180,7 +180,7 @@ function Minimal({ cv, template }) {
         <View style={s.sidebar}>
           {p.photo && <Image style={s.photo} src={p.photo}/>}
           {sidebar.map(({ key, list, text }) => (
-            <SidebarSection key={key} s={s} title={texts[key].title}>
+            <SidebarSection key={key} s={s} title={sectionTitle(cv, key)}>
               {list
                 ? list.filter((item) => hasText(item[field[key]])).map((item) => (
                   <Text key={item.id} style={s.line}>- {item[field[key]]}</Text>

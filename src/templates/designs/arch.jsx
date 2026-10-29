@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, personalDetails, filledSections } from '../format.js'
+import { hasText, personalDetails, filledSections, sectionTitle } from '../format.js'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
 import { Dots } from '../parts/levels.jsx'
@@ -116,7 +116,7 @@ function Arch({ cv, template }) {
     },
     ...sidebar.map(({ key, list }) => ({
       key,
-      title: texts[key].title,
+      title: sectionTitle(cv, key),
       content: sectionItems({
         styles: s.sidebarText,
         sectionKey: key,
@@ -128,7 +128,7 @@ function Arch({ cv, template }) {
 
   const mainBlocks = main.map(({ key, list, text }) => ({
     key,
-    title: texts[key].title,
+    title: sectionTitle(cv, key),
     items: list ? sectionItems({ styles: s.mainText, sectionKey: key, list }) : [<Text key="text">{text}</Text>],
   }))
 
