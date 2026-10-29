@@ -70,6 +70,12 @@ export function loadCv() {
   }
 }
 
+// Asks the browser not to clear the saved CV when space runs low or after weeks without visits.
+// Called after a download, when the CV is worth keeping, because some browsers ask the user first.
+export function keepSaved() {
+  navigator.storage?.persist?.().catch(() => {})
+}
+
 export function saveCv(cv) {
   try {
     localStorage.setItem(storageKey, JSON.stringify({ version, cv }))

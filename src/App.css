@@ -23,7 +23,7 @@
 .secondary-button { padding: 8px 18px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
 .secondary-button:hover { border-color: var(--brand-dark); background: var(--background); }
 /* Same height for every top bar button: the icon-only one would otherwise be shorter than text */
-.actions .secondary-button, .download button { height: 40px; }
+.actions .secondary-button, .download-button { height: 40px; }
 .icon-button { display: flex; align-items: center; justify-content: center; width: 40px; padding: 0; }
 
 /* Shown on hover and also on keyboard focus, so it is not mouse-only */
@@ -50,12 +50,19 @@
 .danger-button { border: none; background: var(--accent-strong); color: var(--text-on-accent); }
 .danger-button:hover { background: var(--accent-strong-hover); }
 
-.download { display: flex; align-items: center; gap: 12px; }
+.download { position: relative; display: flex; align-items: center; gap: 12px; }
 /* The only coloured button: terracotta marks the main action */
-.download button { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border: none; border-radius: var(--radius); background: var(--accent-strong); color: var(--text-on-accent); font: inherit; font-weight: 600; cursor: pointer; }
-.download button svg { width: 18px; height: 18px; }
-.download button:hover:not(:disabled) { background: var(--accent-strong-hover); }
-.download button:disabled { opacity: 0.6; cursor: wait; }
+.download-button { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border: none; border-radius: var(--radius); background: var(--accent-strong); color: var(--text-on-accent); font: inherit; font-weight: 600; cursor: pointer; }
+.download-button svg { width: 18px; height: 18px; }
+.download-button:hover:not(:disabled) { background: var(--accent-strong-hover); }
+.download-button:disabled { opacity: 0.6; cursor: wait; }
+/* Like the tooltip bubble, but it stays until closed or used */
+.save-reminder { position: absolute; top: calc(100% + 12px); right: 0; z-index: 200; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; width: 300px; padding: 16px 40px 16px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; line-height: 1.45; box-shadow: 0 6px 20px var(--shadow); animation: rise-in 0.2s ease-out; }
+.save-reminder::before { content: ''; position: absolute; top: -7px; right: 44px; width: 12px; height: 12px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); background: var(--surface); transform: rotate(45deg); }
+.save-reminder .secondary-button { height: auto; padding: 6px 14px; font-size: 14px; }
+.save-reminder-close { position: absolute; top: 8px; right: 8px; display: flex; padding: 4px; border: none; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer; }
+.save-reminder-close:hover { background: var(--background); color: var(--text); }
+.save-reminder-close svg { width: 16px; height: 16px; }
 .workspace { flex: 1; display: flex; min-height: 0; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */

@@ -231,6 +231,10 @@ const es = {
     error: 'No se ha podido generar el PDF. Inténtalo de nuevo.',
     fileName: 'CV',
     tooltip: 'Descarga tu CV en PDF, listo para enviar.',
+    // Shown once per visit after downloading
+    reminder: 'Tu CV solo está guardado en este navegador. Guarda una copia en tu equipo para poder seguir editándolo aunque borres el historial o cambies de ordenador.',
+    reminderExport: 'Exportar una copia',
+    reminderClose: 'Cerrar aviso',
   },
   tools: {
     templates: 'Plantillas',
