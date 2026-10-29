@@ -355,6 +355,10 @@
    The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
 .form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 1px solid var(--brand-dark); outline-offset: 0; border-color: var(--brand-dark); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
+/* The browser paints autofilled fields light blue; its background cannot be changed directly,
+   so a wide inner shadow in our field colour covers it */
+.form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--field) inset; -webkit-text-fill-color: var(--text); caret-color: var(--text); }
+.file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--surface) inset; }
 .form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
 /* RichTextEditor.jsx: a field like the others, with a small toolbar on top */
