@@ -168,7 +168,8 @@
 .extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
 .section-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }
-.section[open] .section-arrow { transform: rotate(180deg); }
+/* White while open, like on hover, so an open section stands out from the closed ones */
+.section[open] .section-arrow { transform: rotate(180deg); background: var(--surface); }
 .section > summary:hover .section-arrow { background: var(--surface); }
 .section-content { padding-bottom: 32px; }
 
