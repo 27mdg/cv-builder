@@ -85,6 +85,7 @@ const es = {
     start: 'Inicio',
     end: 'Fin',
     description: 'Descripción',
+    link: 'Enlace',
   },
   education: {
     title: 'Formación',
@@ -136,6 +137,12 @@ const es = {
     title: 'Aptitudes',
     quality: 'Aptitud',
     add: 'Añadir aptitud',
+  },
+  projects: {
+    title: 'Proyectos',
+    project: 'Proyecto',
+    role: 'Tu papel',
+    add: 'Añadir proyecto',
   },
   preview: {
     loading: 'Cargando vista previa…',

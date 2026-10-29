@@ -7,7 +7,8 @@ import texts from '../locales/es.js'
  * No month → '2024'. No year → ''.
  */
 export function formatDate(date, dateFormat) {
-  if (!date.year) return ''
+  // Some sections have a single date and no end
+  if (!date?.year) return ''
   if (!date.month) return date.year
   const names = texts.common.dateMonths[dateFormat]
   if (!names) return date.month.padStart(2, '0') + '/' + date.year
@@ -38,24 +39,33 @@ export function join(parts, separator = ' · ') {
   return parts.filter(hasText).join(separator)
 }
 
-// Title and detail of an item, e.g. ['Designer — Studio X', '03/2021 – Presente · Madrid']
-export function itemSummary(key, item) {
-  if (key === 'education') {
-    return [join([item.degree, item.school], ' — '), join([item.dates, item.city])]
-  }
-  if (key === 'courses') return [item.course, item.dates]
-  if (key === 'certificates') return [item.certificate, item.dates]
-  return [join([item.position, item.employer], ' — '), join([item.dates, item.city])]
+// Which fields of each section's items are the title and the subtitle; the rest use
+// position + employer (experience, internships, activities…)
+const itemTitles = {
+  education: ['degree', 'school'],
+  courses: ['course'],
+  certificates: ['certificate'],
+  projects: ['project', 'role'],
 }
 
-// The same item split into separate pieces, for templates that place them apart:
-// { title, subtitle, date, place }
+/**
+ * An item split into the pieces templates place: { title, subtitle, date, place }.
+ * `place` is the city, or the link for items without one (e.g. projects).
+ */
 export function itemParts(key, item) {
-  const parts = { date: item.dates, place: item.city ?? '' }
-  if (key === 'education') return { ...parts, title: item.degree, subtitle: item.school }
-  if (key === 'courses') return { ...parts, title: item.course, subtitle: '' }
-  if (key === 'certificates') return { ...parts, title: item.certificate, subtitle: '' }
-  return { ...parts, title: item.position, subtitle: item.employer }
+  const [title, subtitle] = itemTitles[key] ?? ['position', 'employer']
+  return {
+    title: item[title] ?? '',
+    subtitle: (subtitle && item[subtitle]) ?? '',
+    date: item.dates ?? '',
+    place: item.city || item.link || '',
+  }
+}
+
+// Title and detail of an item in two lines, e.g. ['Designer — Studio X', '03/2021 – Presente · Madrid']
+export function itemSummary(key, item) {
+  const { title, subtitle, date, place } = itemParts(key, item)
+  return [join([title, subtitle], ' — '), join([date, place])]
 }
 
 // { fullName, contact: [{ type, text }], otherDetails: ['Label: value'] }, without empty ones.
