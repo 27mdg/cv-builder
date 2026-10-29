@@ -235,14 +235,18 @@
 .library-plus { display: flex; margin-top: 8px; color: var(--brand-dark); }
 .library-plus svg { width: 16px; height: 16px; transition: transform 0.25s ease; }
 .library-card:hover .library-plus svg { transform: rotate(90deg); }
-/* The custom section, open: it takes a whole row and shows its two kinds */
-.form-panel .library-card.is-open { grid-column: 1 / -1; flex-direction: column; align-items: stretch; border-color: var(--brand-dark); animation: rise-in 0.18s var(--ease-out); }
-.form-panel .library-close { display: flex; align-items: center; gap: 12px; padding: 0; border: none; background: transparent; color: var(--text); text-align: left; }
-.library-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-.form-panel .library-choices .library-card { background: var(--field); }
+/* The custom section's two kinds, in a bubble above its card (arrow pointing down at it).
+   cqw: at most the form's width, as the form panel is a size container. */
+.library-custom { position: relative; }
+.form-panel .library-custom > .library-card[aria-expanded="true"] { border-color: var(--brand-dark); }
+.library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 24px var(--shadow); transform: translateX(-50%); animation: rise-in 0.18s var(--ease-out); }
+.library-popover::after { content: ''; position: absolute; bottom: -7px; left: 50%; width: 12px; height: 12px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); transform: translateX(-50%) rotate(45deg); }
+.library-question { margin: 0 2px 2px; color: var(--text-muted); font-size: 13px; font-weight: 600; }
+.form-panel .library-popover .library-card { padding: 10px 12px; background: var(--field); }
+.library-popover .library-icon { width: 30px; height: 30px; }
 @media (prefers-reduced-motion: reduce) {
   .library-plus svg { transition: none; }
-  .form-panel .library-card.is-open { animation: none; }
+  .library-popover { animation: none; }
 }
 .section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }

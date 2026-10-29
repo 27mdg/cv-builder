@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import texts from '../../locales/es.js'
 import sectionIcons from './sectionIcons.js'
 import { LayersIcon, PlusIcon, TextIcon } from '../Icons.jsx'
@@ -25,11 +25,28 @@ function Card({ icon: Icon, title, hint, onClick, expanded }) {
  */
 function SectionLibrary({ keys, onAdd, onAddCustom }) {
   const [choosingCustom, setChoosingCustom] = useState(false)
+  const customBox = useRef(null)
 
   function addCustom(type) {
     setChoosingCustom(false)
     onAddCustom(type)
   }
+
+  useEffect(() => {
+    if (!choosingCustom) return
+    function handlePointerDown(e) {
+      if (!customBox.current.contains(e.target)) setChoosingCustom(false)
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') setChoosingCustom(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [choosingCustom])
 
   return (
     <div className="extra-sections">
@@ -38,20 +55,18 @@ function SectionLibrary({ keys, onAdd, onAddCustom }) {
         {keys.map((key) => (
           <Card key={key} icon={sectionIcons[key]} title={texts[key].title} hint={t.hints[key]} onClick={() => onAdd(key)}/>
         ))}
-        {choosingCustom
-          ? (
-            <div className="library-card is-open">
-              <button type="button" className="library-close" onClick={() => setChoosingCustom(false)} aria-expanded="true">
-                <span className="library-icon"><LayersIcon/></span>
-                <span className="library-title">{t.custom}</span>
-              </button>
-              <div className="library-choices">
-                <Card icon={LayersIcon} title={t.customList} hint={t.customListHint} onClick={() => addCustom('list')}/>
-                <Card icon={TextIcon} title={t.customText} hint={t.customTextHint} onClick={() => addCustom('text')}/>
-              </div>
+        {/* The two kinds open in a bubble above the card, so nothing grows down out of sight */}
+        <div className="library-custom" ref={customBox}>
+          <Card icon={LayersIcon} title={t.custom} hint={t.hints.custom}
+            onClick={() => setChoosingCustom(!choosingCustom)} expanded={choosingCustom}/>
+          {choosingCustom && (
+            <div className="library-popover" role="dialog" aria-label={t.customQuestion}>
+              <p className="library-question">{t.customQuestion}</p>
+              <Card icon={LayersIcon} title={t.customList} hint={t.customListHint} onClick={() => addCustom('list')}/>
+              <Card icon={TextIcon} title={t.customText} hint={t.customTextHint} onClick={() => addCustom('text')}/>
             </div>
-          )
-          : <Card icon={LayersIcon} title={t.custom} hint={t.hints.custom} onClick={() => setChoosingCustom(true)} expanded={false}/>}
+          )}
+        </div>
       </div>
     </div>
   )

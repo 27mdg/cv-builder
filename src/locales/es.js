@@ -270,6 +270,7 @@ const es = {
       custom: 'Crea la tuya, con el nombre que quieras.',
     },
     custom: 'Sección personalizada',
+    customQuestion: '¿Qué tipo de sección quieres?',
     customList: 'Con elementos',
     customListHint: 'Una lista con título, fechas y descripción, como Experiencia.',
     customText: 'Texto libre',
