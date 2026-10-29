@@ -174,7 +174,12 @@
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .form-panel .section-remove { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
 .form-panel .section-remove:hover { background: var(--background); color: var(--danger); }
-.section-remove svg { width: 18px; height: 18px; }
+/* Spins on hover like the + of the add buttons. 90°, not 45°: a × turned 45° would become a + */
+.section-remove svg { width: 18px; height: 18px; transition: transform 0.25s ease; }
+.section-remove:hover svg { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  .section-remove svg { transition: none; }
+}
 .extra-sections { padding: 28px 0 8px; }
 .extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
 .section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
