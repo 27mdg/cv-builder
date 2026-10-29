@@ -1,6 +1,6 @@
 import {
   PersonIcon, TextIcon, CapIcon, BriefcaseIcon, StarIcon, GlobeIcon, HeartIcon, BookIcon,
-  BadgeIcon, FlagIcon, MedalIcon, BulbIcon, TrophyIcon, FolderIcon,
+  BadgeIcon, FlagIcon, MedalIcon, BulbIcon, TrophyIcon, FolderIcon, HandIcon,
 } from '../Icons.jsx'
 
 // The icon of each form section; the keys match initialCv.js. A new section needs one here.
@@ -19,6 +19,7 @@ const sectionIcons = {
   qualities: BulbIcon,
   achievements: TrophyIcon,
   projects: FolderIcon,
+  volunteering: HandIcon,
 }
 
 export default sectionIcons

@@ -1,7 +1,7 @@
 // Rarely used sections: hidden until the user adds them, so the form starts short
 export const optionalSections = [
   'hobbies', 'courses', 'internships', 'activities', 'certificates', 'qualities', 'achievements',
-  'projects',
+  'projects', 'volunteering',
 ]
 
 // `key` must match initialCv.js and the locale file.
@@ -55,6 +55,7 @@ const sections = [
   },
   { key: 'internships', fields: jobFields },
   { key: 'activities', fields: jobFields },
+  { key: 'volunteering', fields: jobFields },
   {
     key: 'certificates',
     fields: [

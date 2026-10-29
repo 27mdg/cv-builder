@@ -144,6 +144,12 @@ const es = {
     role: 'Tu papel',
     add: 'Añadir proyecto',
   },
+  volunteering: {
+    title: 'Voluntariado',
+    position: 'Tarea',
+    employer: 'Organización',
+    add: 'Añadir voluntariado',
+  },
   preview: {
     loading: 'Cargando vista previa…',
   },
