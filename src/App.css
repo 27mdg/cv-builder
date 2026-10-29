@@ -366,12 +366,15 @@
    general field rule's weight, so these sizes win over it. */
 .rich-link { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--border); }
 .form-panel .rich-link input:not([type="checkbox"]):not([type="file"]) { flex: 1; width: auto; min-width: 160px; height: 30px; margin: 0; padding: 0 10px; font-size: 13px; }
+/* No ring of its own: the whole editor around it already shows one */
+.form-panel .rich-link input:focus { outline: none; border-color: var(--border-strong); }
 .form-panel .rich-link .chip { height: 30px; padding: 0 12px; font-size: 13px; line-height: 1; }
-.rich-content { min-height: 120px; padding: 12px 14px; color: var(--text); font-size: 16px; line-height: 1.6; outline: none; overflow-wrap: anywhere; }
+.rich-content { position: relative; min-height: 120px; padding: 12px 14px; color: var(--text); font-size: 16px; line-height: 1.6; outline: none; overflow-wrap: anywhere; }
 .rich-content ul { margin: 0; padding-left: 22px; }
 .rich-content a { color: var(--brand-dark); text-decoration: underline; }
-/* The hint while empty, like a field's placeholder */
-.rich-content.is-empty::before { content: attr(data-placeholder); color: var(--text-muted); pointer-events: none; }
+/* The hint while empty, like a field's placeholder. Positioned out of the text flow, or the
+   cursor would sit after it instead of at the start. */
+.rich-content.is-empty::before { content: attr(data-placeholder); position: absolute; top: 12px; right: 14px; left: 14px; color: var(--text-muted); pointer-events: none; }
 .form-panel button { padding: 8px 14px; border-radius: var(--radius); font: inherit; cursor: pointer; }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import texts from '../../locales/es.js'
 import { escape, fromDom, toHtml } from './richTextHtml.js'
 import { LinkIcon, ListIcon } from '../Icons.jsx'
+import Animated from '../Animated.jsx'
 
 const t = texts.richText
 
@@ -89,21 +90,23 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
             onMouseDown={(e) => e.preventDefault()} onClick={() => (linkOpen ? setLinkOpen(false) : openLink())}><LinkIcon/></button>
         </div>
         {linkOpen && (
-          <div className="rich-link">
-            <input
-              value={linkUrl}
-              placeholder={t.linkPlaceholder}
-              aria-label={t.link}
-              autoFocus
-              onChange={(e) => setLinkUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') applyLink(false)
-                if (e.key === 'Escape') setLinkOpen(false)
-              }}
-            />
-            <button type="button" className="chip" onClick={() => applyLink(false)}>{t.applyLink}</button>
-            <button type="button" className="chip" onClick={() => applyLink(true)}>{t.removeLink}</button>
-          </div>
+          <Animated appear>
+            <div className="rich-link">
+              <input
+                value={linkUrl}
+                placeholder={t.linkPlaceholder}
+                aria-label={t.link}
+                autoFocus
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') applyLink(false)
+                  if (e.key === 'Escape') setLinkOpen(false)
+                }}
+              />
+              <button type="button" className="chip" onClick={() => applyLink(false)}>{t.applyLink}</button>
+              <button type="button" className="chip" onClick={() => applyLink(true)}>{t.removeLink}</button>
+            </div>
+          </Animated>
         )}
         <div
           ref={editor}
