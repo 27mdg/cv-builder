@@ -287,6 +287,8 @@ const es = {
     hide: 'Ocultar en el CV (no se borra)',
     show: 'Volver a mostrar en el CV',
     hidden: 'Oculta en el CV',
+    hideItem: 'Ocultar en el CV',
+    showItem: 'Mostrar en el CV',
   },
   // The line under the title of a closed form section
   summary: {

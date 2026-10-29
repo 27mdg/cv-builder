@@ -105,7 +105,7 @@ export function personalDetails(personal) {
 
 // The sections that have something to show, in the user's order:
 // [{ key, text }] for profile and achievements, [{ key, list }] for the rest. Sections the user
-// hid (sectionSettings) are left out.
+// hid (sectionSettings) are left out, and so are hidden items (`item.hidden`).
 // Each dated item gets its dates already written (`dates`) in the chosen format, so the
 // templates do not need to know about it.
 export function filledSections(cv) {
@@ -115,7 +115,7 @@ export function filledSections(cv) {
     .map((key) => {
       if (key === 'references' && cv.referencesOnRequest) return { key, text: texts.references.onRequestText }
       return Array.isArray(cv[key])
-        ? { key, list: itemsWithContent(cv[key]).map(withDates) }
+        ? { key, list: itemsWithContent(cv[key]).filter((item) => !item.hidden).map(withDates) }
         : { key, text: cv[key] }
     })
     .filter((section) => (section.list ? section.list.length > 0 : hasText(section.text)))
@@ -123,7 +123,8 @@ export function filledSections(cv) {
 
 function hasContent(item) {
   return Object.entries(item).some(([name, value]) => {
-    if (name === 'id') return false
+    // `hidden` is a setting, not something the user wrote
+    if (name === 'id' || name === 'hidden') return false
     if (typeof value === 'string') return hasText(value)
     if (typeof value === 'object') return value.year !== '' // a date without a year is not shown
     return Boolean(value) // `current` or a numeric level

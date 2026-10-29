@@ -179,6 +179,12 @@
 .section-action svg { width: 18px; height: 18px; }
 /* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
 .section.is-hidden .section-icon, .section.is-hidden .section-summary { opacity: 0.5; }
+.item-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+/* A hidden item stays editable; only its fields look faded */
+.item.is-hidden > label, .item.is-hidden > .date-field { opacity: 0.55; }
+.section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
+/* The + spins on hover, the eye does not */
+.item-actions .chip:hover svg { transform: none; }
 .section-badge { padding: 2px 8px; border-radius: 999px; background: var(--surface-sunken); color: var(--text-muted); font-family: var(--font-body); font-size: 12px; font-weight: 600; }
 /* Spins on hover like the + of the add buttons. 90°, not 45°: a × turned 45° would become a + */
 .section-remove svg { width: 18px; height: 18px; transition: transform 0.25s ease; }

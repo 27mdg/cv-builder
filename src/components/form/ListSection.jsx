@@ -4,7 +4,7 @@ import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
 import DateField from './DateField.jsx'
 import Select from './Select.jsx'
-import { PlusIcon } from '../Icons.jsx'
+import { EyeIcon, EyeOffIcon, PlusIcon } from '../Icons.jsx'
 
 function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
@@ -117,7 +117,8 @@ function ListSection({ sectionKey, fields, list, onChange }) {
           leaving={isLeaving(item.id)}
           onLeft={() => left(item.id)}
         >
-          <div className="item">
+          <div className={item.hidden ? 'item is-hidden' : 'item'}>
+            {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
             {fields.map((field) => (
               <Field
                 key={field.name}
@@ -127,7 +128,14 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                 onChange={(name, value) => change(item.id, name, value)}
               />
             ))}
-            <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+            <div className="item-actions">
+              <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+              <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
+                onClick={() => change(item.id, 'hidden', !item.hidden)}>
+                {item.hidden ? <EyeOffIcon/> : <EyeIcon/>}
+                {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
+              </button>
+            </div>
           </div>
         </Animated>
       ))}
