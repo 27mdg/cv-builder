@@ -8,7 +8,7 @@ import Select from './Select.jsx'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
+import { CloseIcon, GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
 import { useDragSensors } from './useDragSensors.js'
 
 function labelFor(sectionKey, name) {
@@ -200,16 +200,38 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                     {handle}
                     {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
                     {groupPairs(fields.filter((field) => shows(item, field))).map((group) => {
-                      const rendered = group.map((field) => (
-                        <Field
-                          key={field.name}
-                          sectionKey={sectionKey}
-                          field={field}
-                          item={item}
-                          onChange={(name, value) => change(item.id, name, value)}
-                          autoFocus={field.optional && openedOptional.includes(optionalKey(item, field))}
-                        />
-                      ))
+                      const rendered = group.map((field) => {
+                        const input = (
+                          <Field
+                            key={field.name}
+                            sectionKey={sectionKey}
+                            field={field}
+                            item={item}
+                            onChange={(name, value) => change(item.id, name, value)}
+                            autoFocus={field.optional && openedOptional.includes(optionalKey(item, field))}
+                          />
+                        )
+                        if (!field.optional) return input
+                        // An optional field can be taken away again with its ×, like the extra
+                        // personal details: it is emptied and its "+" button comes back
+                        return (
+                          <div className="field" key={field.name}>
+                            {input}
+                            <button
+                              type="button"
+                              className="field-remove"
+                              title={texts.common.remove}
+                              aria-label={`${texts.common.remove}: ${labelFor(sectionKey, field.name)}`}
+                              onClick={() => {
+                                change(item.id, field.name, '')
+                                setOpenedOptional(openedOptional.filter((key) => key !== optionalKey(item, field)))
+                              }}
+                            >
+                              <CloseIcon/>
+                            </button>
+                          </div>
+                        )
+                      })
                       return pairOf(group[0])
                         ? <div className="field-row" key={group[0].name}>{rendered}</div>
                         : rendered
