@@ -265,8 +265,8 @@
 /* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
 .animated { display: grid; grid-template-rows: 1fr; }
 .animated-inner { min-height: 0; }
-/* Clipped top and bottom while it grows or shrinks, but not at the sides, so the focus ring of a new field (which gets
-   the cursor at once) is not cut off at the sides */
+/* Clipped top and bottom while it grows or shrinks, but not at the sides: the focus ring of a
+   new field (which gets the cursor at once) sticks out there */
 .animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow-x: visible; overflow-y: clip; }
 .animated.appearing { animation: grow-in 0.25s var(--ease-out); }
 .animated.leaving { animation: shrink-out 0.2s ease-in forwards; }
