@@ -150,6 +150,13 @@ const es = {
     employer: 'Organización',
     add: 'Añadir voluntariado',
   },
+  awards: {
+    title: 'Premios',
+    award: 'Premio o reconocimiento',
+    issuer: 'Otorgado por',
+    start: 'Fecha',
+    add: 'Añadir premio',
+  },
   preview: {
     loading: 'Cargando vista previa…',
   },

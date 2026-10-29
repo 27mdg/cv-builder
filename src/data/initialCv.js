@@ -48,13 +48,14 @@ const initialCv = {
   qualities: [],
   projects: [],
   volunteering: [],
+  awards: [],
   achievements: '',
   // Order of every section except the personal details, which always go first.
   // The user changes it by dragging the sections in the form; templates follow it.
   sectionOrder: [
     'profile', 'education', 'experience', 'skills', 'languages', 'hobbies',
     'courses', 'internships', 'activities', 'certificates', 'qualities', 'achievements',
-    'projects', 'volunteering',
+    'projects', 'volunteering', 'awards',
   ],
 }
 
