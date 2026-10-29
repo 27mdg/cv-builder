@@ -232,6 +232,18 @@ const es = {
     // Read aloud by screen readers
     value: (percent) => `El formulario ocupa el ${percent} % del ancho`,
   },
+  datePicker: {
+    placeholder: 'dd/mm/aaaa',
+    open: 'Abrir calendario',
+    calendar: 'Calendario',
+    previous: 'Mes anterior',
+    next: 'Mes siguiente',
+    clear: 'Borrar',
+    // Starting on Monday
+    weekdays: ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
+    // Read aloud by screen readers on each day
+    dayLabel: (day, month, year) => `${day} de ${month} de ${year}`,
+  },
   // The line under the title of a closed form section
   summary: {
     more: (count) => `+${count} más`,

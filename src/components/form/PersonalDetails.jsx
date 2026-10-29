@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import texts from '../../locales/es.js'
 import PhotoField from './PhotoField.jsx'
+import DatePicker from './DatePicker.jsx'
 import { CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
@@ -96,8 +97,12 @@ function PersonalDetails({ data, onChange }) {
       </div>
 
       <div className="grid">
-        {fields.map((field) => (
-          <Field key={field.name} field={field} data={data} onChange={onChange}/>
+        {fields.map((field) => (field.type === 'date'
+          ? (
+            <DatePicker key={field.name} label={texts.personal[field.name]} value={data[field.name]}
+              onChange={(value) => onChange(field.name, value)}/>
+          )
+          : <Field key={field.name} field={field} data={data} onChange={onChange}/>
         ))}
         {visible.map((field) => (
           <Animated
