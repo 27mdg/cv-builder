@@ -350,14 +350,14 @@
 }
 /* Fields are a very light cream so they stand out on the white cards.
    The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
-.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); }
+.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 1px solid var(--brand-dark); outline-offset: 0; border-color: var(--brand-dark); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
 .form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
 /* RichTextEditor.jsx: a field like the others, with a small toolbar on top */
 .rich-field { margin-bottom: 16px; }
 .rich-editor { margin-top: 6px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--field); }
-.rich-editor:focus-within { border-color: var(--brand-dark); outline: 3px solid var(--brand-dark); outline-offset: 1px; }
+.rich-editor:focus-within { border-color: var(--brand-dark); outline: 1px solid var(--brand-dark); outline-offset: 0; }
 .rich-toolbar { display: flex; gap: 2px; padding: 4px 6px; border-bottom: 1px solid var(--border); }
 .form-panel .rich-toolbar button { display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 6px; border: none; border-radius: 6px; background: transparent; color: var(--text); }
 .form-panel .rich-toolbar button:hover, .form-panel .rich-toolbar button[aria-expanded="true"] { background: var(--surface-sunken); }
