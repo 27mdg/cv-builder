@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { loadCv, saveCv } from './data/storage.js'
-import { baseName } from './data/file.js'
 import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
@@ -151,11 +150,10 @@ function App() {
       <header className="topbar">
         {/* Temporary logo: it will link to the home page once there is one */}
         <a href="/" className="logo">{texts.app.title}</a>
-        {/* The placeholder shows the automatic name that is used if left empty */}
         <input
           className="file-name"
           aria-label={texts.file.name}
-          placeholder={baseName({ ...cv, fileName: '' })}
+          placeholder={texts.file.placeholder}
           value={cv.fileName}
           onChange={(e) => changeSection('fileName', e.target.value)}
         />

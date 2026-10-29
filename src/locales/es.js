@@ -192,6 +192,7 @@ const es = {
   },
   file: {
     name: 'Nombre del archivo',
+    placeholder: 'Nombre CV',
     import: 'Importar',
     importTooltip: 'Abre un archivo que exportaste antes y continúa tu CV justo donde lo dejaste.',
     export: 'Exportar',
