@@ -54,6 +54,10 @@ const initialCv = {
   // true: the CV only says that references are available on request, without the list
   referencesOnRequest: false,
   achievements: '',
+  // Drawn or uploaded as a PNG data URL; `date` as 'YYYY-MM-DD'. Goes at the end of the CV.
+  signature: { image: '', place: '', date: '' },
+  // Small text at the bottom of every page (e.g. the data protection clause)
+  footer: '',
   // Per section: { hidden: true } leaves it out of the PDF without deleting it
   sectionSettings: {},
   // Order of every section except the personal details, which always go first.

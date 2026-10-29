@@ -27,6 +27,7 @@ export function cvFromData(data) {
     ...data.cv,
     personal: { ...initialCv.personal, ...data.cv.personal },
     design: { ...initialCv.design, ...data.cv.design },
+    signature: { ...initialCv.signature, ...data.cv.signature },
   }
   // In case the file was edited by hand: lists must be lists
   for (const name of Object.keys(initialCv)) {

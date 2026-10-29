@@ -1,7 +1,8 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, personalDetails, filledSections, sectionTitle } from '../format.js'
+import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
+import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
 import { Dots } from '../parts/levels.jsx'
@@ -134,7 +135,7 @@ function Arch({ cv, template }) {
 
   return (
     <Document title={details.fullName} author={details.fullName}>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={pageWithFooter(s.page, cv)}>
         <View style={s.background} fixed/>
 
         <View style={s.main}>
@@ -150,6 +151,7 @@ function Arch({ cv, template }) {
           {mainBlocks.map((block, i) => (
             <Section key={block.key} s={s} title={block.title} first={i === 0} items={block.items}/>
           ))}
+          <Signature cv={cv}/>
         </View>
 
         <View style={s.sidebar}>
@@ -164,6 +166,7 @@ function Arch({ cv, template }) {
             </SidebarSection>
           ))}
         </View>
+        <Footer cv={cv}/>
       </Page>
     </Document>
   )

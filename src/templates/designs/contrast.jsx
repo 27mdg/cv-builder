@@ -1,7 +1,8 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { Footer, Signature } from '../parts/closing.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 
@@ -198,7 +199,7 @@ function Contrast({ cv, template }) {
 
   return (
     <Document title={details.fullName} author={details.fullName}>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={pageWithFooter(s.page, cv)}>
         <View style={s.background} fixed/>
 
         <View style={s.main}>
@@ -212,6 +213,7 @@ function Contrast({ cv, template }) {
           {mainBlocks.map((block) => (
             <Section key={block.key} s={s} v={v} icon={sectionIcons[block.key]} title={sectionTitle(cv, block.key)} items={block.items}/>
           ))}
+          <Signature cv={cv}/>
         </View>
 
         <View style={s.sidebar}>
@@ -232,6 +234,7 @@ function Contrast({ cv, template }) {
             </SidebarSection>
           ))}
         </View>
+        <Footer cv={cv}/>
       </Page>
     </Document>
   )

@@ -1,7 +1,8 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, personalDetails, filledSections, sectionTitle } from '../format.js'
+import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
+import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
 import { Bar } from '../parts/levels.jsx'
@@ -184,7 +185,7 @@ function Banner({ cv, template }) {
 
   return (
     <Document title={details.fullName} author={details.fullName}>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={pageWithFooter(s.page, cv)}>
         <View style={s.background} fixed/>
 
         <View style={s.header}>
@@ -202,6 +203,7 @@ function Banner({ cv, template }) {
             {mainBlocks.map((block) => (
               <Section key={block.key} s={s} title={block.title} items={block.items}/>
             ))}
+            <Signature cv={cv}/>
           </View>
 
           <View style={p.photo ? [s.sidebar, s.sidebarBelowPhoto] : s.sidebar}>
@@ -227,6 +229,7 @@ function Banner({ cv, template }) {
             ))}
           </View>
         </View>
+        <Footer cv={cv}/>
       </Page>
     </Document>
   )

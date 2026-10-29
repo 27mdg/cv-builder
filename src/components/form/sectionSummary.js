@@ -1,5 +1,5 @@
 import texts from '../../locales/es.js'
-import { hasText, join, itemSummary, itemsWithContent } from '../../templates/format.js'
+import { hasText, join, itemSummary, itemsWithContent, formatBirthDate } from '../../templates/format.js'
 
 // Sections whose items are a single field instead of a title built by itemSummary
 const simpleField = { skills: 'skill', languages: 'language', hobbies: 'interest', qualities: 'quality' }
@@ -19,6 +19,10 @@ export function sectionSummary(key, cv) {
   if (key === 'personal') {
     const p = cv.personal
     return join([join([p.firstName, p.lastName], ' '), p.email])
+  }
+  if (key === 'signature') {
+    const { image, place, date } = cv.signature
+    return join([place, formatBirthDate(date)], ', ') || (image ? texts.signature.added : '')
   }
   if (key === 'references' && cv.referencesOnRequest) return texts.references.onRequestText
   if (!Array.isArray(cv[key])) return hasText(cv[key]) ? shorten(cv[key]) : ''

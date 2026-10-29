@@ -6,6 +6,8 @@ import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
+import SignatureField from './components/form/SignatureField.jsx'
+import Animated from './components/Animated.jsx'
 import sections, { optionalSections, customFields, isCustomKey, newCustomKey } from './data/sections.js'
 import { hasText, sectionTitle } from './templates/format.js'
 import Section from './components/form/Section.jsx'
@@ -115,6 +117,12 @@ function App() {
   )
   const hiddenSections = optionalSections.filter((key) => !visibleOrder.includes(key))
 
+  // Signature and footer: not sections of the order, they have fixed places in the CV
+  const closingSections = ['signature', 'footer']
+  const hasClosing = (key) => (key === 'signature' ? Object.values(cv.signature).some(Boolean) : hasText(cv.footer))
+  const visibleClosing = closingSections.filter((key) => hasClosing(key) || addedSections.includes(key))
+  const hiddenClosing = closingSections.filter((key) => !visibleClosing.includes(key))
+
   // Dragging only sees the visible sections; hidden ones keep their place in the full order
   function reorderVisible(newVisible) {
     let next = 0
@@ -159,7 +167,7 @@ function App() {
   }
 
   function removeSection(key) {
-    if (hasContent(key)) setRemovingSection(key)
+    if (closingSections.includes(key) ? hasClosing(key) : hasContent(key)) setRemovingSection(key)
     else hideSection(key)
   }
 
@@ -259,12 +267,46 @@ function App() {
             isLeaving={isSectionLeaving}
             onLeft={sectionLeft}
           />
+          {visibleClosing.map((key) => (
+            <Animated key={key} appear={addedSections.includes(key)} leaving={isSectionLeaving(key)} onLeft={() => sectionLeft(key)}>
+              <Section
+                title={texts[key].title}
+                icon={sectionIcons[key]}
+                summary={sectionSummary(key, cv)}
+                done={hasClosing(key)}
+                open={addedSections.includes(key) || undefined}
+                onRemove={() => removeSection(key)}
+              >
+                {key === 'signature'
+                  ? <SignatureField value={cv.signature} onChange={(field, value) => changeSection('signature', (s) => ({ ...s, [field]: value }))}/>
+                  : (
+                    <>
+                      <label>
+                        {texts.footer.label}
+                        <textarea className="long-text" rows={4} placeholder={texts.footer.hint} value={cv.footer}
+                          onChange={(e) => changeSection('footer', e.target.value)}/>
+                      </label>
+                      <div className="chips footer-actions">
+                        <button type="button" className="chip" onClick={() => changeSection('footer', texts.footer.dataProtection)}>
+                          <PlusIcon/>{texts.footer.useDataProtection}
+                        </button>
+                      </div>
+                    </>
+                  )}
+              </Section>
+            </Animated>
+          ))}
           {/* Always there: custom sections can be added as many times as the user wants */}
           <div className="extra-sections">
             <p className="extra-sections-title">{texts.extraSections.title}</p>
             <div className="chips">
               {hiddenSections.map((key) => (
                 <button type="button" className="chip" key={key} onClick={() => addSection(key)}>
+                  <PlusIcon/>{texts[key].title}
+                </button>
+              ))}
+              {hiddenClosing.map((key) => (
+                <button type="button" className="chip" key={key} onClick={() => setAddedSections((added) => [...added, key])}>
                   <PlusIcon/>{texts[key].title}
                 </button>
               ))}

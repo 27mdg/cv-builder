@@ -1,7 +1,8 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { Footer, Signature } from '../parts/closing.jsx'
 import { Dots } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { Gradient } from '../parts/Gradient.jsx'
@@ -195,7 +196,7 @@ function TimelineTemplate({ cv, template }) {
 
   return (
     <Document title={details.fullName} author={details.fullName}>
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={pageWithFooter(s.page, cv)}>
         <View style={s.background} fixed>
           <Gradient width={sidebarWidth} height={pageHeight} from={v.accentDark} to={v.accent} id="sidebar"/>
         </View>
@@ -240,7 +241,9 @@ function TimelineTemplate({ cv, template }) {
               container={block.container}
             />
           ))}
+          <Signature cv={cv}/>
         </View>
+        <Footer cv={cv}/>
       </Page>
     </Document>
   )

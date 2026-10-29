@@ -290,6 +290,23 @@ const es = {
     hideItem: 'Ocultar en el CV',
     showItem: 'Mostrar en el CV',
   },
+  // Not sections: they go in fixed places (the signature after everything, the footer on every page)
+  signature: {
+    title: 'Firma',
+    draw: 'Firma aquí con el ratón o con el dedo',
+    clear: 'Borrar firma',
+    upload: 'Subir una imagen de la firma',
+    place: 'Lugar',
+    date: 'Fecha',
+    added: 'Firma añadida',
+  },
+  footer: {
+    title: 'Pie de página',
+    label: 'Texto del pie',
+    hint: 'Texto pequeño al pie de cada página, por ejemplo la cláusula de protección de datos.',
+    useDataProtection: 'Usar el texto de protección de datos',
+    dataProtection: 'Autorizo el tratamiento de mis datos personales incluidos en este currículum, conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 de Protección de Datos, para los procesos de selección en los que participe.',
+  },
   customSection: {
     untitled: 'Sección personalizada',
     addList: 'Sección personalizada (con elementos)',

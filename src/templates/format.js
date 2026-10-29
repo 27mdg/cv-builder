@@ -30,6 +30,19 @@ export function formatBirthDate(date) {
   return `${day}/${month}/${year}`
 }
 
+// In points: the room the footer (parts/closing.jsx) takes at the bottom of every page
+const footerSpace = 36
+
+/**
+ * The page's own style plus the room for the footer, if there is one, so the content never
+ * runs under it. `pageStyle` is the template's style for <Page>.
+ */
+export function pageWithFooter(pageStyle, cv) {
+  if (!hasText(cv.footer)) return pageStyle
+  const bottom = pageStyle.paddingBottom ?? pageStyle.paddingVertical ?? pageStyle.padding ?? 0
+  return [pageStyle, { paddingBottom: bottom + footerSpace }]
+}
+
 /** The title a section has in the CV: the one the user wrote, or the usual one. */
 export function sectionTitle(cv, key) {
   const custom = cv.sectionSettings?.[key]?.title

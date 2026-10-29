@@ -178,6 +178,14 @@ export function LayersIcon() {
   return <Icon><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></Icon>
 }
 
+export function SignatureIcon() {
+  return <Icon><path d="M3 17c3-1 4-9 6-9s-1 9 1 9 3-5 4-5 1 4 3 4 2-2 4-2M3 21h18"/></Icon>
+}
+
+export function FooterIcon() {
+  return <Icon><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 17h8"/></Icon>
+}
+
 export function ArrowIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
