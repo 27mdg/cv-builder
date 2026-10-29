@@ -6,8 +6,8 @@ import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
-import sections, { optionalSections } from './data/sections.js'
-import { hasText } from './templates/format.js'
+import sections, { optionalSections, customFields, isCustomKey, newCustomKey } from './data/sections.js'
+import { hasText, sectionTitle } from './templates/format.js'
 import Section from './components/form/Section.jsx'
 import ListSection from './components/form/ListSection.jsx'
 import SortableSections from './components/form/SortableSections.jsx'
@@ -21,7 +21,7 @@ import Toolbar from './components/Toolbar.jsx'
 import ConfirmDialog from './components/ConfirmDialog.jsx'
 import Splitter from './components/Splitter.jsx'
 import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
-import { PlusIcon } from './components/Icons.jsx'
+import { LayersIcon, PlusIcon } from './components/Icons.jsx'
 
 // The preview is loaded separately (lazy) because the PDF library is heavy:
 // the form shows up instantly and the PDF a moment later.
@@ -102,7 +102,8 @@ function App() {
       ...initialCv,
       template: previous.template,
       design: previous.design,
-      sectionOrder: previous.sectionOrder,
+      // Custom sections are the user's own content: they go too
+      sectionOrder: previous.sectionOrder.filter((key) => !isCustomKey(key)),
     }))
     setAddedSections([])
   }
@@ -130,10 +131,28 @@ function App() {
     setAddedSections((added) => [...added, key])
   }
 
+  function addCustomSection(type) {
+    const key = newCustomKey()
+    changeSection(key, type === 'list' ? [] : '')
+    addSection(key)
+  }
+
+  // A custom section is deleted for good: its content, its place and its settings
+  function deleteCustomSection(key) {
+    setCv((previous) => {
+      const next = { ...previous, sectionOrder: previous.sectionOrder.filter((k) => k !== key) }
+      delete next[key]
+      next.sectionSettings = { ...previous.sectionSettings }
+      delete next.sectionSettings[key]
+      return next
+    })
+  }
+
   // The section fades out and shrinks first; its content is cleared once it has gone
   function hideSection(key) {
     leaveSection(key, () => {
-      changeSection(key, initialCv[key])
+      if (isCustomKey(key)) deleteCustomSection(key)
+      else changeSection(key, initialCv[key])
       if (key === 'references') changeSection('referencesOnRequest', false)
       setAddedSections((added) => added.filter((k) => k !== key))
     })
@@ -151,8 +170,13 @@ function App() {
   function sectionProps(key) {
     const summary = sectionSummary(key, cv)
     const hidden = Boolean(cv.sectionSettings[key]?.hidden)
+    const custom = isCustomKey(key)
     return {
-      icon: sectionIcons[key],
+      // The usual title; the one the user wrote is customTitle
+      title: custom ? texts.customSection.untitled : texts[key].title,
+      icon: custom ? LayersIcon : sectionIcons[key],
+      // A new custom section asks for its title straight away
+      startRenaming: custom && addedSections.includes(key),
       summary,
       done: summary !== '',
       hidden,
@@ -164,6 +188,12 @@ function App() {
   }
 
   function sectionContent(key) {
+    if (isCustomKey(key)) {
+      return Array.isArray(cv[key])
+        // Its labels come from texts.customSection, as it has none of its own
+        ? <ListSection sectionKey="customSection" fields={customFields} list={cv[key]} onChange={(value) => changeSection(key, value)}/>
+        : <LongText value={cv[key]} hint={texts.customSection.hint} onChange={(value) => changeSection(key, value)}/>
+    }
     const listSection = sections.find((section) => section.key === key)
     if (!listSection) {
       return <LongText value={cv[key]} hint={texts[key].hint} onChange={(value) => changeSection(key, value)}/>
@@ -222,27 +252,33 @@ function App() {
             onReorder={reorderVisible}
             renderContent={sectionContent}
             sectionProps={sectionProps}
-            removable={optionalSections}
+            removable={[...optionalSections, ...visibleOrder.filter(isCustomKey)]}
+            titleOf={(key) => sectionTitle(cv, key)}
             onRemove={removeSection}
             openKeys={addedSections}
             isLeaving={isSectionLeaving}
             onLeft={sectionLeft}
           />
-          {hiddenSections.length > 0 && (
-            <div className="extra-sections">
-              <p className="extra-sections-title">{texts.extraSections.title}</p>
-              <div className="chips">
-                {hiddenSections.map((key) => (
-                  <button type="button" className="chip" key={key} onClick={() => addSection(key)}>
-                    <PlusIcon/>{texts[key].title}
-                  </button>
-                ))}
-              </div>
+          {/* Always there: custom sections can be added as many times as the user wants */}
+          <div className="extra-sections">
+            <p className="extra-sections-title">{texts.extraSections.title}</p>
+            <div className="chips">
+              {hiddenSections.map((key) => (
+                <button type="button" className="chip" key={key} onClick={() => addSection(key)}>
+                  <PlusIcon/>{texts[key].title}
+                </button>
+              ))}
+              <button type="button" className="chip" onClick={() => addCustomSection('list')}>
+                <PlusIcon/>{texts.customSection.addList}
+              </button>
+              <button type="button" className="chip" onClick={() => addCustomSection('text')}>
+                <PlusIcon/>{texts.customSection.addText}
+              </button>
             </div>
-          )}
+          </div>
           <ConfirmDialog
             open={removingSection !== null}
-            title={removingSection ? texts.extraSections.confirmTitle(texts[removingSection].title) : ''}
+            title={removingSection ? texts.extraSections.confirmTitle(sectionTitle(cv, removingSection)) : ''}
             message={texts.extraSections.confirmMessage}
             cancelLabel={texts.extraSections.cancel}
             confirmLabel={texts.extraSections.confirm}

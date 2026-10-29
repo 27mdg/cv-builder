@@ -1,4 +1,5 @@
 import texts from '../locales/es.js'
+import { isCustomKey } from '../data/sections.js'
 
 // Shared by every template, so each one only deals with layout.
 
@@ -32,7 +33,8 @@ export function formatBirthDate(date) {
 /** The title a section has in the CV: the one the user wrote, or the usual one. */
 export function sectionTitle(cv, key) {
   const custom = cv.sectionSettings?.[key]?.title
-  return hasText(custom) ? custom.trim() : texts[key].title
+  if (hasText(custom)) return custom.trim()
+  return isCustomKey(key) ? texts.customSection.untitled : texts[key].title
 }
 
 // true if the text has more than whitespace
@@ -63,7 +65,7 @@ const itemTitles = {
  * `place` is the city, or else the link (projects) or the contact (references).
  */
 export function itemParts(key, item) {
-  const [title, subtitle] = itemTitles[key] ?? ['position', 'employer']
+  const [title, subtitle] = itemTitles[key] ?? (isCustomKey(key) ? ['title', 'subtitle'] : ['position', 'employer'])
   return {
     title: item[title] ?? '',
     subtitle: Array.isArray(subtitle) ? join(subtitle.map((name) => item[name]), ', ') : (subtitle && item[subtitle]) ?? '',

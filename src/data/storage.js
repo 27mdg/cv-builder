@@ -1,4 +1,5 @@
 import initialCv from './initialCv.js'
+import { isCustomKey } from './sections.js'
 import templates from '../templates/list.js'
 
 // Only in localStorage: the data never leaves the browser (GDPR).
@@ -9,9 +10,10 @@ const storageKey = 'cv-gratis'
 export const version = 2
 
 // Keeps the saved order, drops unknown keys and adds sections that did not exist yet at the
-// end, so older or hand-edited CVs never lose a section
-function normalizeOrder(order) {
-  const known = initialCv.sectionOrder
+// end, so older or hand-edited CVs never lose a section. Custom sections count if they have content.
+function normalizeOrder(order, cv) {
+  const custom = Object.keys(cv).filter((key) => isCustomKey(key) && (Array.isArray(cv[key]) || typeof cv[key] === 'string'))
+  const known = [...initialCv.sectionOrder, ...custom]
   const saved = Array.isArray(order) ? order.filter((key, i) => known.includes(key) && order.indexOf(key) === i) : []
   return [...saved, ...known.filter((key) => !saved.includes(key))]
 }
@@ -35,7 +37,7 @@ export function cvFromData(data) {
   if (!Array.isArray(cv.personal.customFields)) {
     cv.personal.customFields = []
   }
-  cv.sectionOrder = normalizeOrder(cv.sectionOrder)
+  cv.sectionOrder = normalizeOrder(cv.sectionOrder, cv)
   if (typeof cv.sectionSettings !== 'object' || cv.sectionSettings === null || Array.isArray(cv.sectionSettings)) {
     cv.sectionSettings = {}
   }

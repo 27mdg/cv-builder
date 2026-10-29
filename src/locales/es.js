@@ -290,6 +290,16 @@ const es = {
     hideItem: 'Ocultar en el CV',
     showItem: 'Mostrar en el CV',
   },
+  customSection: {
+    untitled: 'Sección personalizada',
+    addList: 'Sección personalizada (con elementos)',
+    addText: 'Sección personalizada (texto libre)',
+    hint: 'Escribe lo que quieras que aparezca en esta sección.',
+    add: 'Añadir elemento',
+    title: 'Título',
+    subtitle: 'Subtítulo',
+    city: 'Lugar',
+  },
   rename: {
     button: 'Cambiar el título',
     label: 'Título de la sección en el CV',

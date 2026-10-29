@@ -4,6 +4,28 @@ export const optionalSections = [
   'projects', 'volunteering', 'awards', 'publications', 'references',
 ]
 
+// Sections the user creates, as many as they want. Each one is stored like any other section:
+// its content in cv['custom:<id>'] (a list, or a text), its title in cv.sectionSettings.
+const customPrefix = 'custom:'
+
+export function isCustomKey(key) {
+  return key.startsWith(customPrefix)
+}
+
+export function newCustomKey() {
+  return customPrefix + crypto.randomUUID().slice(0, 8)
+}
+
+// The items of a custom list section
+export const customFields = [
+  { name: 'title', type: 'text' },
+  { name: 'subtitle', type: 'text' },
+  { name: 'city', type: 'text' },
+  { name: 'start', type: 'date' },
+  { name: 'end', type: 'endDate' },
+  { name: 'description', type: 'longText' },
+]
+
 // `key` must match initialCv.js and the locale file.
 // 'endDate' stores its switch in `current`; 'skillLevel' stores the number (1–5)
 // and 'languageLevel' the code ('B2'), so each template decides how to draw them.

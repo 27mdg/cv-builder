@@ -8,11 +8,13 @@ import { ArrowIcon, CheckIcon, CloseIcon, EyeIcon, EyeOffIcon, PencilIcon } from
 // `icon`: the section's icon component; `summary`: what it holds, shown while closed;
 // `done`: it has content (a tick next to the title).
 // `hidden` + `onToggleHidden`: an eye button that leaves the section out of the PDF without deleting it.
-// `customTitle` + `onRename`: a pencil button to give the section another title in the CV.
+// `customTitle` + `onRename`: a pencil button to give the section another title in the CV;
+// `startRenaming` shows the title field from the start (new custom sections).
 function Section({
-  title, icon: Icon, summary, done, hidden, onToggleHidden, customTitle, onRename, open, handle, onRemove, children,
+  title, icon: Icon, summary, done, hidden, onToggleHidden, customTitle, onRename, startRenaming,
+  open, handle, onRemove, children,
 }) {
-  const [renaming, setRenaming] = useState(false)
+  const [renaming, setRenaming] = useState(Boolean(startRenaming))
   const details = useRef(null)
   const shownTitle = customTitle?.trim() || title
 
