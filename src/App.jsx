@@ -186,7 +186,7 @@ function App() {
       icon: custom ? LayersIcon : sectionIcons[key],
       // A new custom section asks for its title straight away
       startRenaming: custom && addedSections.includes(key),
-      summary,
+      // Whether it has content (its icon fills in); the summary text itself is not shown
       filled: summary !== '',
       hidden,
       customTitle: cv.sectionSettings[key]?.title ?? '',
@@ -292,7 +292,6 @@ function App() {
               <Section
                 title={texts[key].title}
                 icon={sectionIcons[key]}
-                summary={sectionSummary(key, cv)}
                 filled={hasClosing(key)}
                 open={addedSections.includes(key) || undefined}
                 onRemove={() => removeSection(key)}

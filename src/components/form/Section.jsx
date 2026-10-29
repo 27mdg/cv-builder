@@ -5,13 +5,13 @@ import { ArrowIcon, CloseIcon, PencilIcon, VisibilityIcon } from '../Icons.jsx'
 // <details> folds and unfolds without JavaScript or state.
 // `handle`: the drag handle of sections that can be reordered (see SortableSections.jsx).
 // `onRemove`: shows a × to remove an optional section.
-// `icon`: the section's icon component; `summary`: what it holds, shown while closed;
+// `icon`: the section's icon component;
 // `filled`: it has content (its icon goes from an empty ring to filled).
 // `hidden` + `onToggleHidden`: an eye button that leaves the section out of the PDF without deleting it.
 // `customTitle` + `onRename`: a pencil button to give the section another title in the CV;
 // `startRenaming` shows the title field from the start (new custom sections).
 function Section({
-  title, icon: Icon, summary, filled, hidden, onToggleHidden, customTitle, onRename, startRenaming,
+  title, icon: Icon, filled, hidden, onToggleHidden, customTitle, onRename, startRenaming,
   open, handle, onRemove, children,
 }) {
   const [renaming, setRenaming] = useState(Boolean(startRenaming))
@@ -31,7 +31,6 @@ function Section({
             {shownTitle}
             {hidden && <span className="section-badge">{texts.visibility.hidden}</span>}
           </h2>
-          {summary && <p className="section-summary">{summary}</p>}
         </div>
         {onRename && (
           <button

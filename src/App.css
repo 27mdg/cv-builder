@@ -165,8 +165,6 @@
 /* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
 .section-heading { flex: 1; min-width: 0; }
 .section > summary h2 { display: flex; align-items: center; gap: 8px; font-size: 20px; color: var(--text); }
-.section-summary { overflow: hidden; margin-top: 2px; color: var(--text-muted); font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
-.section[open] .section-summary { display: none; }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
 .form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
 .form-panel .drag-handle:hover { background: var(--background); color: var(--text); }
@@ -196,16 +194,13 @@
   .rename-button.scribbling svg { animation: none; }
   .eye-slash { transition: none; }
 }
-/* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
-/* Hidden is told by its label; the icon is left alone, as it tells about content */
-.section.is-hidden .section-summary { opacity: 0.5; }
 /* Hiding and showing fades instead of jumping, and the "Oculta en el CV" label pops in softly */
 .section-icon { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
-.section-summary, .item > label, .item > .field, .item > .field-row { transition: opacity 0.3s ease; }
+.item > label, .item > .field, .item > .field-row { transition: opacity 0.3s ease; }
 .section-badge { animation: badge-in 0.25s var(--ease-out); }
 @keyframes badge-in { from { opacity: 0; scale: 0.9; } }
 @media (prefers-reduced-motion: reduce) {
-  .section-icon, .section-summary, .item > label, .item > .field-row { transition: none; }
+  .section-icon, .item > label, .item > .field, .item > .field-row { transition: none; }
   .section-badge { animation: none; }
 }
 .item-actions { display: flex; flex-wrap: wrap; gap: 10px; }
