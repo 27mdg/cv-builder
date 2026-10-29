@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import texts from '../../locales/es.js'
 import DatePicker from './DatePicker.jsx'
+import { useUndo } from '../undo.js'
 
 const t = texts.signature
 // The ink: a signature is content of the CV, not part of the web's palette
@@ -31,6 +32,7 @@ function SignatureField({ value, onChange }) {
   const drawing = useRef(false)
   // The image this canvas produced last, to tell it apart from one coming from outside (import)
   const lastSaved = useRef(null)
+  const offerUndo = useUndo()
 
   function save() {
     const image = canvas.current.toDataURL('image/png')
@@ -94,7 +96,10 @@ function SignatureField({ value, onChange }) {
     const box = canvas.current
     box.getContext('2d').clearRect(0, 0, box.width, box.height)
     lastSaved.current = ''
+    const removed = value.image
     onChange('image', '')
+    // Putting the image back redraws it through the effect above
+    if (removed) offerUndo(texts.undo.signature, () => onChange('image', removed))
   }
 
   function handleFile(e) {

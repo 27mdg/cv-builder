@@ -7,6 +7,7 @@ import LicenseField from './LicenseField.jsx'
 import { CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
+import { insertAt, useUndo } from '../undo.js'
 
 // `fullWidth`: spans both columns of the grid
 const fields = [
@@ -65,14 +66,29 @@ function PersonalDetails({ data, onChange }) {
   // Custom fields added in this visit: they grow in, and the last one gets the cursor
   const [addedCustom, setAddedCustom] = useState([])
   const { isLeaving, leave, left } = useLeaving()
+  const offerUndo = useUndo()
 
   const visible = extraFields.filter((f) => data[f.name] !== '' || opened.includes(f.name))
   const hidden = extraFields.filter((f) => !visible.includes(f))
 
   function removeExtra(name) {
+    const value = data[name]
     leave(name, () => {
       onChange(name, '')
       setOpened((names) => names.filter((n) => n !== name))
+      if (value) offerUndo(texts.undo.field, () => onChange(name, value))
+    })
+  }
+
+  // Removes a custom field or a link, offering to put it back if it had something written
+  function removeRow(listName, id, message) {
+    const index = data[listName].findIndex((row) => row.id === id)
+    const row = data[listName][index]
+    leave(id, () => {
+      onChange(listName, (current) => current.filter((other) => other.id !== id))
+      if (row.label || row.value || row.url) {
+        offerUndo(message, () => onChange(listName, (current) => insertAt(current, index, row)))
+      }
     })
   }
 
@@ -86,9 +102,6 @@ function PersonalDetails({ data, onChange }) {
     onChange('customFields', data.customFields.map((f) => (f.id === id ? { ...f, [key]: value } : f)))
   }
 
-  function removeCustom(id) {
-    leave(id, () => onChange('customFields', (current) => current.filter((f) => f.id !== id)))
-  }
 
   // Links (LinkedIn, GitHub, a portfolio…), as many as the user wants; same pattern as custom fields
   const [addedLinks, setAddedLinks] = useState([])
@@ -105,14 +118,20 @@ function PersonalDetails({ data, onChange }) {
     onChange('links', data.links.map((link) => (link.id === id ? { ...link, [key]: value } : link)))
   }
 
-  function removeLink(id) {
-    leave(id, () => onChange('links', (current) => current.filter((link) => link.id !== id)))
-  }
 
   return (
     <>
       <div className="personal-header">
-        <PhotoField value={data.photo} onChange={(photo) => onChange('photo', photo)}/>
+        <PhotoField
+          value={data.photo}
+          onChange={(photo) => {
+            if (!photo && data.photo) {
+              const removed = data.photo
+              offerUndo(texts.undo.photo, () => onChange('photo', removed))
+            }
+            onChange('photo', photo)
+          }}
+        />
         <div className="grid">
           <Field field={{ name: 'firstName', type: 'text' }} data={data} onChange={onChange}/>
           <Field field={{ name: 'lastName', type: 'text' }} data={data} onChange={onChange}/>
@@ -167,7 +186,7 @@ function PersonalDetails({ data, onChange }) {
                 autoFocus={link.id === addedLinks.at(-1)}
                 onChange={(e) => changeLink(link.id, 'url', e.target.value)}
               />
-              <RemoveButton onClick={() => removeLink(link.id)}/>
+              <RemoveButton onClick={() => removeRow('links', link.id, texts.undo.link)}/>
             </div>
           </Animated>
         ))}
@@ -193,7 +212,7 @@ function PersonalDetails({ data, onChange }) {
                 value={f.value}
                 onChange={(e) => changeCustom(f.id, 'value', e.target.value)}
               />
-              <RemoveButton onClick={() => removeCustom(f.id)}/>
+              <RemoveButton onClick={() => removeRow('customFields', f.id, texts.undo.field)}/>
             </div>
           </Animated>
         ))}

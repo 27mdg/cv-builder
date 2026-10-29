@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { loadCv, saveCv } from './data/storage.js'
@@ -21,7 +21,8 @@ import ClearButton from './components/ClearButton.jsx'
 import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
-import ConfirmDialog from './components/ConfirmDialog.jsx'
+import UndoToast from './components/UndoToast.jsx'
+import { UndoContext, insertAt } from './components/undo.js'
 import Splitter from './components/Splitter.jsx'
 import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
 import { LayersIcon, PlusIcon } from './components/Icons.jsx'
@@ -53,8 +54,35 @@ function App() {
   // Optional sections the user added in this visit and has not filled yet. Those with content
   // are always shown, so this does not need to be saved in the CV.
   const [addedSections, setAddedSections] = useState([])
-  const [removingSection, setRemovingSection] = useState(null)
   const { isLeaving: isSectionLeaving, leave: leaveSection, left: sectionLeft } = useLeaving()
+
+  // The last removal that can still be undone: { id, message, restore }
+  const [undo, setUndo] = useState(null)
+  const closeUndo = useCallback(() => setUndo(null), [])
+
+  function offerUndo(message, restore) {
+    setUndo({ id: crypto.randomUUID(), message, restore })
+  }
+
+  function runUndo() {
+    undo?.restore()
+    setUndo(null)
+  }
+
+  // Ctrl+Z outside the fields; inside them it is the browser's own undo of the typing
+  useEffect(() => {
+    if (!undo) return
+    function handleKeyDown(e) {
+      const typing = e.target.closest('input, textarea, select, [contenteditable="true"]')
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey && !typing) {
+        e.preventDefault()
+        undo.restore()
+        setUndo(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [undo])
 
   function changeFullScreen(value) {
     withTransition(() => setFullScreen(value))
@@ -157,19 +185,40 @@ function App() {
     })
   }
 
-  // The section fades out and shrinks first; its content is cleared once it has gone
-  function hideSection(key) {
+  // The section fades out and shrinks first; its content is cleared once it has gone. Instead of
+  // asking before, the notice lets the user bring back whatever it had.
+  function removeSection(key) {
+    const custom = isCustomKey(key)
+    const filled = (closingSections.includes(key) ? hasClosing(key) : hasContent(key))
+      || (custom && hasText(cv.sectionSettings[key]?.title))
+    const saved = {
+      content: cv[key],
+      onRequest: cv.referencesOnRequest,
+      index: cv.sectionOrder.indexOf(key),
+      settings: cv.sectionSettings[key],
+    }
+    const title = sectionTitle(cv, key)
     leaveSection(key, () => {
-      if (isCustomKey(key)) deleteCustomSection(key)
+      if (custom) deleteCustomSection(key)
       else changeSection(key, initialCv[key])
       if (key === 'references') changeSection('referencesOnRequest', false)
       setAddedSections((added) => added.filter((k) => k !== key))
+      if (filled) offerUndo(texts.undo.section(title), () => restoreSection(key, saved))
     })
   }
 
-  function removeSection(key) {
-    if (closingSections.includes(key) ? hasClosing(key) : hasContent(key)) setRemovingSection(key)
-    else hideSection(key)
+  // What comes back has content (or, for a custom section, its place in the order), so it is
+  // shown without adding it to addedSections
+  function restoreSection(key, saved) {
+    setCv((previous) => {
+      const next = { ...previous, [key]: saved.content }
+      if (key === 'references') next.referencesOnRequest = saved.onRequest
+      if (isCustomKey(key)) {
+        next.sectionOrder = insertAt(previous.sectionOrder.filter((k) => k !== key), saved.index, key)
+        next.sectionSettings = { ...previous.sectionSettings, [key]: saved.settings }
+      }
+      return next
+    })
   }
 
   function changeSectionSetting(key, name, value) {
@@ -252,104 +301,95 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <header className="topbar">
-        {/* Temporary logo: it will link to the home page once there is one */}
-        <a href="/" className="logo">{texts.app.title}</a>
-        <input
-          className="file-name"
-          aria-label={texts.file.name}
-          placeholder={texts.file.placeholder}
-          value={cv.fileName}
-          onChange={(e) => changeSection('fileName', e.target.value)}
-        />
-        <div className="actions">
-          <ClearButton onClear={clearCv}/>
-          <ImportButton currentCv={cv} onImport={setCv}/>
-          <ExportButton cv={cv}/>
-          <DownloadButton cv={cv}/>
-        </div>
-      </header>
-      <main className="workspace">
-        <section className="form-panel">
-          <Section title={texts.personal.title} open {...sectionProps('personal')}>
-            <PersonalDetails data={cv.personal} onChange={changePersonal}/>
-          </Section>
-          <SortableSections
-            order={visibleOrder}
-            onReorder={reorderVisible}
-            renderContent={sectionContent}
-            sectionProps={sectionProps}
-            removable={[...optionalSections, ...visibleOrder.filter(isCustomKey)]}
-            titleOf={(key) => sectionTitle(cv, key)}
-            onRemove={removeSection}
-            openKeys={addedSections}
-            isLeaving={isSectionLeaving}
-            onLeft={sectionLeft}
+    <UndoContext value={offerUndo}>
+      <div className="app">
+        <header className="topbar">
+          {/* Temporary logo: it will link to the home page once there is one */}
+          <a href="/" className="logo">{texts.app.title}</a>
+          <input
+            className="file-name"
+            aria-label={texts.file.name}
+            placeholder={texts.file.placeholder}
+            value={cv.fileName}
+            onChange={(e) => changeSection('fileName', e.target.value)}
           />
-          {visibleClosing.map((key) => (
-            <Animated key={key} appear={addedSections.includes(key)} leaving={isSectionLeaving(key)} onLeft={() => sectionLeft(key)}>
-              <Section
-                title={texts[key].title}
-                icon={sectionIcons[key]}
-                filled={hasClosing(key)}
-                open={addedSections.includes(key) || undefined}
-                onRemove={() => removeSection(key)}
-              >
-                {key === 'signature'
-                  ? <SignatureField value={cv.signature} onChange={(field, value) => changeSection('signature', (s) => ({ ...s, [field]: value }))}/>
-                  : (
-                    <>
-                      <label>
-                        {texts.footer.label}
-                        <textarea className="long-text" rows={4} placeholder={texts.footer.hint} value={cv.footer}
-                          onChange={(e) => changeSection('footer', e.target.value)}/>
-                      </label>
-                      <div className="chips footer-actions">
-                        <button type="button" className="chip" onClick={() => changeSection('footer', texts.footer.dataProtection)}>
-                          <PlusIcon/>{texts.footer.useDataProtection}
-                        </button>
-                      </div>
-                    </>
-                  )}
-              </Section>
-            </Animated>
-          ))}
-          {/* Always there: custom sections can be added as many times as the user wants */}
-          <SectionLibrary
-            keys={[...hiddenSections, ...hiddenClosing]}
-            onAdd={(key) => (closingSections.includes(key) ? setAddedSections((added) => [...added, key]) : addSection(key))}
-            onAddCustom={addCustomSection}
-          />
-          <ConfirmDialog
-            open={removingSection !== null}
-            title={removingSection ? texts.extraSections.confirmTitle(sectionTitle(cv, removingSection)) : ''}
-            message={texts.extraSections.confirmMessage}
-            cancelLabel={texts.extraSections.cancel}
-            confirmLabel={texts.extraSections.confirm}
-            onConfirm={() => {
-              hideSection(removingSection)
-              setRemovingSection(null)
-            }}
-            onCancel={() => setRemovingSection(null)}
-          />
-        </section>
-        {!fullScreen && <Splitter/>}
-        <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
-          <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>
-            <Preview cv={cv}/>
-          </Suspense>
-          <Toolbar
-            template={cv.template}
-            onTemplateChange={changeTemplate}
-            design={cv.design}
-            onDesignChange={changeDesign}
-            fullScreen={fullScreen}
-            onFullScreenChange={changeFullScreen}
-          />
-        </section>
-      </main>
-    </div>
+          <div className="actions">
+            <ClearButton onClear={clearCv}/>
+            <ImportButton currentCv={cv} onImport={setCv}/>
+            <ExportButton cv={cv}/>
+            <DownloadButton cv={cv}/>
+          </div>
+        </header>
+        <main className="workspace">
+          <section className="form-panel">
+            <Section title={texts.personal.title} open {...sectionProps('personal')}>
+              <PersonalDetails data={cv.personal} onChange={changePersonal}/>
+            </Section>
+            <SortableSections
+              order={visibleOrder}
+              onReorder={reorderVisible}
+              renderContent={sectionContent}
+              sectionProps={sectionProps}
+              removable={[...optionalSections, ...visibleOrder.filter(isCustomKey)]}
+              titleOf={(key) => sectionTitle(cv, key)}
+              onRemove={removeSection}
+              openKeys={addedSections}
+              isLeaving={isSectionLeaving}
+              onLeft={sectionLeft}
+            />
+            {visibleClosing.map((key) => (
+              <Animated key={key} appear={addedSections.includes(key)} leaving={isSectionLeaving(key)} onLeft={() => sectionLeft(key)}>
+                <Section
+                  title={texts[key].title}
+                  icon={sectionIcons[key]}
+                  filled={hasClosing(key)}
+                  open={addedSections.includes(key) || undefined}
+                  onRemove={() => removeSection(key)}
+                >
+                  {key === 'signature'
+                    ? <SignatureField value={cv.signature} onChange={(field, value) => changeSection('signature', (s) => ({ ...s, [field]: value }))}/>
+                    : (
+                      <>
+                        <label>
+                          {texts.footer.label}
+                          <textarea className="long-text" rows={4} placeholder={texts.footer.hint} value={cv.footer}
+                            onChange={(e) => changeSection('footer', e.target.value)}/>
+                        </label>
+                        <div className="chips footer-actions">
+                          <button type="button" className="chip" onClick={() => changeSection('footer', texts.footer.dataProtection)}>
+                            <PlusIcon/>{texts.footer.useDataProtection}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                </Section>
+              </Animated>
+            ))}
+            {/* Always there: custom sections can be added as many times as the user wants */}
+            <SectionLibrary
+              keys={[...hiddenSections, ...hiddenClosing]}
+              onAdd={(key) => (closingSections.includes(key) ? setAddedSections((added) => [...added, key]) : addSection(key))}
+              onAddCustom={addCustomSection}
+            />
+          </section>
+          {!fullScreen && <Splitter/>}
+          <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
+            <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>
+              <Preview cv={cv}/>
+            </Suspense>
+            <Toolbar
+              template={cv.template}
+              onTemplateChange={changeTemplate}
+              design={cv.design}
+              onDesignChange={changeDesign}
+              fullScreen={fullScreen}
+              onFullScreenChange={changeFullScreen}
+            />
+          </section>
+        </main>
+        <UndoToast undo={undo} onUndo={runUndo} onClose={closeUndo}/>
+      </div>
+    </UndoContext>
   )
 }
 

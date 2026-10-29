@@ -21,6 +21,8 @@
   --brand-light: #E6EEE7;
   /* On the green top bar: 5.6:1 on --brand-dark */
   --text-on-brand: #FFFFFF;
+  /* Hover of a button without a border on --brand-dark (the "Deshacer" notice) */
+  --hover-on-brand: rgb(255 255 255 / 0.14);
 
   /* Terracotta only on Download and the confirm button of dialogs. White text needs the deeper tone (5.3:1);
      on the base #D9825B it would be 2.9:1. */

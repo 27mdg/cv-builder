@@ -2,6 +2,7 @@ import { useState } from 'react'
 import texts from '../../locales/es.js'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
+import { insertAt, useUndo } from '../undo.js'
 import DateField from './DateField.jsx'
 import RichTextEditor from './RichTextEditor.jsx'
 import Select from './Select.jsx'
@@ -145,6 +146,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
   // Optional fields (the link) opened in this visit, as 'itemId:fieldName'
   const [openedOptional, setOpenedOptional] = useState([])
   const { isLeaving, leave, left } = useLeaving()
+  const offerUndo = useUndo()
   const optionalKey = (item, field) => `${item.id}:${field.name}`
   const shows = (item, field) => !field.optional || Boolean(item[field.name])
     || openedOptional.includes(optionalKey(item, field))
@@ -156,7 +158,15 @@ function ListSection({ sectionKey, fields, list, onChange }) {
   }
 
   function remove(id) {
-    leave(id, () => onChange((current) => current.filter((item) => item.id !== id)))
+    const index = list.findIndex((item) => item.id === id)
+    const item = list[index]
+    leave(id, () => {
+      onChange((current) => current.filter((other) => other.id !== id))
+      // An empty item is not worth a notice
+      if (Object.entries(item).some(([name, value]) => name !== 'id' && value)) {
+        offerUndo(texts.undo.item, () => onChange((current) => insertAt(current, index, item)))
+      }
+    })
   }
 
   function change(id, name, value) {

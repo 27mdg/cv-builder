@@ -335,10 +335,17 @@ const es = {
     customText: 'Texto libre',
     customTextHint: 'Un párrafo, como el Perfil.',
     remove: 'Quitar sección',
-    confirmTitle: (title) => `¿Quitar ${title}?`,
-    confirmMessage: 'Se borrará todo lo que has escrito en esta sección. Podrás volver a añadirla, pero vacía.',
-    cancel: 'Cancelar',
-    confirm: 'Sí, quitar',
+  },
+  // The notice shown for a few seconds after removing something
+  undo: {
+    button: 'Deshacer',
+    close: 'Cerrar aviso',
+    section: (title) => `Has quitado «${title}».`,
+    item: 'Has quitado un elemento.',
+    link: 'Has quitado un enlace.',
+    field: 'Has quitado un campo.',
+    photo: 'Has quitado la foto.',
+    signature: 'Has borrado la firma.',
   },
   clear: {
     button: 'Borrar todos los datos',
