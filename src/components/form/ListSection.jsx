@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import texts from '../../locales/es.js'
+import Animated from '../Animated.jsx'
+import { useLeaving } from '../useLeaving.js'
 import DateField from './DateField.jsx'
 import Select from './Select.jsx'
 import { PlusIcon } from '../Icons.jsx'
@@ -87,12 +90,18 @@ function Field({ sectionKey, field, item, onChange }) {
 }
 
 function ListSection({ sectionKey, fields, list, onChange }) {
+  // Items added in this visit: only these grow in, so nothing animates on page load
+  const [added, setAdded] = useState([])
+  const { isLeaving, leave, left } = useLeaving()
+
   function add() {
-    onChange([...list, emptyItem(fields)])
+    const item = emptyItem(fields)
+    setAdded([...added, item.id])
+    onChange([...list, item])
   }
 
   function remove(id) {
-    onChange(list.filter((item) => item.id !== id))
+    leave(id, () => onChange((current) => current.filter((item) => item.id !== id)))
   }
 
   function change(id, name, value) {
@@ -102,18 +111,25 @@ function ListSection({ sectionKey, fields, list, onChange }) {
   return (
     <>
       {list.map((item) => (
-        <div className="item" key={item.id}>
-          {fields.map((field) => (
-            <Field
-              key={field.name}
-              sectionKey={sectionKey}
-              field={field}
-              item={item}
-              onChange={(name, value) => change(item.id, name, value)}
-            />
-          ))}
-          <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
-        </div>
+        <Animated
+          key={item.id}
+          appear={added.includes(item.id)}
+          leaving={isLeaving(item.id)}
+          onLeft={() => left(item.id)}
+        >
+          <div className="item">
+            {fields.map((field) => (
+              <Field
+                key={field.name}
+                sectionKey={sectionKey}
+                field={field}
+                item={item}
+                onChange={(name, value) => change(item.id, name, value)}
+              />
+            ))}
+            <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+          </div>
+        </Animated>
       ))}
       <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
     </>

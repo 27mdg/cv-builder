@@ -7,9 +7,10 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import texts from '../../locales/es.js'
 import Section from './Section.jsx'
+import Animated from '../Animated.jsx'
 import { GripIcon } from '../Icons.jsx'
 
-function SortableSection({ id, open, onRemove, extraProps, children }) {
+function SortableSection({ id, open, onRemove, extraProps, leaving, onLeft, children }) {
   const {
     attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging,
   } = useSortable({ id })
@@ -37,9 +38,12 @@ function SortableSection({ id, open, onRemove, extraProps, children }) {
       // Translate, not Transform: sections have different heights and would be stretched
       style={{ transform: CSS.Translate.toString(transform), transition }}
     >
-      <Section title={texts[id].title} open={open} handle={handle} onRemove={onRemove} {...extraProps}>
-        {children}
-      </Section>
+      {/* Sections added in this visit (`open`) grow in */}
+      <Animated appear={open} leaving={leaving} onLeft={onLeft}>
+        <Section title={texts[id].title} open={open} handle={handle} onRemove={onRemove} {...extraProps}>
+          {children}
+        </Section>
+      </Animated>
     </div>
   )
 }
@@ -59,9 +63,9 @@ const accessibility = {
 // Form sections the user can reorder by dragging their handle (mouse, finger or keyboard).
 // renderContent(key) returns what goes inside each section; `removable` sections get a ×
 // that calls onRemove(key), and `openKeys` start unfolded. sectionProps(key) returns more props
-// for each Section (icon, summary, done).
+// for each Section (icon, summary, done). isLeaving(key) and onLeft(key): see useLeaving.js.
 function SortableSections({
-  order, onReorder, renderContent, sectionProps, removable = [], onRemove, openKeys = [],
+  order, onReorder, renderContent, sectionProps, removable = [], onRemove, openKeys = [], isLeaving, onLeft,
 }) {
   const sensors = useSensors(
     // A small distance or delay before dragging starts, so a plain click or a scroll still work
@@ -90,6 +94,8 @@ function SortableSections({
             open={openKeys.includes(key) || undefined}
             onRemove={removable.includes(key) ? () => onRemove(key) : undefined}
             extraProps={sectionProps?.(key)}
+            leaving={isLeaving?.(key)}
+            onLeft={() => onLeft?.(key)}
           >
             {renderContent(key)}
           </SortableSection>

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import texts from '../../locales/es.js'
 import PhotoField from './PhotoField.jsx'
 import { CloseIcon, PlusIcon } from '../Icons.jsx'
+import Animated from '../Animated.jsx'
+import { useLeaving } from '../useLeaving.js'
 
 // `fullWidth`: spans both columns of the grid
 const fields = [
@@ -54,20 +56,23 @@ function PersonalDetails({ data, onChange }) {
   // Only the opened and still empty ones: those with content are always shown (see `visible`),
   // so this does not need to be saved in the CV
   const [opened, setOpened] = useState([])
-  // To put the cursor in the custom field that was just added
-  const [newCustomId, setNewCustomId] = useState(null)
+  // Custom fields added in this visit: they grow in, and the last one gets the cursor
+  const [addedCustom, setAddedCustom] = useState([])
+  const { isLeaving, leave, left } = useLeaving()
 
   const visible = extraFields.filter((f) => data[f.name] !== '' || opened.includes(f.name))
   const hidden = extraFields.filter((f) => !visible.includes(f))
 
   function removeExtra(name) {
-    onChange(name, '')
-    setOpened(opened.filter((n) => n !== name))
+    leave(name, () => {
+      onChange(name, '')
+      setOpened((names) => names.filter((n) => n !== name))
+    })
   }
 
   function addCustom() {
     const field = { id: crypto.randomUUID(), label: '', value: '' }
-    setNewCustomId(field.id)
+    setAddedCustom([...addedCustom, field.id])
     onChange('customFields', [...data.customFields, field])
   }
 
@@ -76,7 +81,7 @@ function PersonalDetails({ data, onChange }) {
   }
 
   function removeCustom(id) {
-    onChange('customFields', data.customFields.filter((f) => f.id !== id))
+    leave(id, () => onChange('customFields', (current) => current.filter((f) => f.id !== id)))
   }
 
   return (
@@ -95,28 +100,42 @@ function PersonalDetails({ data, onChange }) {
           <Field key={field.name} field={field} data={data} onChange={onChange}/>
         ))}
         {visible.map((field) => (
-          <Field key={field.name} field={field} data={data} onChange={onChange}
-            autoFocus={opened.includes(field.name)}>
-            <RemoveButton onClick={() => removeExtra(field.name)}/>
-          </Field>
+          <Animated
+            key={field.name}
+            appear={opened.includes(field.name)}
+            leaving={isLeaving(field.name)}
+            onLeft={() => left(field.name)}
+          >
+            <Field field={field} data={data} onChange={onChange} autoFocus={opened.includes(field.name)}>
+              <RemoveButton onClick={() => removeExtra(field.name)}/>
+            </Field>
+          </Animated>
         ))}
         {data.customFields.map((f) => (
-          <div className="field field-full custom-field" key={f.id}>
-            <input
-              aria-label={texts.customFields.label}
-              placeholder={texts.customFields.label}
-              value={f.label}
-              autoFocus={f.id === newCustomId}
-              onChange={(e) => changeCustom(f.id, 'label', e.target.value)}
-            />
-            <input
-              aria-label={texts.customFields.value}
-              placeholder={texts.customFields.value}
-              value={f.value}
-              onChange={(e) => changeCustom(f.id, 'value', e.target.value)}
-            />
-            <RemoveButton onClick={() => removeCustom(f.id)}/>
-          </div>
+          <Animated
+            key={f.id}
+            className="field-full"
+            appear={addedCustom.includes(f.id)}
+            leaving={isLeaving(f.id)}
+            onLeft={() => left(f.id)}
+          >
+            <div className="field custom-field">
+              <input
+                aria-label={texts.customFields.label}
+                placeholder={texts.customFields.label}
+                value={f.label}
+                autoFocus={f.id === addedCustom.at(-1)}
+                onChange={(e) => changeCustom(f.id, 'label', e.target.value)}
+              />
+              <input
+                aria-label={texts.customFields.value}
+                placeholder={texts.customFields.value}
+                value={f.value}
+                onChange={(e) => changeCustom(f.id, 'value', e.target.value)}
+              />
+              <RemoveButton onClick={() => removeCustom(f.id)}/>
+            </div>
+          </Animated>
         ))}
       </div>
 

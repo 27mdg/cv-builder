@@ -152,8 +152,8 @@
 /* Each section is a white card; the open one lifts with a soft shadow */
 .section { padding: 0 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); transition: box-shadow 0.2s ease; }
 .section[open] { box-shadow: 0 4px 16px var(--shadow); }
-/* The gap goes on the sortable wrapper, not the card, so the drag shadow hugs the card */
-.form-panel > .section, .sortable { margin-bottom: 12px; }
+/* The gap is a margin of the card itself, so it also shrinks when a section fades out */
+.form-panel .section { margin-bottom: 12px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
 .section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); }
@@ -169,7 +169,8 @@
 .form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
 .form-panel .drag-handle:hover { background: var(--background); color: var(--text); }
 .sortable { position: relative; border-radius: var(--radius); }
-.sortable.dragging { z-index: 10; box-shadow: 0 10px 28px var(--shadow); cursor: grabbing; }
+.sortable.dragging { z-index: 10; cursor: grabbing; }
+.sortable.dragging .section { box-shadow: 0 10px 28px var(--shadow); }
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .form-panel .section-remove { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
 .form-panel .section-remove:hover { background: var(--background); color: var(--danger); }
@@ -182,6 +183,36 @@
 .section[open] .section-arrow { transform: rotate(180deg); background: var(--background); }
 .section > summary:hover .section-arrow { background: var(--background); }
 .section-content { padding-bottom: 24px; }
+
+/* Smooth animations. Short, and mostly opacity and position, which even cheap phones move
+   without effort; height only on small pieces. Everything is switched off for reduced motion. */
+:root { --ease-out: cubic-bezier(0.22, 1, 0.36, 1); }
+/* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
+.animated { display: grid; grid-template-rows: 1fr; }
+.animated-inner { min-height: 0; }
+.animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow: hidden; }
+.animated.appearing { animation: grow-in 0.25s var(--ease-out); }
+.animated.leaving { animation: shrink-out 0.2s ease-in forwards; }
+@keyframes grow-in { from { grid-template-rows: 0fr; opacity: 0; } }
+@keyframes shrink-out { to { grid-template-rows: 0fr; opacity: 0; } }
+/* Opening and closing a section. Only where the browser can animate to "auto" height (Chrome,
+   Edge); elsewhere it opens at once, as before. The clip margin keeps the fields' focus rings. */
+@supports (interpolate-size: allow-keywords) {
+  .section { interpolate-size: allow-keywords; }
+  .section::details-content { height: 0; overflow: clip; overflow-clip-margin: 8px; transition: height 0.25s var(--ease-out), content-visibility 0.25s allow-discrete; }
+  .section[open]::details-content { height: auto; }
+}
+.confirm-dialog[open] { animation: pop-in 0.2s var(--ease-out); }
+.confirm-dialog[open]::backdrop { animation: fade-in 0.2s ease; }
+/* translate, not transform: some menus are already centred with transform */
+.tool-menu { animation: rise-in 0.18s var(--ease-out); }
+@keyframes pop-in { from { opacity: 0; scale: 0.96; } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
+@media (prefers-reduced-motion: reduce) {
+  .animated.appearing, .animated.leaving, .confirm-dialog[open], .confirm-dialog[open]::backdrop, .tool-menu { animation: none; }
+  .section::details-content { transition: none; }
+}
 
 .form-panel label, .form-panel .label, .date-field > span { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
 .form-panel label { margin-bottom: 16px; }

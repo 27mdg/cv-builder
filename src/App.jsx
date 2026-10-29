@@ -20,6 +20,7 @@ import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
 import ConfirmDialog from './components/ConfirmDialog.jsx'
 import Splitter from './components/Splitter.jsx'
+import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
 import { PlusIcon } from './components/Icons.jsx'
 
 // The preview is loaded separately (lazy) because the PDF library is heavy:
@@ -30,8 +31,7 @@ const Preview = lazy(() => import('./components/Preview.jsx'))
 // pages and toolbar glide, the form fades out). flushSync: React must finish the change inside
 // the callback, or the "after" snapshot would still be the old page. Without support it just switches.
 function withTransition(update) {
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!document.startViewTransition || reducedMotion) {
+  if (!document.startViewTransition || prefersReducedMotion()) {
     update()
     return
   }
@@ -51,6 +51,7 @@ function App() {
   // are always shown, so this does not need to be saved in the CV.
   const [addedSections, setAddedSections] = useState([])
   const [removingSection, setRemovingSection] = useState(null)
+  const { isLeaving: isSectionLeaving, leave: leaveSection, left: sectionLeft } = useLeaving()
 
   function changeFullScreen(value) {
     withTransition(() => setFullScreen(value))
@@ -68,16 +69,22 @@ function App() {
   // Changes always start from the latest version of the CV (previous), not from `cv`.
   // That way, if two changes arrive almost at once (e.g. the photo, which takes a moment
   // to resize), the second one does not wipe out the first.
+  // `value` can also be a function of the section's latest value: an item that fades out is
+  // removed a moment later, and by then the user may have typed something else
   function changeSection(key, value) {
-    setCv((previous) => ({ ...previous, [key]: value }))
+    setCv((previous) => ({ ...previous, [key]: typeof value === 'function' ? value(previous[key]) : value }))
   }
 
   function changeDesign(field, value) {
     setCv((previous) => ({ ...previous, design: { ...previous.design, [field]: value } }))
   }
 
+  // Like changeSection, `value` can be a function of the field's latest value
   function changePersonal(field, value) {
-    setCv((previous) => ({ ...previous, personal: { ...previous.personal, [field]: value } }))
+    setCv((previous) => {
+      const next = typeof value === 'function' ? value(previous.personal[field]) : value
+      return { ...previous, personal: { ...previous.personal, [field]: next } }
+    })
   }
 
   // A new template starts with its own colour and font, so it looks like its thumbnail
@@ -122,9 +129,12 @@ function App() {
     setAddedSections((added) => [...added, key])
   }
 
+  // The section fades out and shrinks first; its content is cleared once it has gone
   function hideSection(key) {
-    changeSection(key, initialCv[key])
-    setAddedSections((added) => added.filter((k) => k !== key))
+    leaveSection(key, () => {
+      changeSection(key, initialCv[key])
+      setAddedSections((added) => added.filter((k) => k !== key))
+    })
   }
 
   function removeSection(key) {
@@ -184,6 +194,8 @@ function App() {
             removable={optionalSections}
             onRemove={removeSection}
             openKeys={addedSections}
+            isLeaving={isSectionLeaving}
+            onLeft={sectionLeft}
           />
           {hiddenSections.length > 0 && (
             <div className="extra-sections">
