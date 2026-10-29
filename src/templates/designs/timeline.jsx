@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { Dots } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
@@ -169,7 +170,7 @@ function timelineItems(s, v, sectionKey, list) {
         {hasText(parts.title) && <Text style={s.itemTitle}>{parts.title}</Text>}
         {hasText(parts.subtitle) && <Text style={s.itemSubtitle}>{parts.subtitle}</Text>}
         {hasText(join([parts.date, parts.place])) && <Text style={s.itemDate}>{join([parts.date, parts.place])}</Text>}
-        {hasText(item.description) && <Text style={s.description}>{item.description}</Text>}
+        {hasText(item.description) && <RichText style={s.description} text={item.description}/>}
       </TimelineItem>
     )
   })
@@ -192,7 +193,7 @@ function TimelineTemplate({ cv, template }) {
       items: timelineItems(s, v, key, list),
       container: (children) => <Timeline color={v.accentText}>{children}</Timeline>,
     }
-    : { key, title: sectionTitle(cv, key), items: [<Text key="text">{text}</Text>] }))
+    : { key, title: sectionTitle(cv, key), items: [<RichText key="text" text={text}/>] }))
 
   return (
     <Document title={details.fullName} author={details.fullName}>

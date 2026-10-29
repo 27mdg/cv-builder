@@ -50,6 +50,43 @@ export function sectionTitle(cv, key) {
   return isCustomKey(key) ? texts.customSection.untitled : texts[key].title
 }
 
+// Bold (**text**) or a link ([text](address)), the only formatting inside a line
+const inlineMarks = /\*\*(.+?)\*\*|\[([^\]]+)\]\(([^)\s]+)\)/g
+const bulletMark = /^\s*[-•]\s+/
+
+function segmentsOf(line) {
+  const segments = []
+  let last = 0
+  for (const match of line.matchAll(inlineMarks)) {
+    if (match.index > last) segments.push({ text: line.slice(last, match.index) })
+    segments.push(match[1] !== undefined ? { text: match[1], bold: true } : { text: match[2], href: match[3] })
+    last = match.index + match[0].length
+  }
+  if (last < line.length) segments.push({ text: line.slice(last) })
+  return segments
+}
+
+/**
+ * Descriptions are stored as text with a few marks: '- ' starts a bullet, **bold**, [text](link).
+ * Plain text from older CVs stays valid. → [{ bullet, segments: [{ text, bold?, href? }] }], one per line.
+ */
+export function parseRichText(text) {
+  return text.replace(/\s+$/, '').split('\n').map((line) => {
+    const bullet = bulletMark.test(line)
+    return { bullet, segments: segmentsOf(bullet ? line.replace(bulletMark, '') : line) }
+  })
+}
+
+// The same text without marks, for one-line summaries
+export function plainText(text) {
+  return parseRichText(text).map((line) => line.segments.map((s) => s.text).join('')).join('\n')
+}
+
+// 'ana.es' → 'https://ana.es', so a link typed without its beginning still opens
+export function fullUrl(address) {
+  return /^[a-z][a-z0-9+.-]*:/i.test(address) ? address : `https://${address}`
+}
+
 // true if the text has more than whitespace
 export function hasText(text) {
   return typeof text === 'string' && text.trim() !== ''

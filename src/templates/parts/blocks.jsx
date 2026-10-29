@@ -1,5 +1,6 @@
 import { View, Text } from '@react-pdf/renderer'
 import { hasText } from '../format.js'
+import { RichText } from './RichText.jsx'
 
 // Content blocks every template reuses; each one passes its own `styles`
 // so the look stays template-specific.
@@ -10,7 +11,7 @@ export function Item({ styles, title, detail, description }) {
     <View style={styles.item} wrap={false}>
       {hasText(title) && <Text style={styles.itemTitle}>{title}</Text>}
       {hasText(detail) && <Text style={styles.detail}>{detail}</Text>}
-      {hasText(description) && <Text style={styles.description}>{description}</Text>}
+      {hasText(description) && <RichText style={styles.description} text={description}/>}
     </View>
   )
 }

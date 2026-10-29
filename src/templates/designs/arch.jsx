@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
+import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
@@ -130,7 +131,7 @@ function Arch({ cv, template }) {
   const mainBlocks = main.map(({ key, list, text }) => ({
     key,
     title: sectionTitle(cv, key),
-    items: list ? sectionItems({ styles: s.mainText, sectionKey: key, list }) : [<Text key="text">{text}</Text>],
+    items: list ? sectionItems({ styles: s.mainText, sectionKey: key, list }) : [<RichText key="text" text={text}/>],
   }))
 
   return (

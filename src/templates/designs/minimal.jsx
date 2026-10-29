@@ -3,6 +3,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { Dots } from '../parts/levels.jsx'
@@ -110,7 +111,7 @@ function itemList(s, sectionKey, list) {
       <View key={item.id} style={s.item} wrap={false}>
         {hasText(parts.title) && <Text style={s.itemTitle}>{parts.title}</Text>}
         {hasText(detail) && <Text>{detail}</Text>}
-        {hasText(item.description) && <Text style={s.description}>{item.description}</Text>}
+        {hasText(item.description) && <RichText style={s.description} text={item.description}/>}
       </View>
     )
   })
@@ -158,7 +159,7 @@ function Minimal({ cv, template }) {
               key={key}
               s={s}
               title={sectionTitle(cv, key)}
-              items={list ? itemList(s, key, list) : [<Text key="text" style={s.item}>{text}</Text>]}
+              items={list ? itemList(s, key, list) : [<RichText key="text" style={s.item} text={text}/>]}
             />
           ))}
           {columns.length > 0 && (
@@ -187,7 +188,7 @@ function Minimal({ cv, template }) {
                 ? list.filter((item) => hasText(item[field[key]])).map((item) => (
                   <Text key={item.id} style={s.line}>- {item[field[key]]}</Text>
                 ))
-                : <Text style={s.line}>{text}</Text>}
+                : <RichText style={s.line} text={text}/>}
             </SidebarSection>
           ))}
           {details.otherDetails.length > 0 && (

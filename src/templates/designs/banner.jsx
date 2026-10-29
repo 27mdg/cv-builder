@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
+import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
 import { sectionItems } from '../parts/sectionItems.jsx'
@@ -167,7 +168,7 @@ function Banner({ cv, template }) {
   const main = filled.filter(({ key }) => !inSidebar.includes(key))
 
   function mainItems(key, list, text) {
-    if (!list) return [<Text key="text">{text}</Text>]
+    if (!list) return [<RichText key="text" text={text}/>]
     if (key !== 'skills') return sectionItems({ styles: mainText, sectionKey: key, list })
     return list.map((item) => (
       <View key={item.id} style={s.skillRow} wrap={false}>

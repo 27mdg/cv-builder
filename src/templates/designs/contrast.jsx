@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
@@ -177,7 +178,7 @@ function itemElements(s, sectionKey, list) {
       <View key={item.id} style={s.item} wrap={false}>
         {hasText(parts.title) && <Text style={s.itemTitle}>{parts.title}</Text>}
         {hasText(detail) && <Text style={s.itemDetail}>{detail}</Text>}
-        {hasText(item.description) && <Text style={s.description}>{item.description}</Text>}
+        {hasText(item.description) && <RichText style={s.description} text={item.description}/>}
       </View>
     )
   })
@@ -194,7 +195,7 @@ function Contrast({ cv, template }) {
 
   const mainBlocks = main.map(({ key, list, text }) => ({
     key,
-    items: list ? itemElements(s, key, list) : [<Text key="text">{text}</Text>],
+    items: list ? itemElements(s, key, list) : [<RichText key="text" text={text}/>],
   }))
 
   return (
