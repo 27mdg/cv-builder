@@ -6,7 +6,7 @@
 /* Soft film grain over the green. isolation keeps the grain (z-index -1) above the bar's colour
    but under its buttons; z-index 10 keeps the bar, and its tooltips, above the panels below. */
 .topbar { position: relative; z-index: 10; isolation: isolate; }
-.topbar::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--grain); opacity: 0.3; mix-blend-mode: overlay; pointer-events: none; }
+.topbar::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--grain); opacity: 0.22; mix-blend-mode: overlay; pointer-events: none; }
 /* On the green bar the usual green focus ring would not show */
 .topbar :focus-visible { outline-color: var(--text-on-brand); }
 .logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--text-on-brand); text-decoration: none; }
@@ -149,27 +149,39 @@
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-.section { border-bottom: 1px solid var(--border); }
-.section > summary { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; cursor: pointer; list-style: none; }
+/* Each section is a white card; the open one lifts with a soft shadow */
+.section { padding: 0 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); transition: box-shadow 0.2s ease; }
+.section[open] { box-shadow: 0 4px 16px var(--shadow); }
+/* The gap goes on the sortable wrapper, not the card, so the drag shadow hugs the card */
+.form-panel > .section, .sortable { margin-bottom: 12px; }
+.section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section > summary h2 { flex: 1; font-size: 20px; color: var(--text); }
+.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); }
+.section-icon svg { width: 20px; height: 20px; }
+/* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
+.section-heading { flex: 1; min-width: 0; }
+.section > summary h2 { display: flex; align-items: center; gap: 8px; font-size: 20px; color: var(--text); }
+.section-done { display: flex; color: var(--brand-dark); }
+.section-done svg { width: 16px; height: 16px; }
+.section-summary { overflow: hidden; margin-top: 2px; color: var(--text-muted); font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
+.section[open] .section-summary { display: none; }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
-.form-panel .drag-handle { display: flex; margin: 0 8px 0 -6px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
-.form-panel .drag-handle:hover { background: var(--surface); color: var(--text); }
-.sortable { position: relative; background: var(--background); }
-.sortable.dragging { z-index: 10; border-radius: var(--radius); box-shadow: 0 10px 28px var(--shadow); cursor: grabbing; }
+.form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
+.form-panel .drag-handle:hover { background: var(--background); color: var(--text); }
+.sortable { position: relative; border-radius: var(--radius); }
+.sortable.dragging { z-index: 10; box-shadow: 0 10px 28px var(--shadow); cursor: grabbing; }
 .sortable.dragging .drag-handle { cursor: grabbing; }
-.form-panel .section-remove { display: flex; margin-right: 10px; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
-.form-panel .section-remove:hover { background: var(--surface); color: var(--danger); }
+.form-panel .section-remove { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
+.form-panel .section-remove:hover { background: var(--background); color: var(--danger); }
 .section-remove svg { width: 18px; height: 18px; }
 .extra-sections { padding: 28px 0 8px; }
 .extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
-.section-arrow { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
+.section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }
-/* White while open, like on hover, so an open section stands out from the closed ones */
-.section[open] .section-arrow { transform: rotate(180deg); background: var(--surface); }
-.section > summary:hover .section-arrow { background: var(--surface); }
-.section-content { padding-bottom: 32px; }
+/* Filled while open, like on hover. Cream, not white: the card itself is white now. */
+.section[open] .section-arrow { transform: rotate(180deg); background: var(--background); }
+.section > summary:hover .section-arrow { background: var(--background); }
+.section-content { padding-bottom: 24px; }
 
 .form-panel label, .form-panel .label, .date-field > span { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
 .form-panel label { margin-bottom: 16px; }

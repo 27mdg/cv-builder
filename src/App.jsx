@@ -11,6 +11,8 @@ import { hasText } from './templates/format.js'
 import Section from './components/form/Section.jsx'
 import ListSection from './components/form/ListSection.jsx'
 import SortableSections from './components/form/SortableSections.jsx'
+import sectionIcons from './components/form/sectionIcons.js'
+import { sectionSummary } from './components/form/sectionSummary.js'
 import DownloadButton from './components/DownloadButton.jsx'
 import ClearButton from './components/ClearButton.jsx'
 import ImportButton from './components/ImportButton.jsx'
@@ -130,6 +132,11 @@ function App() {
     else hideSection(key)
   }
 
+  function sectionProps(key) {
+    const summary = sectionSummary(key, cv)
+    return { icon: sectionIcons[key], summary, done: summary !== '' }
+  }
+
   function sectionContent(key) {
     const listSection = sections.find((section) => section.key === key)
     if (!listSection) {
@@ -166,13 +173,14 @@ function App() {
       </header>
       <main className="workspace">
         <section className="form-panel">
-          <Section title={texts.personal.title} open>
+          <Section title={texts.personal.title} open {...sectionProps('personal')}>
             <PersonalDetails data={cv.personal} onChange={changePersonal}/>
           </Section>
           <SortableSections
             order={visibleOrder}
             onReorder={reorderVisible}
             renderContent={sectionContent}
+            sectionProps={sectionProps}
             removable={optionalSections}
             onRemove={removeSection}
             openKeys={addedSections}

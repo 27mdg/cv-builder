@@ -1,15 +1,24 @@
 import texts from '../../locales/es.js'
-import { ArrowIcon, CloseIcon } from '../Icons.jsx'
+import { ArrowIcon, CheckIcon, CloseIcon } from '../Icons.jsx'
 
 // <details> folds and unfolds without JavaScript or state.
 // `handle`: the drag handle of sections that can be reordered (see SortableSections.jsx).
 // `onRemove`: shows a × to remove an optional section.
-function Section({ title, open, handle, onRemove, children }) {
+// `icon`: the section's icon component; `summary`: what it holds, shown while closed;
+// `done`: it has content (a tick next to the title).
+function Section({ title, icon: Icon, summary, done, open, handle, onRemove, children }) {
   return (
     <details className="section" open={open}>
       <summary>
         {handle}
-        <h2>{title}</h2>
+        {Icon && <span className="section-icon"><Icon/></span>}
+        <div className="section-heading">
+          <h2>
+            {title}
+            {done && <span className="section-done" role="img" aria-label={texts.summary.done}><CheckIcon/></span>}
+          </h2>
+          {summary && <p className="section-summary">{summary}</p>}
+        </div>
         {onRemove && (
           <button
             type="button"

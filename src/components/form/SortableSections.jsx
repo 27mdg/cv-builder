@@ -9,7 +9,7 @@ import texts from '../../locales/es.js'
 import Section from './Section.jsx'
 import { GripIcon } from '../Icons.jsx'
 
-function SortableSection({ id, open, onRemove, children }) {
+function SortableSection({ id, open, onRemove, extraProps, children }) {
   const {
     attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging,
   } = useSortable({ id })
@@ -37,7 +37,9 @@ function SortableSection({ id, open, onRemove, children }) {
       // Translate, not Transform: sections have different heights and would be stretched
       style={{ transform: CSS.Translate.toString(transform), transition }}
     >
-      <Section title={texts[id].title} open={open} handle={handle} onRemove={onRemove}>{children}</Section>
+      <Section title={texts[id].title} open={open} handle={handle} onRemove={onRemove} {...extraProps}>
+        {children}
+      </Section>
     </div>
   )
 }
@@ -56,8 +58,11 @@ const accessibility = {
 
 // Form sections the user can reorder by dragging their handle (mouse, finger or keyboard).
 // renderContent(key) returns what goes inside each section; `removable` sections get a ×
-// that calls onRemove(key), and `openKeys` start unfolded.
-function SortableSections({ order, onReorder, renderContent, removable = [], onRemove, openKeys = [] }) {
+// that calls onRemove(key), and `openKeys` start unfolded. sectionProps(key) returns more props
+// for each Section (icon, summary, done).
+function SortableSections({
+  order, onReorder, renderContent, sectionProps, removable = [], onRemove, openKeys = [],
+}) {
   const sensors = useSensors(
     // A small distance or delay before dragging starts, so a plain click or a scroll still work
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -84,6 +89,7 @@ function SortableSections({ order, onReorder, renderContent, removable = [], onR
             id={key}
             open={openKeys.includes(key) || undefined}
             onRemove={removable.includes(key) ? () => onRemove(key) : undefined}
+            extraProps={sectionProps?.(key)}
           >
             {renderContent(key)}
           </SortableSection>

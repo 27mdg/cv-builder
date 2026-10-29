@@ -232,6 +232,12 @@ const es = {
     // Read aloud by screen readers
     value: (percent) => `El formulario ocupa el ${percent} % del ancho`,
   },
+  // The line under the title of a closed form section
+  summary: {
+    more: (count) => `+${count} más`,
+    items: (count) => (count === 1 ? '1 elemento' : `${count} elementos`),
+    done: 'Sección con contenido',
+  },
   // Not shown at the moment: kept for the future home page
   storage: {
     notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
