@@ -466,7 +466,7 @@
 @media (prefers-reduced-motion: reduce) {
   .form-panel input.switch, .form-panel input.switch::after { transition: none; }
 }
-.form-panel .switch-label.references-on-request { display: flex; margin-bottom: 16px; }
+.form-panel .switch-label.references-on-request, .form-panel .switch-label.section-switch { display: flex; margin-bottom: 16px; }
 
 /* Small screens: the real mobile layout is a separate task; this keeps the top bar usable */
 @media (max-width: 760px) {

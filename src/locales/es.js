@@ -145,6 +145,8 @@ const es = {
     title: 'Habilidades',
     skill: 'Habilidad',
     level: 'Nivel',
+    category: 'Categoría',
+    showLevel: 'Mostrar el nivel en el CV',
     add: 'Añadir habilidad',
   },
   languages: {

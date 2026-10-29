@@ -215,6 +215,23 @@ function App() {
         onChange={(value) => changeSection(key, value)}
       />
     )
+    if (key === 'skills') {
+      return (
+        <>
+          <label className="switch-label section-switch">
+            <input
+              type="checkbox"
+              role="switch"
+              className="switch"
+              checked={!cv.sectionSettings.skills?.hideLevel}
+              onChange={(e) => changeSectionSetting('skills', 'hideLevel', !e.target.checked)}
+            />
+            {texts.skills.showLevel}
+          </label>
+          {list}
+        </>
+      )
+    }
     if (key !== 'references') return list
     // The list is kept while hidden, so unticking brings it back
     return (

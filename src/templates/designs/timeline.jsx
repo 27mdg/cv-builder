@@ -2,6 +2,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter, languageLevel } from '../format.js'
+import { withCategories } from '../parts/sectionItems.jsx'
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { Dots } from '../parts/levels.jsx'
@@ -122,7 +123,7 @@ function SidebarSection({ s, title, children }) {
 
 function SidebarList({ s, v, sectionKey, list }) {
   if (sectionKey === 'skills') {
-    return list.map((item) => (
+    return withCategories(list, (item) => (
       <Bullet key={item.id} s={s}>
         <View style={s.skillRow}>
           <Text>{item.skill}</Text>

@@ -3,6 +3,7 @@ import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/render
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter, languageLevel } from '../format.js'
+import { withCategories } from '../parts/sectionItems.jsx'
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
@@ -118,7 +119,7 @@ function itemList(s, sectionKey, list) {
 }
 
 function skillItems(s, v, list) {
-  return list.map((item) => (
+  return withCategories(list, (item) => (
     <View key={item.id} style={s.skillRow} wrap={false}>
       <Text>- {item.skill}</Text>
       {item.level !== '' && <Dots level={item.level} color={v.accentText} size={5}/>}

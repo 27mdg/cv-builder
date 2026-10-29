@@ -72,6 +72,8 @@ const sections = [
     fields: [
       { name: 'skill', type: 'text' },
       { name: 'level', type: 'skillLevel' },
+      // Skills with the same category go together in the CV, under its name
+      { name: 'category', type: 'text', optional: true },
     ],
   },
   {

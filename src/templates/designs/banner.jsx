@@ -5,7 +5,7 @@ import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter,
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
-import { sectionItems } from '../parts/sectionItems.jsx'
+import { sectionItems, withCategories } from '../parts/sectionItems.jsx'
 import { Bar } from '../parts/levels.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
 
@@ -170,7 +170,7 @@ function Banner({ cv, template }) {
   function mainItems(key, list, text) {
     if (!list) return [<RichText key="text" text={text}/>]
     if (key !== 'skills') return sectionItems({ styles: mainText, sectionKey: key, list })
-    return list.map((item) => (
+    return withCategories(list, (item) => (
       <View key={item.id} style={s.skillRow} wrap={false}>
         <Text style={s.skillName}>{item.skill}</Text>
         {item.level !== '' && <Bar level={item.level} color={v.accent} trackColor="#dcdfe4" width={110}/>}

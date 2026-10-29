@@ -180,15 +180,33 @@ export function personalDetails(personal) {
 // hid (sectionSettings) are left out, and so are hidden items (`item.hidden`).
 // Each dated item gets its dates already written (`dates`) in the chosen format, so the
 // templates do not need to know about it.
+// Skills of the same category next to each other (categories in order of first appearance);
+// the first of each group carries `categoryHead`, the title templates draw above it. Skills with
+// no category go first: at the end they would look like part of the last group.
+function groupByCategory(list) {
+  const category = (item) => (item.category ?? '').trim()
+  if (!list.some((item) => category(item))) return list
+  const order = ['', ...new Set(list.map(category).filter(Boolean))]
+  return order.flatMap((name) => list
+    .filter((item) => category(item) === name)
+    .map((item, i) => (i === 0 && name ? { ...item, categoryHead: name } : item)))
+}
+
+function skillsFor(cv, list) {
+  // The user can leave the levels out of the CV (switch in the form)
+  const levels = cv.sectionSettings?.skills?.hideLevel ? list.map((item) => ({ ...item, level: '' })) : list
+  return groupByCategory(levels)
+}
+
 export function filledSections(cv) {
   const withDates = (item) => (item.start ? { ...item, dates: dateRange(item, cv.design.dateFormat) } : item)
   return cv.sectionOrder
     .filter((key) => !cv.sectionSettings?.[key]?.hidden)
     .map((key) => {
       if (key === 'references' && cv.referencesOnRequest) return { key, text: texts.references.onRequestText }
-      return Array.isArray(cv[key])
-        ? { key, list: itemsWithContent(cv[key]).filter((item) => !item.hidden).map(withDates) }
-        : { key, text: cv[key] }
+      if (!Array.isArray(cv[key])) return { key, text: cv[key] }
+      const list = itemsWithContent(cv[key]).filter((item) => !item.hidden).map(withDates)
+      return { key, list: key === 'skills' ? skillsFor(cv, list) : list }
     })
     .filter((section) => (section.list ? section.list.length > 0 : hasText(section.text)))
 }
