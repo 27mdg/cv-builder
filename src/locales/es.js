@@ -164,6 +164,18 @@ const es = {
     start: 'Fecha',
     add: 'Añadir publicación',
   },
+  references: {
+    title: 'Referencias',
+    referee: 'Nombre',
+    position: 'Cargo',
+    employer: 'Empresa',
+    email: 'Correo electrónico',
+    phone: 'Teléfono',
+    add: 'Añadir referencia',
+    onRequest: 'No mostrar la lista: poner solo «Referencias disponibles bajo petición»',
+    // What the CV says in that case
+    onRequestText: 'Referencias disponibles bajo petición.',
+  },
   preview: {
     loading: 'Cargando vista previa…',
   },

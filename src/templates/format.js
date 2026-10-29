@@ -48,19 +48,22 @@ const itemTitles = {
   projects: ['project', 'role'],
   awards: ['award', 'issuer'],
   publications: ['publication', 'publisher'],
+  // Several fields: joined with commas ('Jefa de equipo, Estudio X')
+  references: ['referee', ['position', 'employer']],
 }
 
 /**
  * An item split into the pieces templates place: { title, subtitle, date, place }.
- * `place` is the city, or the link for items without one (e.g. projects).
+ * `place` is the city, or else the link (projects) or the contact (references).
  */
 export function itemParts(key, item) {
   const [title, subtitle] = itemTitles[key] ?? ['position', 'employer']
   return {
     title: item[title] ?? '',
-    subtitle: (subtitle && item[subtitle]) ?? '',
+    subtitle: Array.isArray(subtitle) ? join(subtitle.map((name) => item[name]), ', ') : (subtitle && item[subtitle]) ?? '',
     date: item.dates ?? '',
-    place: item.city || item.link || '',
+    // References have no place: their contact goes there
+    place: item.city || item.link || join([item.email, item.phone]),
   }
 }
 
@@ -107,9 +110,12 @@ export function personalDetails(personal) {
 export function filledSections(cv) {
   const withDates = (item) => (item.start ? { ...item, dates: dateRange(item, cv.design.dateFormat) } : item)
   return cv.sectionOrder
-    .map((key) => (Array.isArray(cv[key])
-      ? { key, list: itemsWithContent(cv[key]).map(withDates) }
-      : { key, text: cv[key] }))
+    .map((key) => {
+      if (key === 'references' && cv.referencesOnRequest) return { key, text: texts.references.onRequestText }
+      return Array.isArray(cv[key])
+        ? { key, list: itemsWithContent(cv[key]).map(withDates) }
+        : { key, text: cv[key] }
+    })
     .filter((section) => (section.list ? section.list.length > 0 : hasText(section.text)))
 }
 

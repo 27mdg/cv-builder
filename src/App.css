@@ -319,6 +319,7 @@
 .form-panel .date-field select { width: auto; }
 .date-field { margin-bottom: 16px; }
 .form-panel .current { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-weight: 400; }
+.form-panel .references-on-request { display: flex; margin-bottom: 16px; }
 
 /* Small screens: the real mobile layout is a separate task; this keeps the top bar usable */
 @media (max-width: 760px) {

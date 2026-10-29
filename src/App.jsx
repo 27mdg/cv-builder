@@ -107,7 +107,8 @@ function App() {
     setAddedSections([])
   }
 
-  const hasContent = (key) => (Array.isArray(cv[key]) ? cv[key].length > 0 : hasText(cv[key]))
+  const hasContent = (key) => (key === 'references' && cv.referencesOnRequest)
+    || (Array.isArray(cv[key]) ? cv[key].length > 0 : hasText(cv[key]))
   const visibleOrder = cv.sectionOrder.filter(
     (key) => !optionalSections.includes(key) || hasContent(key) || addedSections.includes(key),
   )
@@ -133,6 +134,7 @@ function App() {
   function hideSection(key) {
     leaveSection(key, () => {
       changeSection(key, initialCv[key])
+      if (key === 'references') changeSection('referencesOnRequest', false)
       setAddedSections((added) => added.filter((k) => k !== key))
     })
   }
@@ -152,13 +154,28 @@ function App() {
     if (!listSection) {
       return <LongText value={cv[key]} hint={texts[key].hint} onChange={(value) => changeSection(key, value)}/>
     }
-    return (
+    const list = (
       <ListSection
         sectionKey={key}
         fields={listSection.fields}
         list={cv[key]}
-        onChange={(list) => changeSection(key, list)}
+        onChange={(value) => changeSection(key, value)}
       />
+    )
+    if (key !== 'references') return list
+    // The list is kept while hidden, so unticking brings it back
+    return (
+      <>
+        <label className="current references-on-request">
+          <input
+            type="checkbox"
+            checked={cv.referencesOnRequest}
+            onChange={(e) => changeSection('referencesOnRequest', e.target.checked)}
+          />
+          {texts.references.onRequest}
+        </label>
+        {!cv.referencesOnRequest && list}
+      </>
     )
   }
 

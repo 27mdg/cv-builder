@@ -20,6 +20,7 @@ export function sectionSummary(key, cv) {
     const p = cv.personal
     return join([join([p.firstName, p.lastName], ' '), p.email])
   }
+  if (key === 'references' && cv.referencesOnRequest) return texts.references.onRequestText
   if (!Array.isArray(cv[key])) return hasText(cv[key]) ? shorten(cv[key]) : ''
 
   const items = itemsWithContent(cv[key])
