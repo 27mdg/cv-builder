@@ -35,7 +35,7 @@ function Section({
         {onRename && (
           <button
             type="button"
-            className="section-action"
+            className="section-action rename-button"
             title={texts.rename.button}
             aria-label={`${texts.rename.button}: ${shownTitle}`}
             aria-expanded={renaming}
@@ -52,7 +52,7 @@ function Section({
         {onToggleHidden && (
           <button
             type="button"
-            className="section-action"
+            className="section-action visibility-button"
             title={hidden ? texts.visibility.show : texts.visibility.hide}
             aria-label={`${hidden ? texts.visibility.show : texts.visibility.hide}: ${title}`}
             aria-pressed={hidden}
