@@ -1,6 +1,6 @@
 import { View, Text } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
-import { hasText, itemSummary } from '../format.js'
+import { hasText, itemSummary, languageLevel } from '../format.js'
 import { Item } from './blocks.jsx'
 
 const simpleField = { hobbies: 'interest', qualities: 'quality' }
@@ -23,7 +23,7 @@ export function sectionItems({ styles, sectionKey, list, renderLevel }) {
     return list.map((item) => (
       <View key={item.id} style={styles.line} wrap={false}>
         {hasText(item.language) && <Text>{item.language}</Text>}
-        {item.level !== '' && <Text style={styles.detail}>{texts.common.languageLevels[item.level]}</Text>}
+        {hasText(languageLevel(item)) && <Text style={styles.detail}>{languageLevel(item)}</Text>}
       </View>
     ))
   }

@@ -146,6 +146,7 @@ const es = {
     title: 'Idiomas',
     language: 'Idioma',
     level: 'Nivel',
+    certificate: 'Título oficial (p. ej. DELF B2)',
     add: 'Añadir idioma',
   },
   hobbies: {

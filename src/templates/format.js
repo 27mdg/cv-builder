@@ -43,6 +43,11 @@ export function pageWithFooter(pageStyle, cv) {
   return [pageStyle, { paddingBottom: bottom + footerSpace }]
 }
 
+/** A language's level and its official certificate, e.g. 'C1 – Avanzado · Cambridge C1 Advanced', or ''. */
+export function languageLevel(item) {
+  return join([texts.common.languageLevels[item.level], item.certificate])
+}
+
 /** The title a section has in the CV: the one the user wrote, or the usual one. */
 export function sectionTitle(cv, key) {
   const custom = cv.sectionSettings?.[key]?.title

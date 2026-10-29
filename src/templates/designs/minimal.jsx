@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter, languageLevel } from '../format.js'
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { PdfIcon } from '../parts/icons.jsx'
@@ -130,7 +130,7 @@ function languageItems(s, list) {
   return list.map((item) => (
     <View key={item.id} wrap={false}>
       {hasText(item.language) && <Text style={s.languageName}>{item.language}:</Text>}
-      {item.level !== '' && <Text>{texts.common.languageLevels[item.level]}.</Text>}
+      {hasText(languageLevel(item)) && <Text>{languageLevel(item)}.</Text>}
     </View>
   ))
 }

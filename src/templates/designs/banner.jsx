@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
+import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter, languageLevel } from '../format.js'
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { KeepWithFirst } from '../parts/blocks.jsx'
@@ -147,7 +147,7 @@ function SidebarList({ s, sectionKey, list }) {
     return list.map((item) => (
       <View key={item.id} style={s.languageRow} wrap={false}>
         <Text style={s.languageName}>{item.language}</Text>
-        <Text style={s.languageLevel}>{texts.common.languageLevels[item.level] ?? ''}</Text>
+        <Text style={s.languageLevel}>{languageLevel(item)}</Text>
       </View>
     ))
   }

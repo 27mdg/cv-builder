@@ -73,6 +73,7 @@ const sections = [
     fields: [
       { name: 'language', type: 'text' },
       { name: 'level', type: 'languageLevel' },
+      { name: 'certificate', type: 'text' },
     ],
   },
   { key: 'hobbies', fields: [{ name: 'interest', type: 'text' }] },

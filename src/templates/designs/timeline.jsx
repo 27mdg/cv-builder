@@ -1,7 +1,7 @@
 import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
-import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter } from '../format.js'
+import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter, languageLevel } from '../format.js'
 import { RichText } from '../parts/RichText.jsx'
 import { Footer, Signature } from '../parts/closing.jsx'
 import { Dots } from '../parts/levels.jsx'
@@ -134,7 +134,7 @@ function SidebarList({ s, v, sectionKey, list }) {
   if (sectionKey === 'languages') {
     return list.map((item) => (
       <Bullet key={item.id} s={s}>
-        <Text>{join([item.language, texts.common.languageLevels[item.level]], ' — ')}</Text>
+        <Text>{join([item.language, languageLevel(item)], ' — ')}</Text>
       </Bullet>
     ))
   }
