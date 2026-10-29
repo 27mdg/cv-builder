@@ -47,6 +47,7 @@ const itemTitles = {
   certificates: ['certificate'],
   projects: ['project', 'role'],
   awards: ['award', 'issuer'],
+  publications: ['publication', 'publisher'],
 }
 
 /**

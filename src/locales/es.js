@@ -157,6 +157,13 @@ const es = {
     start: 'Fecha',
     add: 'Añadir premio',
   },
+  publications: {
+    title: 'Publicaciones',
+    publication: 'Título',
+    publisher: 'Revista, editorial o medio',
+    start: 'Fecha',
+    add: 'Añadir publicación',
+  },
   preview: {
     loading: 'Cargando vista previa…',
   },
