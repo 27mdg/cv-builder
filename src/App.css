@@ -202,9 +202,9 @@
 @media (prefers-reduced-motion: reduce) {
   .select::after { transition: none; }
 }
-/* Fields are a very light cream so they stand out on the white cards, and turn white while typing.
+/* Fields are a very light cream so they stand out on the white cards.
    The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
-.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); background-color: var(--surface); }
+.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
 .form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
