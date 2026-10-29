@@ -190,7 +190,9 @@
 /* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
 .animated { display: grid; grid-template-rows: 1fr; }
 .animated-inner { min-height: 0; }
-.animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow: hidden; }
+/* Clipped while it grows or shrinks, with a margin so the focus ring of a new field (which gets
+   the cursor at once) is not cut off at the sides */
+.animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow: clip; overflow-clip-margin: 8px; }
 .animated.appearing { animation: grow-in 0.25s var(--ease-out); }
 .animated.leaving { animation: shrink-out 0.2s ease-in forwards; }
 @keyframes grow-in { from { grid-template-rows: 0fr; opacity: 0; } }
