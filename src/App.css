@@ -64,6 +64,31 @@
 .save-reminder-close:hover { background: var(--background); color: var(--text); }
 .save-reminder-close svg { width: 16px; height: 16px; }
 
+/* PublicMode.jsx: a light strip under the top bar for as long as the mode is on */
+.public-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 24px; border-bottom: 1px solid var(--border); background: var(--brand-light); color: var(--text); font-size: 14px; }
+.public-bar > svg { flex: none; color: var(--brand-dark); }
+.public-bar span { flex: 1; min-width: 200px; }
+.public-bar button { padding: 6px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+.public-bar button:hover { border-color: var(--brand-dark); background: var(--background); }
+.public-bar .public-off { border-color: transparent; background: none; }
+/* The strip comes out from under the top bar: a negative margin of its own height (measured in
+   PublicMode.jsx) pulls it up behind the bar, and the form below follows it with no gap.
+   It hides the same way back. */
+.public-slot { overflow-y: clip; }
+.public-bar.appearing { animation: bar-in 0.3s var(--ease-out); }
+.public-bar.leaving { animation: bar-out 0.25s ease-in forwards; }
+@keyframes bar-in { from { margin-top: calc(-1 * var(--bar-height)); } }
+@keyframes bar-out { to { margin-top: calc(-1 * var(--bar-height)); } }
+/* Its button shrinks on its own centre and vanishes where it is. Its place is not animated: the
+   buttons are aligned to the right, so a narrowing place would slide the button towards them,
+   and on its left there is nothing that has to move. */
+.public-button-slot { display: flex; }
+.public-button-slot.appearing { animation: icon-in 0.25s var(--ease-out); }
+.public-button-slot.leaving { animation: icon-out 0.25s var(--ease-out) forwards; }
+.public-button-slot.leaving .tooltip { display: none; }
+@keyframes icon-in { from { scale: 0; opacity: 0; } }
+@keyframes icon-out { to { scale: 0; opacity: 0; } }
+
 /* UndoToast.jsx: bottom left, over the form, where the removal happened. Dark like the top bar,
    so it stands out from the white cards without a new colour. */
 .undo-toast { position: fixed; left: 24px; bottom: 24px; z-index: 300; display: flex; align-items: center; gap: 4px; max-width: calc(100vw - 48px); padding: 8px 8px 8px 16px; border-radius: var(--radius); background: var(--brand-dark); color: var(--text-on-brand); font-size: 14px; box-shadow: 0 6px 20px var(--shadow); animation: rise-in 0.2s var(--ease-out); }
@@ -346,7 +371,7 @@
 @keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) {
   .animated.appearing, .animated.leaving, .confirm-dialog[open], .confirm-dialog[open]::backdrop, .tool-menu, .date-popover,
-  .save-reminder, .undo-toast { animation: none; }
+  .save-reminder, .undo-toast, .public-bar, .public-button-slot { animation: none; }
   .section::details-content { transition: none; }
 }
 

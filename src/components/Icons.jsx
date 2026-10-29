@@ -72,6 +72,10 @@ export function TrashIcon() {
   return <Icon><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></Icon>
 }
 
+export function ComputerIcon() {
+  return <Icon><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></Icon>
+}
+
 export function CloseIcon() {
   return <Icon><path d="M6 6l12 12M18 6L6 18"/></Icon>
 }

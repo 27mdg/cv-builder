@@ -5,7 +5,8 @@ import { exportCv } from '../data/file.js'
 import Tooltip from './Tooltip.jsx'
 import { CloseIcon, DownloadIcon } from './Icons.jsx'
 
-function DownloadButton({ cv }) {
+// publicMode: nothing is kept in this browser, so there is nothing to protect or remind about
+function DownloadButton({ cv, publicMode }) {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState(false)
   const [reminder, setReminder] = useState(false)
@@ -19,8 +20,8 @@ function DownloadButton({ cv }) {
       // import(): the PDF library is heavy and only loads on click
       const { downloadPdf } = await import('../templates/download.jsx')
       await downloadPdf(cv)
-      keepSaved()
-      if (!reminded.current) {
+      if (!publicMode) keepSaved()
+      if (!publicMode && !reminded.current) {
         reminded.current = true
         setReminder(true)
       }

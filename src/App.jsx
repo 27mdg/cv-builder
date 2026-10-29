@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import './App.css'
-import { loadCv, saveCv } from './data/storage.js'
+import { isPublicMode, loadCv, saveCv, setPublicMode } from './data/storage.js'
 import initialCv from './data/initialCv.js'
 import texts from './locales/es.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
@@ -18,6 +18,7 @@ import sectionIcons from './components/form/sectionIcons.js'
 import { sectionSummary } from './components/form/sectionSummary.js'
 import DownloadButton from './components/DownloadButton.jsx'
 import ClearButton from './components/ClearButton.jsx'
+import { PublicModeBar, PublicModeButton } from './components/PublicMode.jsx'
 import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import Toolbar from './components/Toolbar.jsx'
@@ -45,11 +46,36 @@ function withTransition(update) {
 function App() {
   const [cv, setCv] = useState(loadCv)
 
+  const [fullScreen, setFullScreen] = useState(false)
+  const [publicMode, setPublicModeState] = useState(isPublicMode)
+
+  // Also on a change of mode, so the CV moves to its new place (see setPublicMode)
   useEffect(() => {
     saveCv(cv)
-  }, [cv])
+  }, [cv, publicMode])
 
-  const [fullScreen, setFullScreen] = useState(false)
+  // Only what changes in this visit animates, never on page load
+  const [publicAnimated, setPublicAnimated] = useState(false)
+  const [publicButtonLeaving, setPublicButtonLeaving] = useState(false)
+  const { isLeaving: isPublicLeaving, leave: leavePublic, left: publicLeft } = useLeaving()
+
+  function changePublicMode(on) {
+    setPublicMode(on)
+    setPublicModeState(on)
+  }
+
+  // The button shrinks away while the strip slides out from under the top bar
+  function turnOnPublicMode() {
+    setPublicAnimated(true)
+    if (!prefersReducedMotion()) setPublicButtonLeaving(true)
+    changePublicMode(true)
+  }
+
+  // The strip hides behind the top bar first; the mode changes once it has gone
+  function turnOffPublicMode() {
+    setPublicAnimated(true)
+    leavePublic('bar', () => changePublicMode(false))
+  }
 
   // Optional sections the user added in this visit and has not filled yet. Those with content
   // are always shown, so this does not need to be saved in the CV.
@@ -137,6 +163,14 @@ function App() {
       sectionOrder: previous.sectionOrder.filter((key) => !isCustomKey(key)),
     }))
     setAddedSections([])
+  }
+
+  // Public computer mode: leaves nothing behind, not even what "Deshacer" could bring back.
+  // Then the mode turns off, as there is nothing left to protect.
+  function finishPublicSession() {
+    setCv(initialCv)
+    setAddedSections([])
+    setUndo(null)
   }
 
   const hasContent = (key) => (key === 'references' && cv.referencesOnRequest)
@@ -314,12 +348,32 @@ function App() {
             onChange={(e) => changeSection('fileName', e.target.value)}
           />
           <div className="actions">
+            {(!publicMode || publicButtonLeaving) && (
+              <PublicModeButton
+                appear={publicAnimated}
+                leaving={publicButtonLeaving}
+                onLeft={() => setPublicButtonLeaving(false)}
+                onTurnOn={turnOnPublicMode}
+              />
+            )}
             <ClearButton onClear={clearCv}/>
             <ImportButton currentCv={cv} onImport={setCv}/>
             <ExportButton cv={cv}/>
-            <DownloadButton cv={cv}/>
+            <DownloadButton cv={cv} publicMode={publicMode}/>
           </div>
         </header>
+        {publicMode && (
+          <PublicModeBar
+            appear={publicAnimated}
+            leaving={isPublicLeaving('bar')}
+            onLeft={() => publicLeft('bar')}
+            onFinish={() => {
+              finishPublicSession()
+              turnOffPublicMode()
+            }}
+            onTurnOff={turnOffPublicMode}
+          />
+        )}
         <main className="workspace">
           <section className="form-panel">
             <Section title={texts.personal.title} open {...sectionProps('personal')}>

@@ -2,7 +2,8 @@ import initialCv from './initialCv.js'
 import { isCustomKey } from './sections.js'
 import templates from '../templates/list.js'
 
-// Only in localStorage: the data never leaves the browser (GDPR).
+// Only in the browser (localStorage, or sessionStorage in public computer mode): the data never
+// leaves it (GDPR).
 
 const storageKey = 'cv-gratis'
 // Bump it when the shape of the data changes, to recognise (and convert) old CVs.
@@ -58,10 +59,44 @@ export function cvFromData(data) {
   return cv
 }
 
+// Public computer mode (libraries, job centres…): the CV lives only in this tab's sessionStorage,
+// which the browser clears when the tab closes, and nothing stays in localStorage.
+const publicModeKey = 'cv-gratis-public'
+
+function store() {
+  return isPublicMode() ? sessionStorage : localStorage
+}
+
+export function isPublicMode() {
+  try {
+    return sessionStorage.getItem(publicModeKey) === 'on'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Turns public computer mode on or off and deletes the copy in the other place. The next
+ * saveCv() writes the CV where it now belongs.
+ */
+export function setPublicMode(on) {
+  try {
+    if (on) {
+      sessionStorage.setItem(publicModeKey, 'on')
+      localStorage.removeItem(storageKey)
+    } else {
+      sessionStorage.removeItem(publicModeKey)
+      sessionStorage.removeItem(storageKey)
+    }
+  } catch {
+    // Storage blocked: nothing was saved anyway
+  }
+}
+
 // The saved CV, or an empty one if there is none or it is broken
 export function loadCv() {
   try {
-    const text = localStorage.getItem(storageKey)
+    const text = store().getItem(storageKey)
     if (!text) return initialCv
     return cvFromData(JSON.parse(text)) ?? initialCv
   } catch {
@@ -78,7 +113,7 @@ export function keepSaved() {
 
 export function saveCv(cv) {
   try {
-    localStorage.setItem(storageKey, JSON.stringify({ version, cv }))
+    store().setItem(storageKey, JSON.stringify({ version, cv }))
   } catch {
     // Private mode or storage full: the site keeps working, just without saving
   }

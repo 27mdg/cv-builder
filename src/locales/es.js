@@ -336,6 +336,17 @@ const es = {
     customTextHint: 'Un párrafo, como el Perfil.',
     remove: 'Quitar sección',
   },
+  publicMode: {
+    button: 'Modo ordenador público',
+    tooltip: 'Para ordenadores compartidos, como los de bibliotecas u oficinas de empleo: tu CV no se guarda en este equipo y se borra al cerrar la pestaña.',
+    notice: 'Modo ordenador público: tu CV no se guarda en este equipo y se borra al cerrar la pestaña.',
+    finish: 'Terminar y borrar',
+    turnOff: 'Desactivar',
+    confirmTitle: '¿Terminar y borrar tu CV?',
+    confirmMessage: 'Se borrará todo lo que has escrito. Si aún no lo has hecho, descarga antes el PDF. Después, borra también el PDF de la carpeta Descargas de este ordenador.',
+    cancel: 'Cancelar',
+    confirm: 'Sí, borrar todo',
+  },
   // The notice shown for a few seconds after removing something
   undo: {
     button: 'Deshacer',
