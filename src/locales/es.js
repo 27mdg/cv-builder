@@ -25,6 +25,23 @@ const es = {
     website: 'Página web',
     linkedin: 'LinkedIn',
   },
+  links: {
+    button: 'Red o enlace',
+    type: 'Tipo de enlace',
+    url: 'Dirección',
+    placeholder: 'p. ej. linkedin.com/in/tu-nombre',
+    // The keys are stored in the CV: only change the texts
+    types: {
+      linkedin: 'LinkedIn',
+      github: 'GitHub',
+      portfolio: 'Portfolio',
+      website: 'Página web',
+      behance: 'Behance',
+      x: 'X (Twitter)',
+      instagram: 'Instagram',
+      other: 'Otro enlace',
+    },
+  },
   customFields: {
     label: 'Nombre del campo (p. ej. Disponibilidad)',
     value: 'Valor (p. ej. Inmediata)',

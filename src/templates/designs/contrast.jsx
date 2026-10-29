@@ -221,7 +221,7 @@ function Contrast({ cv, template }) {
           {p.photo && <Image style={s.photo} src={p.photo}/>}
           {details.contact.length > 0 && (
             <SidebarSection s={s} v={v} icon="phone" title={texts.common.contact}>
-              {details.contact.map((c) => <Text key={c.type} style={s.line}>{c.text}</Text>)}
+              {details.contact.map((c) => <Text key={c.key} style={s.line}>{c.text}</Text>)}
             </SidebarSection>
           )}
           {details.otherDetails.length > 0 && (

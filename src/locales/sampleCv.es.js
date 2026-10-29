@@ -14,7 +14,7 @@ const sampleCv = {
     email: 'lucia.romero@correo.es',
     phone: '600 123 456',
     city: 'Valencia',
-    website: 'luciaromero.es',
+    links: [{ id: 'web', type: 'portfolio', url: 'luciaromero.es' }],
     birthDate: '1994-05-18',
     nationality: 'Española',
     drivingLicense: 'B',

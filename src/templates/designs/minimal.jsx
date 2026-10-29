@@ -199,7 +199,7 @@ function Minimal({ cv, template }) {
           {details.contact.length > 0 && (
             <SidebarSection s={s} title={texts.common.contact}>
               {details.contact.map((c) => (
-                <View key={c.type} style={s.contactRow} wrap={false}>
+                <View key={c.key} style={s.contactRow} wrap={false}>
                   <View style={s.contactIcon}><PdfIcon name={c.type} size={11} color={v.accent}/></View>
                   <Text style={s.contactText}>{c.text}</Text>
                 </View>

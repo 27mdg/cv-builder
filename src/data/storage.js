@@ -38,6 +38,15 @@ export function cvFromData(data) {
   if (!Array.isArray(cv.personal.customFields)) {
     cv.personal.customFields = []
   }
+  // CVs from before the list of links had two separate fields: website and LinkedIn. Checked on
+  // the saved data, as the merge above already gave `cv` an empty list.
+  if (!Array.isArray(data.cv.personal.links)) {
+    cv.personal.links = [['portfolio', cv.personal.website], ['linkedin', cv.personal.linkedin]]
+      .filter(([, url]) => typeof url === 'string' && url.trim() !== '')
+      .map(([type, url]) => ({ id: crypto.randomUUID(), type, url }))
+  }
+  delete cv.personal.website
+  delete cv.personal.linkedin
   cv.sectionOrder = normalizeOrder(cv.sectionOrder, cv)
   if (typeof cv.sectionSettings !== 'object' || cv.sectionSettings === null || Array.isArray(cv.sectionSettings)) {
     cv.sectionSettings = {}

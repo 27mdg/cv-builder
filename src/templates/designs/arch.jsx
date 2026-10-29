@@ -145,7 +145,7 @@ function Arch({ cv, template }) {
           {details.contact.length > 0 && (
             <View style={s.contact}>
               {details.contact.map((c) => (
-                <Text key={c.type}>{texts.personal[c.type]}: {c.text}</Text>
+                <Text key={c.key}>{c.label}: {c.text}</Text>
               ))}
             </View>
           )}

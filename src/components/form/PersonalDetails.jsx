@@ -2,6 +2,7 @@ import { useState } from 'react'
 import texts from '../../locales/es.js'
 import PhotoField from './PhotoField.jsx'
 import DatePicker from './DatePicker.jsx'
+import Select from './Select.jsx'
 import { CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
@@ -23,8 +24,6 @@ const extraFields = [
   { name: 'gender', type: 'text' },
   { name: 'nationality', type: 'text' },
   { name: 'maritalStatus', type: 'text' },
-  { name: 'website', type: 'text' },
-  { name: 'linkedin', type: 'text' },
 ]
 
 function Field({ field, data, onChange, autoFocus, children }) {
@@ -85,6 +84,25 @@ function PersonalDetails({ data, onChange }) {
     leave(id, () => onChange('customFields', (current) => current.filter((f) => f.id !== id)))
   }
 
+  // Links (LinkedIn, GitHub, a portfolio…), as many as the user wants; same pattern as custom fields
+  const [addedLinks, setAddedLinks] = useState([])
+
+  function addLink() {
+    // LinkedIn first, as most people have it; then a website
+    const type = data.links.some((link) => link.type === 'linkedin') ? 'portfolio' : 'linkedin'
+    const link = { id: crypto.randomUUID(), type, url: '' }
+    setAddedLinks([...addedLinks, link.id])
+    onChange('links', [...data.links, link])
+  }
+
+  function changeLink(id, key, value) {
+    onChange('links', data.links.map((link) => (link.id === id ? { ...link, [key]: value } : link)))
+  }
+
+  function removeLink(id) {
+    leave(id, () => onChange('links', (current) => current.filter((link) => link.id !== id)))
+  }
+
   return (
     <>
       <div className="personal-header">
@@ -114,6 +132,29 @@ function PersonalDetails({ data, onChange }) {
             <Field field={field} data={data} onChange={onChange} autoFocus={opened.includes(field.name)}>
               <RemoveButton onClick={() => removeExtra(field.name)}/>
             </Field>
+          </Animated>
+        ))}
+        {data.links.map((link) => (
+          <Animated
+            key={link.id}
+            className="field-full"
+            appear={addedLinks.includes(link.id)}
+            leaving={isLeaving(link.id)}
+            onLeft={() => left(link.id)}
+          >
+            <div className="field link-field">
+              <Select aria-label={texts.links.type} value={link.type} onChange={(e) => changeLink(link.id, 'type', e.target.value)}>
+                {Object.entries(texts.links.types).map(([type, name]) => <option key={type} value={type}>{name}</option>)}
+              </Select>
+              <input
+                aria-label={`${texts.links.types[link.type] ?? ''} ${texts.links.url}`}
+                placeholder={texts.links.placeholder}
+                value={link.url}
+                autoFocus={link.id === addedLinks.at(-1)}
+                onChange={(e) => changeLink(link.id, 'url', e.target.value)}
+              />
+              <RemoveButton onClick={() => removeLink(link.id)}/>
+            </div>
           </Animated>
         ))}
         {data.customFields.map((f) => (
@@ -151,6 +192,9 @@ function PersonalDetails({ data, onChange }) {
             <PlusIcon/>{texts.personal[field.name]}
           </button>
         ))}
+        <button type="button" className="chip" onClick={addLink}>
+          <PlusIcon/>{texts.links.button}
+        </button>
         <button type="button" className="chip" onClick={addCustom}>
           <PlusIcon/>{texts.customFields.button}
         </button>

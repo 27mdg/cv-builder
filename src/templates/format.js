@@ -131,8 +131,8 @@ export function itemSummary(key, item) {
   return [join([title, subtitle], ' — '), join([date, place])]
 }
 
-// { fullName, contact: [{ type, text }], otherDetails: ['Label: value'] }, without empty ones.
-// `type` (phone, email, website, address, linkedin) lets templates pick an icon.
+// { fullName, contact: [{ key, type, label, text }], otherDetails: ['Label: value'] }, without empty ones.
+// `type` lets templates pick an icon (PdfIcon); `key` is unique, as there can be several links.
 export function personalDetails(personal) {
   const p = personal
   const address = join([p.address, join([p.postalCode, p.city], ' ')], ', ')
@@ -148,15 +148,18 @@ export function personalDetails(personal) {
     .filter(([, value]) => hasText(value))
     .map(([label, value]) => (hasText(label) ? `${label}: ${value}` : value))
 
+  const contact = (type, text) => ({ key: type, type, label: texts.personal[type], text })
+  const links = (p.links ?? []).map((link) => ({
+    key: link.id,
+    // The icon: web addresses share the globe, an unknown kind gets a chain link
+    type: { portfolio: 'website', other: 'link' }[link.type] ?? link.type,
+    label: texts.links.types[link.type] ?? texts.links.types.other,
+    text: link.url,
+  }))
   return {
     fullName: join([p.firstName, p.lastName], ' '),
-    contact: [
-      { type: 'phone', text: p.phone },
-      { type: 'email', text: p.email },
-      { type: 'website', text: p.website },
-      { type: 'linkedin', text: p.linkedin },
-      { type: 'address', text: address },
-    ].filter((c) => hasText(c.text)),
+    contact: [contact('phone', p.phone), contact('email', p.email), ...links, contact('address', address)]
+      .filter((c) => hasText(c.text)),
     otherDetails,
   }
 }

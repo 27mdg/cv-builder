@@ -30,8 +30,7 @@ const initialCv = {
     gender: '',
     nationality: '',
     maritalStatus: '',
-    website: '',
-    linkedin: '',
+    links: [], // { id, type (see texts.links.types), url }
     customFields: [], // { id, label, value }
   },
   profile: '',

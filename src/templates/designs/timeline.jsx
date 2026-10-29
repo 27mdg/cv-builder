@@ -209,7 +209,7 @@ function TimelineTemplate({ cv, template }) {
           {details.contact.length > 0 && (
             <View style={s.contact}>
               {details.contact.map((c) => (
-                <View key={c.type} style={s.contactRow} wrap={false}>
+                <View key={c.key} style={s.contactRow} wrap={false}>
                   <View style={s.contactIcon}><PdfIcon name={c.type} size={10} color={v.accentDark}/></View>
                   <Text style={s.contactText}>{c.text}</Text>
                 </View>

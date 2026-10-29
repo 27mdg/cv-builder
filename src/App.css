@@ -393,6 +393,10 @@
 .custom-field { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 16px; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }
+/* A link: its kind, its address and its × on one row */
+.link-field { display: grid; grid-template-columns: minmax(130px, 180px) 1fr auto; align-items: center; gap: 12px; margin-bottom: 16px; }
+.form-panel .link-field input:not([type="checkbox"]), .link-field .select { margin-top: 0; }
+.form-panel .link-field .field-remove { position: static; }
 
 .personal-header { display: grid; grid-template-columns: 128px 1fr; gap: 20px; }
 .photo-field { position: relative; }
