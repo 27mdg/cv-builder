@@ -16,6 +16,8 @@ function Section({
 }) {
   const [renaming, setRenaming] = useState(Boolean(startRenaming))
   const [draft, setDraft] = useState(null)
+  // The pencil scribbles once each time it is clicked (App.css)
+  const [scribbling, setScribbling] = useState(false)
   const details = useRef(null)
   const shownTitle = customTitle?.trim() || title
 
@@ -35,7 +37,7 @@ function Section({
         {onRename && (
           <button
             type="button"
-            className="section-action rename-button"
+            className={scribbling ? 'section-action rename-button scribbling' : 'section-action rename-button'}
             title={texts.rename.button}
             aria-label={`${texts.rename.button}: ${shownTitle}`}
             aria-expanded={renaming}
@@ -44,7 +46,9 @@ function Section({
               // The title field lives inside the section, so it must be open to show it
               details.current.open = true
               setRenaming(!renaming)
+              setScribbling(true)
             }}
+            onAnimationEnd={() => setScribbling(false)}
           >
             <PencilIcon/>
           </button>
