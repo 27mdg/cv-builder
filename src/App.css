@@ -187,7 +187,7 @@
 .form-panel label { margin-bottom: 16px; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
   display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
-  background: var(--surface); color: var(--text); font: inherit; font-size: 16px; font-weight: 400;
+  background-color: var(--background); color: var(--text); font: inherit; font-size: 16px; font-weight: 400;
 }
 /* The browser's own arrow sits against the edge and ignores padding, so Select.jsx draws its own */
 .form-panel select { appearance: none; padding-right: 44px; cursor: pointer; }
@@ -202,8 +202,9 @@
 @media (prefers-reduced-motion: reduce) {
   .select::after { transition: none; }
 }
-/* Fields show the ring on any focus, not just keyboard focus: it tells where you are typing */
-.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); }
+/* Fields are cream so they stand out on the white cards, and turn white while typing.
+   The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
+.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 3px solid var(--brand-dark); outline-offset: 1px; border-color: var(--brand-dark); background-color: var(--surface); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
 .form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
@@ -225,7 +226,7 @@
 
 .personal-header { display: grid; grid-template-columns: 128px 1fr; gap: 20px; }
 .photo-field { position: relative; }
-.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text-muted); cursor: pointer; }
+.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--background); color: var(--text-muted); cursor: pointer; }
 .photo-box:hover { border-color: var(--brand-dark); }
 .photo-box:focus-within { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
 .photo-box svg { width: 48px; height: 48px; }
