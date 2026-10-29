@@ -303,7 +303,7 @@ const es = {
   rename: {
     button: 'Cambiar el título',
     label: 'Título de la sección en el CV',
-    hint: (title) => `Déjalo vacío para usar «${title}».`,
+    hint: (title) => `Si lo dejas vacío, vuelve a «${title}».`,
   },
   // The line under the title of a closed form section
   summary: {

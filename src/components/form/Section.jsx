@@ -15,6 +15,7 @@ function Section({
   open, handle, onRemove, children,
 }) {
   const [renaming, setRenaming] = useState(Boolean(startRenaming))
+  const [draft, setDraft] = useState(null)
   const details = useRef(null)
   const shownTitle = customTitle?.trim() || title
 
@@ -85,10 +86,16 @@ function Section({
           <label className="rename-field">
             {texts.rename.label}
             <input
-              value={customTitle}
-              placeholder={title}
+              // While typing it shows exactly what was typed (even empty); on leaving the field
+              // it shows the title in use, so an emptied field gets the usual title back
+              value={draft ?? shownTitle}
               autoFocus
-              onChange={(e) => onRename(e.target.value)}
+              onFocus={(e) => e.target.select()}
+              onChange={(e) => {
+                setDraft(e.target.value)
+                onRename(e.target.value.trim() === title ? '' : e.target.value)
+              }}
+              onBlur={() => setDraft(null)}
               onKeyDown={(e) => e.key === 'Enter' && setRenaming(false)}
             />
             <span className="field-hint">{texts.rename.hint(title)}</span>
