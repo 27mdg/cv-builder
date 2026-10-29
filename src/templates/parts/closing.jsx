@@ -16,7 +16,8 @@ export function Footer({ cv, color = '#8a8a8a' }) {
 
 /** The signature with place and date, right-aligned. Last child of the template's main column. */
 export function Signature({ cv, color = '#555555' }) {
-  const { image, place, date } = cv.signature
+  // `?? {}`: a CV held in memory from before signatures existed must not break the preview
+  const { image, place, date } = cv.signature ?? {}
   const line = join([place, formatBirthDate(date)], ', ')
   if (!image && !hasText(line)) return null
   return (
