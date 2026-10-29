@@ -52,7 +52,7 @@ function Section({
         {onToggleHidden && (
           <button
             type="button"
-            className="section-action visibility-button"
+            className="section-action"
             title={hidden ? texts.visibility.show : texts.visibility.hide}
             aria-label={`${hidden ? texts.visibility.show : texts.visibility.hide}: ${title}`}
             aria-pressed={hidden}

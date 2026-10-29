@@ -177,20 +177,19 @@
 .form-panel .section-action { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
 .form-panel .section-action:hover { background: var(--background); color: var(--text); }
 .section-action svg { width: 18px; height: 18px; }
-/* On hover the pencil scribbles a little and the eye blinks twice; they play once per hover */
+/* On hover the pencil scribbles a little, once per hover */
 .rename-button:hover svg { animation: scribble 0.45s ease-in-out; }
-.visibility-button:hover svg { animation: blink 0.6s ease-in-out; }
+/* When something gets hidden, the eye's slash is drawn in. pathLength="1" on the path makes
+   the dash exactly as long as the line. */
+.eye-slash { stroke-dasharray: 1; animation: draw-line 0.3s var(--ease-out); }
+@keyframes draw-line { from { stroke-dashoffset: 1; } }
 @keyframes scribble {
   25% { transform: translate(1.5px, -1px) rotate(-8deg); }
   50% { transform: translate(-1px, 1px) rotate(4deg); }
   75% { transform: translate(1px, 0) rotate(-4deg); }
 }
-@keyframes blink {
-  15%, 45% { transform: scaleY(0.1); }
-  30%, 60% { transform: scaleY(1); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .rename-button:hover svg, .visibility-button:hover svg { animation: none; }
+  .rename-button:hover svg, .eye-slash { animation: none; }
 }
 /* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
 .section.is-hidden .section-icon, .section.is-hidden .section-summary { opacity: 0.5; }

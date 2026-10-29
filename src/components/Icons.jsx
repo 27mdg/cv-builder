@@ -165,7 +165,9 @@ export function EyeOffIcon() {
   return (
     <Icon>
       <path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.4 3.3M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/>
-      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/>
+      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+      {/* Its own path, so the slash can be drawn in when something gets hidden (App.css) */}
+      <path className="eye-slash" d="M3 3l18 18" pathLength="1"/>
     </Icon>
   )
 }
