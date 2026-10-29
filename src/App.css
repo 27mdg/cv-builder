@@ -265,18 +265,19 @@
 /* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
 .animated { display: grid; grid-template-rows: 1fr; }
 .animated-inner { min-height: 0; }
-/* Clipped while it grows or shrinks, with a margin so the focus ring of a new field (which gets
+/* Clipped top and bottom while it grows or shrinks, but not at the sides, so the focus ring of a new field (which gets
    the cursor at once) is not cut off at the sides */
-.animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow: clip; overflow-clip-margin: 8px; }
+.animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow-x: visible; overflow-y: clip; }
 .animated.appearing { animation: grow-in 0.25s var(--ease-out); }
 .animated.leaving { animation: shrink-out 0.2s ease-in forwards; }
 @keyframes grow-in { from { grid-template-rows: 0fr; opacity: 0; } }
 @keyframes shrink-out { to { grid-template-rows: 0fr; opacity: 0; } }
 /* Opening and closing a section. Only where the browser can animate to "auto" height (Chrome,
-   Edge); elsewhere it opens at once, as before. The clip margin keeps the fields' focus rings. */
+   Edge); elsewhere it opens at once, as before. Clipped only top and bottom: the sides must stay
+   free for the fields' focus rings, and a clip margin would let the content peek out below. */
 @supports (interpolate-size: allow-keywords) {
   .section { interpolate-size: allow-keywords; }
-  .section::details-content { height: 0; overflow: clip; overflow-clip-margin: 8px; transition: height 0.25s var(--ease-out), content-visibility 0.25s allow-discrete; }
+  .section::details-content { height: 0; overflow-x: visible; overflow-y: clip; transition: height 0.25s var(--ease-out), content-visibility 0.25s allow-discrete; }
   .section[open]::details-content { height: auto; }
 }
 .confirm-dialog[open] { animation: pop-in 0.2s var(--ease-out); }
