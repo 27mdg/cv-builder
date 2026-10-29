@@ -9,7 +9,7 @@ import ColorMenu from './ColorMenu.jsx'
 import DateMenu from './DateMenu.jsx'
 import {
   TemplatesIcon, FontIcon, SpacingIcon, CalendarIcon, ColorsIcon,
-  FullScreenIcon, ExitFullScreenIcon,
+  FullScreenIcon,
 } from './Icons.jsx'
 
 function Toolbar({
@@ -41,7 +41,7 @@ function Toolbar({
         title={fullScreen ? texts.tools.exitFullScreen : texts.tools.fullScreen}
         onClick={() => onFullScreenChange(!fullScreen)}
       >
-        {fullScreen ? <ExitFullScreenIcon/> : <FullScreenIcon/>}
+        <FullScreenIcon exit={fullScreen}/>
       </button>
     </div>
   )

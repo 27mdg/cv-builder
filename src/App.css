@@ -104,6 +104,12 @@
 .toolbar button:hover:not(:disabled) { background: var(--background); }
 .toolbar button:disabled { color: var(--text-muted); cursor: not-allowed; }
 .full-screen-button { margin-left: 8px; }
+/* Each corner turns half a round on its own centre: pointing out to enter full screen, in to leave */
+.full-screen-icon path { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--ease-out); }
+.full-screen-icon.is-in path { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .full-screen-icon path { transition: none; }
+}
 /* The menu's arrow turns up while it is open, like the form's dropdowns */
 .tool > button > svg:last-child { transition: rotate 0.2s ease; }
 .tool > button[aria-expanded="true"] > svg:last-child { rotate: 180deg; }
