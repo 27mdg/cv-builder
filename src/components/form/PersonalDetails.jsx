@@ -3,6 +3,7 @@ import texts from '../../locales/es.js'
 import PhotoField from './PhotoField.jsx'
 import DatePicker from './DatePicker.jsx'
 import Select from './Select.jsx'
+import LicenseField from './LicenseField.jsx'
 import { CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
@@ -130,13 +131,23 @@ function PersonalDetails({ data, onChange }) {
         {visible.map((field) => (
           <Animated
             key={field.name}
+            // The licence buttons need the whole row
+            className={field.name === 'drivingLicense' ? 'field-full' : undefined}
             appear={opened.includes(field.name)}
             leaving={isLeaving(field.name)}
             onLeft={() => left(field.name)}
           >
-            <Field field={field} data={data} onChange={onChange} autoFocus={opened.includes(field.name)}>
-              <RemoveButton onClick={() => removeExtra(field.name)}/>
-            </Field>
+            {field.name === 'drivingLicense'
+              ? (
+                <LicenseField value={data.drivingLicense} onChange={(value) => onChange('drivingLicense', value)}>
+                  <RemoveButton onClick={() => removeExtra(field.name)}/>
+                </LicenseField>
+              )
+              : (
+                <Field field={field} data={data} onChange={onChange} autoFocus={opened.includes(field.name)}>
+                  <RemoveButton onClick={() => removeExtra(field.name)}/>
+                </Field>
+              )}
           </Animated>
         ))}
         {data.links.map((link) => (
