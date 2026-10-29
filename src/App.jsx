@@ -219,9 +219,11 @@ function App() {
     // The list is kept while hidden, so unticking brings it back
     return (
       <>
-        <label className="current references-on-request">
+        <label className="switch-label references-on-request">
           <input
             type="checkbox"
+            role="switch"
+            className="switch"
             checked={cv.referencesOnRequest}
             onChange={(e) => changeSection('referencesOnRequest', e.target.checked)}
           />

@@ -8,35 +8,42 @@ for (let year = currentYear + 6; year >= 1950; year--) {
   years.push(String(year))
 }
 
+// `children`: a control next to the label (the "Presente" switch of end dates).
+// `hideDate`: shows "Presente" in place of the menus, at the same height, so the start and
+// end columns stay aligned.
 function DateField({ label, value, onChange, hideDate, children }) {
   return (
     <div className="date-field">
-      <span>{label}</span>
-      {!hideDate && (
-        <>
-          <Select
-            aria-label={texts.common.month}
-            value={value.month}
-            onChange={(e) => onChange({ ...value, month: e.target.value })}
-          >
-            <option value="">{texts.common.month}</option>
-            {texts.common.months.map((name, i) => (
-              <option key={name} value={String(i + 1)}>{name}</option>
-            ))}
-          </Select>
-          <Select
-            aria-label={texts.common.year}
-            value={value.year}
-            onChange={(e) => onChange({ ...value, year: e.target.value })}
-          >
-            <option value="">{texts.common.year}</option>
-            {years.map((year) => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </Select>
-        </>
-      )}
-      {children}
+      <div className="date-head">
+        <span className="date-label">{label}</span>
+        {children}
+      </div>
+      {hideDate
+        ? <div className="date-current">{texts.common.current}</div>
+        : (
+          <div className="date-selects">
+            <Select
+              aria-label={`${label}: ${texts.common.month}`}
+              value={value.month}
+              onChange={(e) => onChange({ ...value, month: e.target.value })}
+            >
+              <option value="">{texts.common.month}</option>
+              {texts.common.months.map((name, i) => (
+                <option key={name} value={String(i + 1)}>{name}</option>
+              ))}
+            </Select>
+            <Select
+              aria-label={`${label}: ${texts.common.year}`}
+              value={value.year}
+              onChange={(e) => onChange({ ...value, year: e.target.value })}
+            >
+              <option value="">{texts.common.year}</option>
+              {years.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </Select>
+          </div>
+        )}
     </div>
   )
 }

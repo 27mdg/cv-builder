@@ -34,6 +34,8 @@
   --overlay: rgba(43, 38, 34, 0.45);
   /* Warm grey, 3:1 against the page so the scrollbar is easy to spot */
   --scrollbar-thumb: #938D84;
+  /* The off state of switches: 3:1 against white, so the switch can be seen */
+  --switch-off: #938D84;
   /* Darker and barely warm for the grey preview background, where a light one looks faded */
   --scrollbar-thumb-dark: #5C5853;
   /* Film grain: grey noise made by the browser from an SVG filter, so there is no image file */

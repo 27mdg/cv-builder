@@ -45,9 +45,11 @@ function Field({ sectionKey, field, item, onChange }) {
         onChange={(date) => onChange(field.name, date)}
         hideDate={item.current}
       >
-        <label className="current">
+        <label className="switch-label">
           <input
             type="checkbox"
+            role="switch"
+            className="switch"
             checked={item.current}
             onChange={(e) => onChange('current', e.target.checked)}
           />
@@ -85,6 +87,19 @@ function Field({ sectionKey, field, item, onChange }) {
   )
 }
 
+const isDate = (field) => field.type === 'date' || field.type === 'endDate'
+
+// Start and end dates next to each other: consecutive date fields form one group
+function groupDates(fields) {
+  const groups = []
+  for (const field of fields) {
+    const last = groups[groups.length - 1]
+    if (isDate(field) && last && isDate(last[0])) last.push(field)
+    else groups.push([field])
+  }
+  return groups
+}
+
 function ListSection({ sectionKey, fields, list, onChange }) {
   // Items added in this visit: only these grow in, so nothing animates on page load
   const [added, setAdded] = useState([])
@@ -115,15 +130,20 @@ function ListSection({ sectionKey, fields, list, onChange }) {
         >
           <div className={item.hidden ? 'item is-hidden' : 'item'}>
             {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
-            {fields.map((field) => (
-              <Field
-                key={field.name}
-                sectionKey={sectionKey}
-                field={field}
-                item={item}
-                onChange={(name, value) => change(item.id, name, value)}
-              />
-            ))}
+            {groupDates(fields).map((group) => {
+              const rendered = group.map((field) => (
+                <Field
+                  key={field.name}
+                  sectionKey={sectionKey}
+                  field={field}
+                  item={item}
+                  onChange={(name, value) => change(item.id, name, value)}
+                />
+              ))
+              return isDate(group[0])
+                ? <div className="date-row" key={group[0].name}>{rendered}</div>
+                : rendered
+            })}
             <div className="item-actions">
               <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
               <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}

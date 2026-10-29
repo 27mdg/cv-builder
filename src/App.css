@@ -200,16 +200,16 @@
 .section.is-hidden .section-summary { opacity: 0.5; }
 /* Hiding and showing fades instead of jumping, and the "Oculta en el CV" label pops in softly */
 .section-icon { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
-.section-summary, .item > label, .item > .date-field { transition: opacity 0.3s ease; }
+.section-summary, .item > label, .item > .date-row { transition: opacity 0.3s ease; }
 .section-badge { animation: badge-in 0.25s var(--ease-out); }
 @keyframes badge-in { from { opacity: 0; scale: 0.9; } }
 @media (prefers-reduced-motion: reduce) {
-  .section-icon, .section-summary, .item > label, .item > .date-field { transition: none; }
+  .section-icon, .section-summary, .item > label, .item > .date-row { transition: none; }
   .section-badge { animation: none; }
 }
 .item-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 /* A hidden item stays editable; only its fields look faded */
-.item.is-hidden > label, .item.is-hidden > .date-field { opacity: 0.55; }
+.item.is-hidden > label, .item.is-hidden > .date-row, .item.is-hidden > .rich-field { opacity: 0.55; }
 .section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
 /* The + spins on hover, the eye does not */
 .item-actions .chip:hover svg { transform: none; }
@@ -328,7 +328,7 @@
   .section::details-content { transition: none; }
 }
 
-.form-panel label, .form-panel .label, .date-field > span { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+.form-panel label, .form-panel .label, .date-label { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
 .form-panel label { margin-bottom: 16px; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
   display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
@@ -417,11 +417,29 @@
 
 /* Temporary: the list sections still need a redesign */
 .item { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
-.date-field .select { display: inline-block; margin-right: 8px; }
-.form-panel .date-field select { width: auto; }
+/* Start and end side by side (ListSection.jsx groups them); one under the other if narrow */
+.date-row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+@container (max-width: 480px) {
+  .date-row { grid-template-columns: 1fr; }
+}
 .date-field { margin-bottom: 16px; }
-.form-panel .current { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-weight: 400; }
-.form-panel .references-on-request { display: flex; margin-bottom: 16px; }
+/* Label on the left, the "Presente" switch on the right, without pushing the boxes down */
+.date-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 22px; }
+.date-selects { display: grid; grid-template-columns: 3fr 2fr; gap: 8px; margin-top: 6px; }
+.date-selects .select { margin-top: 0; }
+/* Same height as the menus it replaces, so both columns stay aligned */
+.date-current { display: flex; align-items: center; margin-top: 6px; padding: 12px 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+
+/* Our own on/off switch instead of the browser's checkbox ("Presente", references) */
+.form-panel .switch-label { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; font-weight: 400; cursor: pointer; }
+.form-panel input.switch { appearance: none; position: relative; flex: none; width: 34px; height: 20px; margin: 0; border-radius: 999px; background: var(--switch-off); cursor: pointer; transition: background-color 0.2s ease; }
+.form-panel input.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px var(--shadow); transition: transform 0.2s var(--ease-out); }
+.form-panel input.switch:checked { background: var(--brand-dark); }
+.form-panel input.switch:checked::after { transform: translateX(14px); }
+@media (prefers-reduced-motion: reduce) {
+  .form-panel input.switch, .form-panel input.switch::after { transition: none; }
+}
+.form-panel .switch-label.references-on-request { display: flex; margin-bottom: 16px; }
 
 /* Small screens: the real mobile layout is a separate task; this keeps the top bar usable */
 @media (max-width: 760px) {
