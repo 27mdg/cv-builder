@@ -62,8 +62,9 @@ function Field({ sectionKey, field, item, onChange }) {
       </DateField>
     )
   }
-  if (field.type === 'skillLevel' || field.type === 'languageLevel') {
-    const options = field.type === 'skillLevel' ? texts.common.skillLevels : texts.common.languageLevels
+  if (field.type === 'skillLevel' || field.type === 'languageLevel' || field.type === 'choice') {
+    const options = field.type === 'choice' ? texts.common[field.options]
+      : field.type === 'skillLevel' ? texts.common.skillLevels : texts.common.languageLevels
     return (
       <label>
         {label}
@@ -91,14 +92,15 @@ function Field({ sectionKey, field, item, onChange }) {
   )
 }
 
-const isDate = (field) => field.type === 'date' || field.type === 'endDate'
+// Fields that go in pairs side by side: start and end dates, and two menus in a row
+const pairOf = (field) => ({ date: 'date', endDate: 'date', choice: 'choice' })[field.type]
 
-// Start and end dates next to each other: consecutive date fields form one group
-function groupDates(fields) {
+// Consecutive fields of the same pair kind form one group (a row)
+function groupPairs(fields) {
   const groups = []
   for (const field of fields) {
     const last = groups[groups.length - 1]
-    if (isDate(field) && last && isDate(last[0])) last.push(field)
+    if (pairOf(field) && last && pairOf(last[0]) === pairOf(field)) last.push(field)
     else groups.push([field])
   }
   return groups
@@ -192,7 +194,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                   <div className={item.hidden ? 'item is-hidden' : 'item'}>
                     {handle}
                     {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
-                    {groupDates(fields).map((group) => {
+                    {groupPairs(fields).map((group) => {
                       const rendered = group.map((field) => (
                         <Field
                           key={field.name}
@@ -202,8 +204,8 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                           onChange={(name, value) => change(item.id, name, value)}
                         />
                       ))
-                      return isDate(group[0])
-                        ? <div className="date-row" key={group[0].name}>{rendered}</div>
+                      return pairOf(group[0])
+                        ? <div className="field-row" key={group[0].name}>{rendered}</div>
                         : rendered
                     })}
                     <div className="item-actions">

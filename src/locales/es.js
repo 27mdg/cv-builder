@@ -89,6 +89,19 @@ const es = {
       4: 'Avanzado',
       5: 'Experto',
     },
+    // Experience: kind of contract and where the work is done. The keys are stored in the CV.
+    schedules: {
+      fullTime: 'Jornada completa',
+      partTime: 'Media jornada',
+      freelance: 'Autónomo',
+      internship: 'Prácticas',
+      temporary: 'Temporal',
+    },
+    workModes: {
+      onsite: 'Presencial',
+      remote: 'En remoto',
+      hybrid: 'Híbrido',
+    },
     languageLevels: {
       native: 'Nativo',
       C2: 'C2 – Maestría',
@@ -118,6 +131,8 @@ const es = {
   experience: {
     title: 'Experiencia',
     description: 'Qué hacías y qué lograste',
+    schedule: 'Jornada',
+    workMode: 'Modalidad',
     add: 'Añadir experiencia',
   },
   skills: {

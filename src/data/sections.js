@@ -50,7 +50,16 @@ const sections = [
       { name: 'description', type: 'longText' },
     ],
   },
-  { key: 'experience', fields: jobFields },
+  {
+    key: 'experience',
+    fields: [
+      ...jobFields.slice(0, 3),
+      // 'choice': a menu whose options are texts.common[options]
+      { name: 'schedule', type: 'choice', options: 'schedules' },
+      { name: 'workMode', type: 'choice', options: 'workModes' },
+      ...jobFields.slice(3),
+    ],
+  },
   {
     key: 'skills',
     fields: [
