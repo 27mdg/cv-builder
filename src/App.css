@@ -6,7 +6,7 @@
 /* Soft film grain over the green. isolation keeps the grain (z-index -1) above the bar's colour
    but under its buttons; z-index 10 keeps the bar, and its tooltips, above the panels below. */
 .topbar { position: relative; z-index: 10; isolation: isolate; }
-.topbar::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--grain); opacity: 0.22; mix-blend-mode: overlay; pointer-events: none; }
+.topbar::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--grain); opacity: 0.3; mix-blend-mode: overlay; pointer-events: none; }
 /* On the green bar the usual green focus ring would not show */
 .topbar :focus-visible { outline-color: var(--text-on-brand); }
 .logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--text-on-brand); text-decoration: none; }
