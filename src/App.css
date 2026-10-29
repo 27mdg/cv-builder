@@ -174,6 +174,12 @@
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .form-panel .section-remove { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
 .form-panel .section-remove:hover { background: var(--background); color: var(--danger); }
+.form-panel .section-action { display: flex; padding: 6px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
+.form-panel .section-action:hover { background: var(--background); color: var(--text); }
+.section-action svg { width: 18px; height: 18px; }
+/* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
+.section.is-hidden .section-icon, .section.is-hidden .section-summary { opacity: 0.5; }
+.section-badge { padding: 2px 8px; border-radius: 999px; background: var(--surface-sunken); color: var(--text-muted); font-family: var(--font-body); font-size: 12px; font-weight: 600; }
 /* Spins on hover like the + of the add buttons. 90°, not 45°: a × turned 45° would become a + */
 .section-remove svg { width: 18px; height: 18px; transition: transform 0.25s ease; }
 .section-remove:hover svg { transform: rotate(90deg); }

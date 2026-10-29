@@ -104,12 +104,14 @@ export function personalDetails(personal) {
 }
 
 // The sections that have something to show, in the user's order:
-// [{ key, text }] for profile and achievements, [{ key, list }] for the rest.
+// [{ key, text }] for profile and achievements, [{ key, list }] for the rest. Sections the user
+// hid (sectionSettings) are left out.
 // Each dated item gets its dates already written (`dates`) in the chosen format, so the
 // templates do not need to know about it.
 export function filledSections(cv) {
   const withDates = (item) => (item.start ? { ...item, dates: dateRange(item, cv.design.dateFormat) } : item)
   return cv.sectionOrder
+    .filter((key) => !cv.sectionSettings?.[key]?.hidden)
     .map((key) => {
       if (key === 'references' && cv.referencesOnRequest) return { key, text: texts.references.onRequestText }
       return Array.isArray(cv[key])

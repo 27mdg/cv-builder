@@ -283,6 +283,11 @@ const es = {
     // Read aloud by screen readers on each day
     dayLabel: (day, month, year) => `${day} de ${month} de ${year}`,
   },
+  visibility: {
+    hide: 'Ocultar en el CV (no se borra)',
+    show: 'Volver a mostrar en el CV',
+    hidden: 'Oculta en el CV',
+  },
   // The line under the title of a closed form section
   summary: {
     more: (count) => `+${count} más`,

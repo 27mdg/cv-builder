@@ -144,9 +144,21 @@ function App() {
     else hideSection(key)
   }
 
+  function changeSectionSetting(key, name, value) {
+    changeSection('sectionSettings', (settings) => ({ ...settings, [key]: { ...settings[key], [name]: value } }))
+  }
+
   function sectionProps(key) {
     const summary = sectionSummary(key, cv)
-    return { icon: sectionIcons[key], summary, done: summary !== '' }
+    const hidden = Boolean(cv.sectionSettings[key]?.hidden)
+    return {
+      icon: sectionIcons[key],
+      summary,
+      done: summary !== '',
+      hidden,
+      // The personal details always go in the CV
+      onToggleHidden: key === 'personal' ? undefined : () => changeSectionSetting(key, 'hidden', !hidden),
+    }
   }
 
   function sectionContent(key) {

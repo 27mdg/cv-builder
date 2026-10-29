@@ -54,6 +54,8 @@ const initialCv = {
   // true: the CV only says that references are available on request, without the list
   referencesOnRequest: false,
   achievements: '',
+  // Per section: { hidden: true } leaves it out of the PDF without deleting it
+  sectionSettings: {},
   // Order of every section except the personal details, which always go first.
   // The user changes it by dragging the sections in the form; templates follow it.
   sectionOrder: [

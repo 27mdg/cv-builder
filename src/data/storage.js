@@ -36,6 +36,9 @@ export function cvFromData(data) {
     cv.personal.customFields = []
   }
   cv.sectionOrder = normalizeOrder(cv.sectionOrder)
+  if (typeof cv.sectionSettings !== 'object' || cv.sectionSettings === null || Array.isArray(cv.sectionSettings)) {
+    cv.sectionSettings = {}
+  }
   // Templates can be removed (e.g. the first 'classic' and 'modern')
   if (!templates.some((t) => t.id === cv.template)) {
     cv.template = initialCv.template
