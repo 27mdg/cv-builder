@@ -180,9 +180,11 @@
 /* When clicked, the pencil scribbles a little */
 .rename-button.scribbling svg { animation: scribble 0.45s ease-in-out; }
 /* The eye's slash is drawn in when something gets hidden and drawn out when it is shown again.
-   pathLength="1" on the path makes the dash exactly as long as the line. */
-.eye-slash { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.3s var(--ease-out); }
-.eye-slash.is-on { stroke-dashoffset: 0; }
+   pathLength="1" on the path makes the dash exactly as long as the line. The curve differs per
+   direction: drawing slows down at the end (it settles), drawing out speeds up (it vanishes),
+   or its last bit would seem to freeze. */
+.eye-slash { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.22s ease-in; }
+.eye-slash.is-on { stroke-dashoffset: 0; transition: stroke-dashoffset 0.3s var(--ease-out); }
 @keyframes scribble {
   25% { transform: translate(1.5px, -1px) rotate(-8deg); }
   50% { transform: translate(-1px, 1px) rotate(4deg); }
