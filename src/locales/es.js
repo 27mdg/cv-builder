@@ -249,6 +249,15 @@ const es = {
     dropped: (title) => `Has soltado ${title}.`,
     cancelled: (title) => `Cancelado. ${title} vuelve a su sitio.`,
   },
+  // Like `reorder`, for the items inside a section (each job, each course…)
+  reorderItems: {
+    handle: 'Arrastra para cambiar el orden',
+    instructions: 'Para mover un elemento, pulsa espacio, muévelo con las flechas arriba y abajo y pulsa espacio otra vez para soltarlo. Escape cancela.',
+    picked: (position) => `Has cogido el elemento ${position}.`,
+    over: (position) => `Encima del elemento ${position}.`,
+    dropped: (position) => `Has soltado el elemento en la posición ${position}.`,
+    cancelled: 'Cancelado. El elemento vuelve a su sitio.',
+  },
   extraSections: {
     title: 'Añadir secciones',
     // One line under each card, so people know what goes in each section

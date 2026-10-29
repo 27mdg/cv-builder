@@ -417,7 +417,12 @@
 }
 
 /* Temporary: the list sections still need a redesign */
-.item { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+.item { position: relative; margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+/* Each item can be dragged within its section by the handle in its corner */
+.sortable-item { position: relative; border-radius: var(--radius); }
+.sortable-item.dragging { z-index: 10; cursor: grabbing; }
+.sortable-item.dragging .item { box-shadow: 0 10px 28px var(--shadow); }
+.form-panel .item-handle { position: absolute; top: 10px; right: 10px; margin: 0; }
 /* Start and end side by side (ListSection.jsx groups them); one under the other if narrow */
 .date-row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
 @container (max-width: 480px) {

@@ -1,14 +1,11 @@
-import {
-  DndContext, closestCenter, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors,
-} from '@dnd-kit/core'
-import {
-  SortableContext, arrayMove, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { DndContext, closestCenter } from '@dnd-kit/core'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import texts from '../../locales/es.js'
 import Section from './Section.jsx'
 import Animated from '../Animated.jsx'
 import { GripIcon } from '../Icons.jsx'
+import { useDragSensors } from './useDragSensors.js'
 
 function SortableSection({ id, label, open, onRemove, extraProps, leaving, onLeft, children }) {
   const {
@@ -69,12 +66,7 @@ function accessibility(titleOf) {
 function SortableSections({
   order, onReorder, renderContent, sectionProps, titleOf, removable = [], onRemove, openKeys = [], isLeaving, onLeft,
 }) {
-  const sensors = useSensors(
-    // A small distance or delay before dragging starts, so a plain click or a scroll still work
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  )
+  const sensors = useDragSensors()
 
   function handleDragEnd({ active, over }) {
     if (!over || active.id === over.id) return

@@ -5,7 +5,11 @@ import { useLeaving } from '../useLeaving.js'
 import DateField from './DateField.jsx'
 import RichTextEditor from './RichTextEditor.jsx'
 import Select from './Select.jsx'
-import { PlusIcon, VisibilityIcon } from '../Icons.jsx'
+import { DndContext, closestCenter } from '@dnd-kit/core'
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
+import { useDragSensors } from './useDragSensors.js'
 
 function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
@@ -100,6 +104,39 @@ function groupDates(fields) {
   return groups
 }
 
+// An item that can be dragged by its handle. children(handle) draws the item with the handle
+// inside; with a single item there is nothing to reorder, so no handle.
+function SortableItem({ id, draggable, children }) {
+  const {
+    attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging,
+  } = useSortable({ id })
+
+  const handle = draggable && (
+    <button
+      type="button"
+      ref={setActivatorNodeRef}
+      className="drag-handle item-handle"
+      title={texts.reorderItems.handle}
+      aria-label={texts.reorderItems.handle}
+      {...attributes}
+      {...listeners}
+    >
+      <GripIcon/>
+    </button>
+  )
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={isDragging ? 'sortable-item dragging' : 'sortable-item'}
+      // Translate, not Transform: items have different heights and would be stretched
+      style={{ transform: CSS.Translate.toString(transform), transition }}
+    >
+      {children(handle)}
+    </div>
+  )
+}
+
 function ListSection({ sectionKey, fields, list, onChange }) {
   // Items added in this visit: only these grow in, so nothing animates on page load
   const [added, setAdded] = useState([])
@@ -119,42 +156,71 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     onChange(list.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
   }
 
+  const sensors = useDragSensors()
+  // Screen readers hear positions (1, 2, 3…): items have no fixed name
+  const position = (id) => list.findIndex((item) => item.id === id) + 1
+  const accessibility = {
+    screenReaderInstructions: { draggable: texts.reorderItems.instructions },
+    announcements: {
+      onDragStart: ({ active }) => texts.reorderItems.picked(position(active.id)),
+      onDragOver: ({ over }) => (over ? texts.reorderItems.over(position(over.id)) : ''),
+      onDragEnd: ({ over }) => (over ? texts.reorderItems.dropped(position(over.id)) : ''),
+      onDragCancel: () => texts.reorderItems.cancelled,
+    },
+  }
+
+  function handleDragEnd({ active, over }) {
+    if (!over || active.id === over.id) return
+    onChange((current) => {
+      const ids = current.map((item) => item.id)
+      return arrayMove(current, ids.indexOf(active.id), ids.indexOf(over.id))
+    })
+  }
+
   return (
     <>
-      {list.map((item) => (
-        <Animated
-          key={item.id}
-          appear={added.includes(item.id)}
-          leaving={isLeaving(item.id)}
-          onLeft={() => left(item.id)}
-        >
-          <div className={item.hidden ? 'item is-hidden' : 'item'}>
-            {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
-            {groupDates(fields).map((group) => {
-              const rendered = group.map((field) => (
-                <Field
-                  key={field.name}
-                  sectionKey={sectionKey}
-                  field={field}
-                  item={item}
-                  onChange={(name, value) => change(item.id, name, value)}
-                />
-              ))
-              return isDate(group[0])
-                ? <div className="date-row" key={group[0].name}>{rendered}</div>
-                : rendered
-            })}
-            <div className="item-actions">
-              <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
-              <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
-                onClick={() => change(item.id, 'hidden', !item.hidden)}>
-                <VisibilityIcon hidden={item.hidden}/>
-                {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
-              </button>
-            </div>
-          </div>
-        </Animated>
-      ))}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} accessibility={accessibility}>
+        <SortableContext items={list.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+          {list.map((item) => (
+            <SortableItem key={item.id} id={item.id} draggable={list.length > 1}>
+              {(handle) => (
+                <Animated
+                  appear={added.includes(item.id)}
+                  leaving={isLeaving(item.id)}
+                  onLeft={() => left(item.id)}
+                >
+                  <div className={item.hidden ? 'item is-hidden' : 'item'}>
+                    {handle}
+                    {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
+                    {groupDates(fields).map((group) => {
+                      const rendered = group.map((field) => (
+                        <Field
+                          key={field.name}
+                          sectionKey={sectionKey}
+                          field={field}
+                          item={item}
+                          onChange={(name, value) => change(item.id, name, value)}
+                        />
+                      ))
+                      return isDate(group[0])
+                        ? <div className="date-row" key={group[0].name}>{rendered}</div>
+                        : rendered
+                    })}
+                    <div className="item-actions">
+                      <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+                      <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
+                        onClick={() => change(item.id, 'hidden', !item.hidden)}>
+                        <VisibilityIcon hidden={item.hidden}/>
+                        {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
+                      </button>
+                    </div>
+                  </div>
+                </Animated>
+              )}
+            </SortableItem>
+          ))}
+        </SortableContext>
+      </DndContext>
       <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
     </>
   )
