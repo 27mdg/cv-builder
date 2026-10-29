@@ -187,7 +187,7 @@ function App() {
       // A new custom section asks for its title straight away
       startRenaming: custom && addedSections.includes(key),
       summary,
-      done: summary !== '',
+      filled: summary !== '',
       hidden,
       customTitle: cv.sectionSettings[key]?.title ?? '',
       // The personal details always go in the CV, with their usual title
@@ -274,7 +274,7 @@ function App() {
                 title={texts[key].title}
                 icon={sectionIcons[key]}
                 summary={sectionSummary(key, cv)}
-                done={hasClosing(key)}
+                filled={hasClosing(key)}
                 open={addedSections.includes(key) || undefined}
                 onRemove={() => removeSection(key)}
               >

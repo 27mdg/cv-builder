@@ -64,7 +64,7 @@ function accessibility(titleOf) {
 // Form sections the user can reorder by dragging their handle (mouse, finger or keyboard).
 // renderContent(key) returns what goes inside each section; `removable` sections get a ×
 // that calls onRemove(key), and `openKeys` start unfolded. sectionProps(key) returns more props
-// for each Section (icon, summary, done). isLeaving(key) and onLeft(key): see useLeaving.js.
+// for each Section (icon, summary, filled…). isLeaving(key) and onLeft(key): see useLeaving.js.
 // titleOf(key): the section's title as the user sees it (custom sections have no fixed one).
 function SortableSections({
   order, onReorder, renderContent, sectionProps, titleOf, removable = [], onRemove, openKeys = [], isLeaving, onLeft,

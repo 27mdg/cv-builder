@@ -348,7 +348,6 @@ const es = {
   summary: {
     more: (count) => `+${count} más`,
     items: (count) => (count === 1 ? '1 elemento' : `${count} elementos`),
-    done: 'Sección con contenido',
   },
   // Not shown at the moment: kept for the future home page
   storage: {

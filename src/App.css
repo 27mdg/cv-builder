@@ -156,13 +156,14 @@
 .form-panel .section { margin-bottom: 12px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); }
+.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--surface); color: var(--text-muted); }
+/* The icon says whether the section has content: an empty ring while empty (it must not look
+   disabled), filled sage once something is written. A tick would wrongly say "finished". */
+.section.is-filled .section-icon { border-color: transparent; background: var(--brand-light); color: var(--brand-dark); }
 .section-icon svg { width: 20px; height: 20px; }
 /* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
 .section-heading { flex: 1; min-width: 0; }
 .section > summary h2 { display: flex; align-items: center; gap: 8px; font-size: 20px; color: var(--text); }
-.section-done { display: flex; color: var(--brand-dark); }
-.section-done svg { width: 16px; height: 16px; }
 .section-summary { overflow: hidden; margin-top: 2px; color: var(--text-muted); font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
 .section[open] .section-summary { display: none; }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
@@ -195,9 +196,11 @@
   .eye-slash { transition: none; }
 }
 /* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
-.section.is-hidden .section-icon, .section.is-hidden .section-summary { opacity: 0.5; }
+/* Hidden is told by its label; the icon is left alone, as it tells about content */
+.section.is-hidden .section-summary { opacity: 0.5; }
 /* Hiding and showing fades instead of jumping, and the "Oculta en el CV" label pops in softly */
-.section-icon, .section-summary, .item > label, .item > .date-field { transition: opacity 0.3s ease; }
+.section-icon { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+.section-summary, .item > label, .item > .date-field { transition: opacity 0.3s ease; }
 .section-badge { animation: badge-in 0.25s var(--ease-out); }
 @keyframes badge-in { from { opacity: 0; scale: 0.9; } }
 @media (prefers-reduced-motion: reduce) {
