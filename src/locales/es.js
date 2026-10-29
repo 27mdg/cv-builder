@@ -67,6 +67,7 @@ const es = {
   },
   common: {
     remove: 'Quitar',
+    duplicate: 'Duplicar',
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',

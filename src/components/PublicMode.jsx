@@ -9,10 +9,13 @@ const t = texts.publicMode
 
 /**
  * Top bar button that turns public computer mode on. It shrinks away when `leaving` (then
- * onLeft) and grows back when `appear`, while the buttons beside it close or open its gap.
+ * onLeft) and grows back when `appear`.
  */
 export function PublicModeButton({ appear, leaving, onLeft, onTurnOn }) {
   const [appearing, setAppearing] = useState(() => Boolean(appear) && !prefersReducedMotion())
+  // The glare on its screen: started by the mouse, ended by the animation itself, so it is
+  // never cut short when the mouse leaves
+  const [glaring, setGlaring] = useState(false)
 
   function handleAnimationEnd(e) {
     if (e.target !== e.currentTarget) return
@@ -26,10 +29,12 @@ export function PublicModeButton({ appear, leaving, onLeft, onTurnOn }) {
       <Tooltip id="public-tooltip" text={t.tooltip}>
         <button
           type="button"
-          className="secondary-button icon-button"
+          className={glaring ? 'secondary-button icon-button glaring' : 'secondary-button icon-button'}
           aria-label={t.button}
           aria-describedby="public-tooltip"
           onClick={onTurnOn}
+          onMouseEnter={() => setGlaring(!prefersReducedMotion())}
+          onAnimationEnd={(e) => e.animationName === 'glare' && setGlaring(false)}
         >
           <ComputerIcon/>
         </button>

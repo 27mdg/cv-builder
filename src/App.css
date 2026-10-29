@@ -83,6 +83,14 @@
    buttons are aligned to the right, so a narrowing place would slide the button towards them,
    and on its left there is nothing that has to move. */
 .public-button-slot { display: flex; }
+/* A glare line sweeps across the screen of its icon, out of sight before and after. Started on
+   hover by PublicMode.jsx (.glaring), so it finishes even if the mouse leaves halfway. */
+.screen-glare { translate: -10px 0; }
+.glaring .screen-glare { animation: glare 0.6s ease-in-out; }
+/* The trash lid lifts a little on its left end while hovered, as if opening before throwing */
+.trash-lid { transform-origin: 4px 7px; transition: rotate 0.2s var(--ease-out); }
+button:hover .trash-lid { rotate: -16deg; }
+@keyframes glare { from { translate: -10px 0; } to { translate: 18px 0; } }
 .public-button-slot.appearing { animation: icon-in 0.25s var(--ease-out); }
 .public-button-slot.leaving { animation: icon-out 0.25s var(--ease-out) forwards; }
 .public-button-slot.leaving .tooltip { display: none; }
@@ -257,8 +265,11 @@
 /* A hidden item stays editable; only its fields look faded */
 .item.is-hidden > label, .item.is-hidden > .field, .item.is-hidden > .field-row, .item.is-hidden > .rich-field { opacity: 0.55; }
 .section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
-/* The + spins on hover, the eye does not */
-.item-actions .chip:hover svg { transform: none; }
+/* The + spins on hover (like the other chips); the eye and the copy icon have their own effects */
+.item-actions .chip[aria-pressed]:hover svg, .item-actions .copy-chip:hover svg { transform: none; }
+.copy-front, .copy-back { transition: translate 0.25s var(--ease-out); }
+.copy-chip:hover .copy-front { translate: 1.5px 1.5px; }
+.copy-chip:hover .copy-back { translate: -1.5px -1.5px; }
 .form-panel .rename-field { margin-bottom: 20px; }
 .field-hint { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
 .signature-pad { position: relative; margin-top: 6px; }
@@ -371,7 +382,8 @@
 @keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) {
   .animated.appearing, .animated.leaving, .confirm-dialog[open], .confirm-dialog[open]::backdrop, .tool-menu, .date-popover,
-  .save-reminder, .undo-toast, .public-bar, .public-button-slot { animation: none; }
+  .save-reminder, .undo-toast, .public-bar, .public-button-slot, .screen-glare { animation: none; }
+  .copy-front, .copy-back, .trash-lid { transition: none; }
   .section::details-content { transition: none; }
 }
 
@@ -439,7 +451,12 @@
 .field-full { grid-column: 1 / -1; }
 .form-panel .field-remove { position: absolute; top: -3px; right: 0; display: flex; padding: 2px; border: none; border-radius: 50%; background: transparent; color: var(--text-muted); }
 .form-panel .field-remove:hover { background: var(--background); color: var(--text); }
-.field-remove svg { width: 16px; height: 16px; }
+/* Turns on hover, like the × of the sections */
+.field-remove svg { width: 16px; height: 16px; transition: transform 0.25s ease; }
+.field-remove:hover svg { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  .field-remove svg { transition: none; }
+}
 .custom-field { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 16px; margin-bottom: 16px; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }

@@ -9,7 +9,7 @@ import Select from './Select.jsx'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { CloseIcon, GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
+import { CloseIcon, CopyIcon, GripIcon, PlusIcon, VisibilityIcon } from '../Icons.jsx'
 import { useDragSensors } from './useDragSensors.js'
 
 function labelFor(sectionKey, name) {
@@ -169,6 +169,14 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     })
   }
 
+  // E.g. two positions at the same company: the copy goes right below and only needs a few changes
+  function duplicate(id) {
+    const index = list.findIndex((item) => item.id === id)
+    const copy = { ...list[index], id: crypto.randomUUID() }
+    setAdded([...added, copy.id])
+    onChange(insertAt(list, index + 1, copy))
+  }
+
   function change(id, name, value) {
     onChange(list.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
   }
@@ -248,6 +256,9 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                     })}
                     <div className="item-actions">
                       <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+                      <button type="button" className="chip copy-chip" onClick={() => duplicate(item.id)}>
+                        <CopyIcon/>{texts.common.duplicate}
+                      </button>
                       {fields.filter((field) => !shows(item, field)).map((field) => (
                         <button type="button" className="chip" key={field.name}
                           onClick={() => setOpenedOptional([...openedOptional, optionalKey(item, field)])}>

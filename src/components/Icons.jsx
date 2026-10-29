@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 // Hand-made so we do not depend on icon libraries or their licences.
 
 function Icon({ children }) {
@@ -68,12 +70,41 @@ export function DownloadIcon() {
   return <Icon><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></Icon>
 }
 
+// The lid is apart so it can lift on hover (App.css)
 export function TrashIcon() {
-  return <Icon><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></Icon>
+  return (
+    <Icon>
+      <path className="trash-lid" d="M4 7h16M9 7V4h6v3"/>
+      <path d="M10 11v6M14 11v6M6 7l1 13h10l1-13"/>
+    </Icon>
+  )
 }
 
+// Its two sheets move apart on hover (App.css), as if the copy came out of the original
+export function CopyIcon() {
+  return (
+    <Icon>
+      <path className="copy-back" d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>
+      <rect className="copy-front" x="8" y="8" width="12" height="12" rx="2"/>
+    </Icon>
+  )
+}
+
+// The screen has a glare line that sweeps across it on hover (App.css), kept inside the screen
+// by a clip path. The icon appears more than once, so each needs its own id.
 export function ComputerIcon() {
-  return <Icon><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></Icon>
+  const clipId = 'screen-' + useId().replace(/[^\w-]/g, '')
+  return (
+    <Icon>
+      <defs>
+        <clipPath id={clipId}><rect x="4" y="5" width="16" height="10" rx="1"/></clipPath>
+      </defs>
+      <rect x="3" y="4" width="18" height="12" rx="2"/>
+      <path d="M8 20h8M12 16v4"/>
+      {/* Clipped by a group around it: on the moving line itself, the clip would move along */}
+      <g clipPath={`url(#${clipId})`}><path className="screen-glare" d="M6 17 11 3"/></g>
+    </Icon>
+  )
 }
 
 export function CloseIcon() {
