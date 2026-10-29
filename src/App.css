@@ -360,6 +360,8 @@
 .rich-toolbar { display: flex; gap: 2px; padding: 4px 6px; border-bottom: 1px solid var(--border); }
 .form-panel .rich-toolbar button { display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 6px; border: none; border-radius: 6px; background: transparent; color: var(--text); }
 .form-panel .rich-toolbar button:hover, .form-panel .rich-toolbar button[aria-expanded="true"] { background: var(--surface-sunken); }
+/* On where the cursor is (bold text, a bullet, a link): sage, like other active states */
+.form-panel .rich-toolbar button[aria-pressed="true"] { background: var(--brand-light); color: var(--brand-dark); }
 .form-panel .rich-toolbar .rich-bold { font-family: var(--font-body); font-size: 16px; font-weight: 700; }
 .rich-toolbar svg { width: 18px; height: 18px; }
 /* Small and flat: it is a quick extra step, not a main field. The :not() parts match the

@@ -6,6 +6,14 @@ import Animated from '../Animated.jsx'
 
 const t = texts.richText
 
+// The link the cursor is in, if it is inside this editor
+function linkAtCursor(editorBox) {
+  const node = window.getSelection().anchorNode
+  const element = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node
+  const link = element?.closest?.('a')
+  return link && editorBox.contains(link) ? link : null
+}
+
 /** A description box that shows bullets, bold and links as they will look in the CV. */
 function RichTextEditor({ label, value, placeholder, onChange }) {
   const editor = useRef(null)
@@ -15,7 +23,21 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
   const savedRange = useRef(null)
   const [linkOpen, setLinkOpen] = useState(false)
   const [linkUrl, setLinkUrl] = useState('')
+  // What applies where the cursor is, so each button shows whether it is on
+  const [active, setActive] = useState({ bold: false, list: false, link: false })
   const labelId = useId()
+
+  // The browser tells the formatting at the cursor; asked again whenever the cursor moves
+  useEffect(() => {
+    function update() {
+      const inside = editor.current?.contains(window.getSelection().anchorNode)
+      setActive(inside
+        ? { bold: document.queryCommandState('bold'), list: document.queryCommandState('insertUnorderedList'), link: Boolean(linkAtCursor(editor.current)) }
+        : { bold: false, list: false, link: false })
+    }
+    document.addEventListener('selectionchange', update)
+    return () => document.removeEventListener('selectionchange', update)
+  }, [])
 
   useEffect(() => {
     if (value === lastValue.current) return
@@ -32,14 +54,9 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
   function format(command) {
     editor.current.focus()
     document.execCommand(command)
+    // Turning bold on with nothing selected changes no text, so no selectionchange follows
+    setActive((current) => ({ ...current, [command === 'bold' ? 'bold' : 'list']: document.queryCommandState(command) }))
     sync()
-  }
-
-  function linkAtCursor() {
-    const node = window.getSelection().anchorNode
-    const element = node?.nodeType === Node.TEXT_NODE ? node.parentElement : node
-    const link = element?.closest('a')
-    return link && editor.current.contains(link) ? link : null
   }
 
   function openLink() {
@@ -47,7 +64,7 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
     if (selection.rangeCount && editor.current.contains(selection.anchorNode)) {
       savedRange.current = selection.getRangeAt(0).cloneRange()
     }
-    setLinkUrl(linkAtCursor()?.getAttribute('href') ?? '')
+    setLinkUrl(linkAtCursor(editor.current)?.getAttribute('href') ?? '')
     setLinkOpen(true)
   }
 
@@ -82,11 +99,11 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
       <div className="rich-editor">
         {/* onMouseDown + preventDefault: clicking a button must not take the selection away */}
         <div className="rich-toolbar">
-          <button type="button" className="rich-bold" title={t.bold} aria-label={t.bold}
+          <button type="button" className="rich-bold" title={t.bold} aria-label={t.bold} aria-pressed={active.bold}
             onMouseDown={(e) => e.preventDefault()} onClick={() => format('bold')}>B</button>
-          <button type="button" title={t.list} aria-label={t.list}
+          <button type="button" title={t.list} aria-label={t.list} aria-pressed={active.list}
             onMouseDown={(e) => e.preventDefault()} onClick={() => format('insertUnorderedList')}><ListIcon/></button>
-          <button type="button" title={t.link} aria-label={t.link} aria-expanded={linkOpen}
+          <button type="button" title={t.link} aria-label={t.link} aria-expanded={linkOpen} aria-pressed={active.link}
             onMouseDown={(e) => e.preventDefault()} onClick={() => (linkOpen ? setLinkOpen(false) : openLink())}><LinkIcon/></button>
         </div>
         {linkOpen && (
