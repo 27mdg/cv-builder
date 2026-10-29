@@ -223,6 +223,27 @@
 }
 .extra-sections { padding: 28px 0 8px; }
 .extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+/* SectionLibrary.jsx: small cards with a line of help, as many per row as fit */
+.section-library { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 14px; }
+.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); text-align: left; }
+.form-panel button.library-card:hover { border-color: var(--brand-dark); }
+.library-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); }
+.library-icon svg { width: 18px; height: 18px; }
+.library-text { flex: 1; min-width: 0; }
+.library-title { display: block; font-size: 15px; font-weight: 600; }
+.library-hint { display: block; margin-top: 2px; color: var(--text-muted); font-size: 13px; line-height: 1.35; }
+.library-plus { display: flex; margin-top: 8px; color: var(--brand-dark); }
+.library-plus svg { width: 16px; height: 16px; transition: transform 0.25s ease; }
+.library-card:hover .library-plus svg { transform: rotate(90deg); }
+/* The custom section, open: it takes a whole row and shows its two kinds */
+.form-panel .library-card.is-open { grid-column: 1 / -1; flex-direction: column; align-items: stretch; border-color: var(--brand-dark); animation: rise-in 0.18s var(--ease-out); }
+.form-panel .library-close { display: flex; align-items: center; gap: 12px; padding: 0; border: none; background: transparent; color: var(--text); text-align: left; }
+.library-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.form-panel .library-choices .library-card { background: var(--field); }
+@media (prefers-reduced-motion: reduce) {
+  .library-plus svg { transition: none; }
+  .form-panel .library-card.is-open { animation: none; }
+}
 .section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
 .section-arrow svg { width: 16px; height: 16px; }
 /* Filled while open, like on hover. Cream, not white: the card itself is white now. */

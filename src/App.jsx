@@ -8,6 +8,7 @@ import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
 import SignatureField from './components/form/SignatureField.jsx'
 import Animated from './components/Animated.jsx'
+import SectionLibrary from './components/form/SectionLibrary.jsx'
 import sections, { optionalSections, customFields, isCustomKey, newCustomKey } from './data/sections.js'
 import { hasText, sectionTitle } from './templates/format.js'
 import Section from './components/form/Section.jsx'
@@ -297,27 +298,11 @@ function App() {
             </Animated>
           ))}
           {/* Always there: custom sections can be added as many times as the user wants */}
-          <div className="extra-sections">
-            <p className="extra-sections-title">{texts.extraSections.title}</p>
-            <div className="chips">
-              {hiddenSections.map((key) => (
-                <button type="button" className="chip" key={key} onClick={() => addSection(key)}>
-                  <PlusIcon/>{texts[key].title}
-                </button>
-              ))}
-              {hiddenClosing.map((key) => (
-                <button type="button" className="chip" key={key} onClick={() => setAddedSections((added) => [...added, key])}>
-                  <PlusIcon/>{texts[key].title}
-                </button>
-              ))}
-              <button type="button" className="chip" onClick={() => addCustomSection('list')}>
-                <PlusIcon/>{texts.customSection.addList}
-              </button>
-              <button type="button" className="chip" onClick={() => addCustomSection('text')}>
-                <PlusIcon/>{texts.customSection.addText}
-              </button>
-            </div>
-          </div>
+          <SectionLibrary
+            keys={[...hiddenSections, ...hiddenClosing]}
+            onAdd={(key) => (closingSections.includes(key) ? setAddedSections((added) => [...added, key]) : addSection(key))}
+            onAddCustom={addCustomSection}
+          />
           <ConfirmDialog
             open={removingSection !== null}
             title={removingSection ? texts.extraSections.confirmTitle(sectionTitle(cv, removingSection)) : ''}
