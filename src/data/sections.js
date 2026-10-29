@@ -16,6 +16,9 @@ export function newCustomKey() {
   return customPrefix + crypto.randomUUID().slice(0, 8)
 }
 
+// Hidden behind a "+ Enlace" button until used, so the cards stay short (ListSection.jsx)
+const optionalLink = { name: 'link', type: 'text', optional: true }
+
 // The items of a custom list section
 export const customFields = [
   { name: 'title', type: 'text' },
@@ -23,6 +26,7 @@ export const customFields = [
   { name: 'city', type: 'text' },
   { name: 'start', type: 'date' },
   { name: 'end', type: 'endDate' },
+  optionalLink,
   { name: 'description', type: 'longText' },
 ]
 
@@ -35,6 +39,7 @@ const jobFields = [
   { name: 'city', type: 'text' },
   { name: 'start', type: 'date' },
   { name: 'end', type: 'endDate' },
+  optionalLink,
   { name: 'description', type: 'longText' },
 ]
 
@@ -48,6 +53,7 @@ const sections = [
       { name: 'grade', type: 'text' },
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
+      optionalLink,
       { name: 'description', type: 'longText' },
     ],
   },
@@ -83,6 +89,7 @@ const sections = [
       { name: 'course', type: 'text' },
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
+      optionalLink,
       { name: 'description', type: 'longText' },
     ],
   },
@@ -96,6 +103,7 @@ const sections = [
       { name: 'issuer', type: 'text' },
       // A single date: no end and no "Presente"
       { name: 'start', type: 'date' },
+      optionalLink,
       { name: 'description', type: 'longText' },
     ],
   },
@@ -105,6 +113,7 @@ const sections = [
       { name: 'certificate', type: 'text' },
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
+      optionalLink,
       { name: 'description', type: 'longText' },
     ],
   },

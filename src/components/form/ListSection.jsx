@@ -31,7 +31,7 @@ function emptyItem(fields) {
   return item
 }
 
-function Field({ sectionKey, field, item, onChange }) {
+function Field({ sectionKey, field, item, onChange, autoFocus }) {
   const label = labelFor(sectionKey, field.name)
   const value = item[field.name]
 
@@ -87,7 +87,7 @@ function Field({ sectionKey, field, item, onChange }) {
   return (
     <label>
       {label}
-      <input value={value} onChange={(e) => onChange(field.name, e.target.value)}/>
+      <input value={value} autoFocus={autoFocus} onChange={(e) => onChange(field.name, e.target.value)}/>
     </label>
   )
 }
@@ -142,7 +142,12 @@ function SortableItem({ id, draggable, children }) {
 function ListSection({ sectionKey, fields, list, onChange }) {
   // Items added in this visit: only these grow in, so nothing animates on page load
   const [added, setAdded] = useState([])
+  // Optional fields (the link) opened in this visit, as 'itemId:fieldName'
+  const [openedOptional, setOpenedOptional] = useState([])
   const { isLeaving, leave, left } = useLeaving()
+  const optionalKey = (item, field) => `${item.id}:${field.name}`
+  const shows = (item, field) => !field.optional || Boolean(item[field.name])
+    || openedOptional.includes(optionalKey(item, field))
 
   function add() {
     const item = emptyItem(fields)
@@ -194,7 +199,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                   <div className={item.hidden ? 'item is-hidden' : 'item'}>
                     {handle}
                     {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
-                    {groupPairs(fields).map((group) => {
+                    {groupPairs(fields.filter((field) => shows(item, field))).map((group) => {
                       const rendered = group.map((field) => (
                         <Field
                           key={field.name}
@@ -202,6 +207,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                           field={field}
                           item={item}
                           onChange={(name, value) => change(item.id, name, value)}
+                          autoFocus={field.optional && openedOptional.includes(optionalKey(item, field))}
                         />
                       ))
                       return pairOf(group[0])
@@ -210,6 +216,12 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                     })}
                     <div className="item-actions">
                       <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+                      {fields.filter((field) => !shows(item, field)).map((field) => (
+                        <button type="button" className="chip" key={field.name}
+                          onClick={() => setOpenedOptional([...openedOptional, optionalKey(item, field)])}>
+                          <PlusIcon/>{labelFor(sectionKey, field.name)}
+                        </button>
+                      ))}
                       <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
                         onClick={() => change(item.id, 'hidden', !item.hidden)}>
                         <VisibilityIcon hidden={item.hidden}/>
