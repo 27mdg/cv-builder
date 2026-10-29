@@ -398,7 +398,7 @@
 .photo-field { position: relative; }
 .form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--field); color: var(--text-muted); cursor: pointer; }
 .photo-box:hover { border-color: var(--brand-dark); }
-.photo-box:focus-within { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
+.photo-box:focus-within { outline: 1px solid var(--brand-dark); outline-offset: 0; border-color: var(--brand-dark); border-style: solid; }
 .photo-box svg { width: 48px; height: 48px; }
 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 /* Visually hidden but still reachable with the keyboard (display: none would remove it) */
