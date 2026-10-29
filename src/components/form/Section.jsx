@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import texts from '../../locales/es.js'
-import { ArrowIcon, CheckIcon, CloseIcon, EyeIcon, EyeOffIcon, PencilIcon } from '../Icons.jsx'
+import { ArrowIcon, CheckIcon, CloseIcon, PencilIcon, VisibilityIcon } from '../Icons.jsx'
 
 // <details> folds and unfolds without JavaScript or state.
 // `handle`: the drag handle of sections that can be reordered (see SortableSections.jsx).
@@ -61,7 +61,7 @@ function Section({
               onToggleHidden()
             }}
           >
-            {hidden ? <EyeOffIcon/> : <EyeIcon/>}
+            <VisibilityIcon hidden={hidden}/>
           </button>
         )}
         {onRemove && (

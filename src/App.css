@@ -179,17 +179,18 @@
 .section-action svg { width: 18px; height: 18px; }
 /* On hover the pencil scribbles a little, once per hover */
 .rename-button:hover svg { animation: scribble 0.45s ease-in-out; }
-/* When something gets hidden, the eye's slash is drawn in. pathLength="1" on the path makes
-   the dash exactly as long as the line. */
-.eye-slash { stroke-dasharray: 1; animation: draw-line 0.3s var(--ease-out); }
-@keyframes draw-line { from { stroke-dashoffset: 1; } }
+/* The eye's slash is drawn in when something gets hidden and drawn out when it is shown again.
+   pathLength="1" on the path makes the dash exactly as long as the line. */
+.eye-slash { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.3s var(--ease-out); }
+.eye-slash.is-on { stroke-dashoffset: 0; }
 @keyframes scribble {
   25% { transform: translate(1.5px, -1px) rotate(-8deg); }
   50% { transform: translate(-1px, 1px) rotate(4deg); }
   75% { transform: translate(1px, 0) rotate(-4deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rename-button:hover svg, .eye-slash { animation: none; }
+  .rename-button:hover svg { animation: none; }
+  .eye-slash { transition: none; }
 }
 /* A hidden section stays editable but looks faded, with a label saying it is not in the CV */
 .section.is-hidden .section-icon, .section.is-hidden .section-summary { opacity: 0.5; }

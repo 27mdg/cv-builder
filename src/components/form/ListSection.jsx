@@ -4,7 +4,7 @@ import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
 import DateField from './DateField.jsx'
 import Select from './Select.jsx'
-import { EyeIcon, EyeOffIcon, PlusIcon } from '../Icons.jsx'
+import { PlusIcon, VisibilityIcon } from '../Icons.jsx'
 
 function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
@@ -132,7 +132,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
               <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
               <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
                 onClick={() => change(item.id, 'hidden', !item.hidden)}>
-                {item.hidden ? <EyeOffIcon/> : <EyeIcon/>}
+                <VisibilityIcon hidden={item.hidden}/>
                 {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
               </button>
             </div>

@@ -157,17 +157,14 @@ export function PeopleIcon() {
   return <Icon><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.8 3.5 2.9 3.5 5.7"/></Icon>
 }
 
-export function EyeIcon() {
-  return <Icon><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></Icon>
-}
-
-export function EyeOffIcon() {
+// One icon for both states: the slash is always there and only shown when `hidden`, so it can
+// be drawn in and out (App.css) instead of one icon jumping to another
+export function VisibilityIcon({ hidden }) {
   return (
     <Icon>
-      <path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.4 3.3M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/>
-      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
-      {/* Its own path, so the slash can be drawn in when something gets hidden (App.css) */}
-      <path className="eye-slash" d="M3 3l18 18" pathLength="1"/>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/>
+      <circle cx="12" cy="12" r="3"/>
+      <path className={hidden ? 'eye-slash is-on' : 'eye-slash'} d="M3 3l18 18" pathLength="1"/>
     </Icon>
   )
 }
