@@ -121,7 +121,7 @@ export function itemParts(key, item) {
     subtitle: Array.isArray(subtitle) ? join(subtitle.map((name) => item[name]), ', ') : (subtitle && item[subtitle]) ?? '',
     date: item.dates ?? '',
     // Where and how; or else the link (projects) or the contact (references)
-    place: join([item.city, texts.common.workModes[item.workMode], texts.common.schedules[item.schedule]])
+    place: join([item.city, item.grade, texts.common.workModes[item.workMode], texts.common.schedules[item.schedule]])
       || item.link || join([item.email, item.phone]),
   }
 }

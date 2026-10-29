@@ -45,6 +45,7 @@ const sections = [
       { name: 'degree', type: 'text' },
       { name: 'school', type: 'text' },
       { name: 'city', type: 'text' },
+      { name: 'grade', type: 'text' },
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
       { name: 'description', type: 'longText' },

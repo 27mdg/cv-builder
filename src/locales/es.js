@@ -126,6 +126,7 @@ const es = {
     title: 'Formación',
     degree: 'Formación',
     school: 'Centro de estudios',
+    grade: 'Nota media o mención',
     add: 'Añadir formación',
   },
   experience: {
