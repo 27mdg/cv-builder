@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { isPublicMode, loadCv, saveCv, setPublicMode } from './data/storage.js'
@@ -109,6 +109,18 @@ function App() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [undo])
+
+  // The bar floats over the panels, which start their content below it. Its height changes when
+  // the public mode strip slides in or the bar wraps on a narrow window, so it is measured.
+  const topLayer = useRef(null)
+  useEffect(() => {
+    const layer = topLayer.current
+    const observer = new ResizeObserver(() => {
+      layer.parentElement.style.setProperty('--top-height', `${layer.offsetHeight}px`)
+    })
+    observer.observe(layer)
+    return () => observer.disconnect()
+  }, [])
 
   function changeFullScreen(value) {
     withTransition(() => setFullScreen(value))
@@ -337,43 +349,46 @@ function App() {
   return (
     <UndoContext value={offerUndo}>
       <div className="app">
-        <header className="topbar">
-          {/* Temporary logo: it will link to the home page once there is one */}
-          <a href="/" className="logo">{texts.app.title}</a>
-          <input
-            className="file-name"
-            aria-label={texts.file.name}
-            placeholder={texts.file.placeholder}
-            value={cv.fileName}
-            onChange={(e) => changeSection('fileName', e.target.value)}
-          />
-          <div className="actions">
-            {(!publicMode || publicButtonLeaving) && (
-              <PublicModeButton
-                appear={publicAnimated}
-                leaving={publicButtonLeaving}
-                onLeft={() => setPublicButtonLeaving(false)}
-                onTurnOn={turnOnPublicMode}
-              />
-            )}
-            <ClearButton onClear={clearCv}/>
-            <ImportButton currentCv={cv} onImport={setCv}/>
-            <ExportButton cv={cv}/>
-            <DownloadButton cv={cv} publicMode={publicMode}/>
-          </div>
-        </header>
-        {publicMode && (
-          <PublicModeBar
-            appear={publicAnimated}
-            leaving={isPublicLeaving('bar')}
-            onLeft={() => publicLeft('bar')}
-            onFinish={() => {
-              finishPublicSession()
-              turnOffPublicMode()
-            }}
-            onTurnOff={turnOffPublicMode}
-          />
-        )}
+        <div className="top-layer" ref={topLayer}>
+          <header className="topbar">
+            {/* Temporary logo: it will link to the home page once there is one */}
+            <a href="/" className="logo">{texts.app.title}</a>
+            <input
+              className="file-name"
+              aria-label={texts.file.name}
+              placeholder={texts.file.placeholder}
+              value={cv.fileName}
+              onChange={(e) => changeSection('fileName', e.target.value)}
+            />
+            <div className="actions">
+              {(!publicMode || publicButtonLeaving) && (
+                <PublicModeButton
+                  appear={publicAnimated}
+                  leaving={publicButtonLeaving}
+                  onLeft={() => setPublicButtonLeaving(false)}
+                  onTurnOn={turnOnPublicMode}
+                />
+              )}
+              <ClearButton onClear={clearCv}/>
+              <span className="actions-divider" aria-hidden="true"/>
+              <ImportButton currentCv={cv} onImport={setCv}/>
+              <ExportButton cv={cv}/>
+              <DownloadButton cv={cv} publicMode={publicMode}/>
+            </div>
+          </header>
+          {publicMode && (
+            <PublicModeBar
+              appear={publicAnimated}
+              leaving={isPublicLeaving('bar')}
+              onLeft={() => publicLeft('bar')}
+              onFinish={() => {
+                finishPublicSession()
+                turnOffPublicMode()
+              }}
+              onTurnOff={turnOffPublicMode}
+            />
+          )}
+        </div>
         <main className="workspace">
           <section className="form-panel">
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
