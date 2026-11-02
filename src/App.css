@@ -170,7 +170,9 @@ button:hover .trash-lid { rotate: -16deg; }
 .toolbar::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: inset 0 1px 0 var(--glass-highlight); }
 /* Full-screen animation (withTransition in App.jsx): the toolbar and each page (PdfPage.jsx) are
    named so they glide to their new place; the rest of the page simply fades */
-.toolbar { view-transition-name: toolbar; }
+/* Named only while the animation runs: a named element stops everything inside it from blurring
+   what is behind, and the menus' glass would go flat */
+:root:active-view-transition .toolbar { view-transition-name: toolbar; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
 .tool { position: relative; }
 .toolbar button { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 12px; background: transparent; color: var(--text); font: inherit; cursor: pointer; transition: background-color 0.15s, box-shadow 0.15s; }
