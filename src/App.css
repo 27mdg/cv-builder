@@ -112,7 +112,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */
 /* Half the splitter's lane comes off the form, so at 50% the lane sits exactly mid-page */
-.form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: calc(var(--top-height, 80px) + 28px) 48px 48px; background: var(--background); container-type: inline-size; scrollbar-color: var(--scrollbar-thumb) var(--background); }
+.form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: calc(var(--top-height, 80px) + 28px) 48px 48px; background: var(--background); container-type: inline-size; --thumb: var(--scrollbar-thumb); }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
 .form-panel > * { max-width: 760px; margin-inline: auto; }
 /* clip: if something ever gets wider than the panel, it is cut instead of spilling over the
@@ -141,9 +141,21 @@ button:hover .trash-lid { rotate: -16deg; }
 .splitter:focus-visible { outline: none; }
 .splitter:focus-visible .splitter-knob { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
-.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; scrollbar-color: var(--scrollbar-thumb-dark) var(--surface-sunken); }
+.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; --thumb: var(--scrollbar-thumb-dark); }
 /* Full screen covers the bar, so nothing has to start below it */
 .preview-panel.full-screen .preview { padding-top: 32px; }
+/* The content scrolls behind the glass bar, but the scrollbar starts below it: a scrollbar
+   half hidden under the bar looks broken. Only the browsers' own scrollbar styling can move
+   the track (with a margin); the others get the plain coloured scrollbar. */
+.form-panel::-webkit-scrollbar, .preview::-webkit-scrollbar { width: 14px; }
+.form-panel::-webkit-scrollbar-track, .preview::-webkit-scrollbar-track { margin: calc(var(--top-height, 80px) + 4px) 0 4px; background: transparent; }
+.preview-panel.full-screen .preview::-webkit-scrollbar-track { margin-top: 4px; }
+/* The transparent border leaves a thin pill floating in the middle of its lane */
+.form-panel::-webkit-scrollbar-thumb, .preview::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--thumb) padding-box; }
+@supports not selector(::-webkit-scrollbar) {
+  .form-panel { scrollbar-color: var(--scrollbar-thumb) var(--background); }
+  .preview { scrollbar-color: var(--scrollbar-thumb-dark) var(--surface-sunken); }
+}
 .pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: 0 2px 12px var(--shadow); }
 .loading { padding: 16px; color: var(--text-muted); }
 .preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; }
