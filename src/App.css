@@ -1,6 +1,6 @@
 /* An app, not a page to copy from: double-clicking a section title or a label must not paint
    the whole form blue. What the user types stays selectable. */
-.app { position: relative; height: 100vh; display: flex; flex-direction: column; user-select: none; }
+.app { position: relative; height: 100vh; display: flex; flex-direction: column; background: var(--page); user-select: none; }
 .app input, .app textarea, .app [contenteditable] { user-select: text; }
 /* The bar floats over the panels, so what they scroll passes behind its glass. The layer itself
    lets clicks through: only the bar and the public mode strip catch them, not the margins
@@ -115,18 +115,18 @@ button:hover .trash-lid { rotate: -16deg; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */
 /* Half the splitter's lane comes off the form, so at 50% the lane sits exactly mid-page */
-.form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: calc(var(--top-height, 80px) + 28px) 48px 48px; background: var(--background); container-type: inline-size; --thumb: var(--scrollbar-thumb); }
+.form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: calc(var(--top-height, 80px) + 28px) 48px 48px; container-type: inline-size; }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
 .form-panel > * { max-width: 760px; margin-inline: auto; }
 /* clip: if something ever gets wider than the panel, it is cut instead of spilling over the
    splitter and widening the page */
-.preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--surface-sunken); container-type: inline-size; overflow-x: clip; }
+.preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); container-type: inline-size; overflow-x: clip; }
 
 /* Its own lane, so the knob never covers the form's scrollbar; the knob is a pill that fits
-   inside it. The visible 1 px line is a background in the middle of the lane, and each half
-   of the lane takes the colour of the panel next to it. */
+   inside it. The visible 1 px line is a background in the middle of the lane, which is
+   otherwise see-through, like both panels. */
 .workspace { --gutter: 18px; }
-.splitter { --line: var(--border-strong); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat, linear-gradient(to right, var(--background) 50%, var(--surface-sunken) 50%); cursor: col-resize; touch-action: none; }
+.splitter { --line: var(--border-strong); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; cursor: col-resize; touch-action: none; }
 .splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text-muted); box-shadow: 0 1px 4px var(--shadow); }
 .splitter-knob svg { width: 14px; height: 14px; }
 /* Gliding back to the middle when released, a little slower so the eye can follow it */
@@ -144,7 +144,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .splitter:focus-visible { outline: none; }
 .splitter:focus-visible .splitter-knob { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
-.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; --thumb: var(--scrollbar-thumb-dark); }
+.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; }
 /* Full screen covers the bar, so nothing has to start below it */
 .preview-panel.full-screen .preview { padding-top: 32px; }
 /* The content scrolls behind the glass bar, but the scrollbar starts below it: a scrollbar
@@ -154,23 +154,30 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel::-webkit-scrollbar-track, .preview::-webkit-scrollbar-track { margin: calc(var(--top-height, 80px) + 4px) 0 4px; background: transparent; }
 .preview-panel.full-screen .preview::-webkit-scrollbar-track { margin-top: 4px; }
 /* The transparent border leaves a thin pill floating in the middle of its lane */
-.form-panel::-webkit-scrollbar-thumb, .preview::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--thumb) padding-box; }
+.form-panel::-webkit-scrollbar-thumb, .preview::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb) padding-box; }
 @supports not selector(::-webkit-scrollbar) {
-  .form-panel { scrollbar-color: var(--scrollbar-thumb) var(--background); }
-  .preview { scrollbar-color: var(--scrollbar-thumb-dark) var(--surface-sunken); }
+  .form-panel, .preview { scrollbar-color: var(--scrollbar-thumb) transparent; }
 }
 .pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: 0 2px 12px var(--shadow); }
 .loading { padding: 16px; color: var(--text-muted); }
-.preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; }
+/* Fixed over the whole app, so it brings its own copy of the background */
+.preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; background: var(--page); }
 
-.toolbar { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 8px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); box-shadow: 0 4px 16px var(--shadow); white-space: nowrap; }
+/* The same glass as the top bar. The blur sits on a layer behind the buttons, not on the toolbar
+   itself: an element with a backdrop filter only lets its children blur what is inside it, so
+   the menus that open from here could not blur the PDF behind them. */
+.toolbar { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 8px; border: 1px solid var(--glass-border); border-radius: 18px; box-shadow: 0 8px 32px var(--shadow); white-space: nowrap; }
+.toolbar::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--glass); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: inset 0 1px 0 var(--glass-highlight); }
 /* Full-screen animation (withTransition in App.jsx): the toolbar and each page (PdfPage.jsx) are
    named so they glide to their new place; the rest of the page simply fades */
 .toolbar { view-transition-name: toolbar; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
 .tool { position: relative; }
-.toolbar button { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: none; border-radius: var(--radius); background: transparent; color: var(--text); font: inherit; cursor: pointer; }
-.toolbar button:hover:not(:disabled) { background: var(--background); }
+.toolbar button { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 12px; background: transparent; color: var(--text); font: inherit; cursor: pointer; transition: background-color 0.15s, box-shadow 0.15s; }
+.toolbar button:hover:not(:disabled) { background: var(--glass-hover); }
+/* The tool whose menu is open stands out as a solid white pill */
+.toolbar .tool > button[aria-expanded="true"] { background: var(--surface); box-shadow: 0 1px 4px var(--shadow); }
+.tool-menu button:hover:not(:disabled) { background: var(--background); }
 .toolbar button:disabled { color: var(--text-muted); cursor: not-allowed; }
 .full-screen-button { margin-left: 8px; }
 /* Each corner turns half a round on its own centre: pointing out to enter full screen, in to leave */
@@ -185,7 +192,7 @@ button:hover .trash-lid { rotate: -16deg; }
 @media (prefers-reduced-motion: reduce) {
   .tool > button > svg:last-child { transition: none; }
 }
-.tool-menu { position: absolute; left: 0; bottom: calc(100% + 12px); min-width: 180px; padding: 8px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); box-shadow: 0 4px 16px var(--shadow); }
+.tool-menu { position: absolute; left: 0; bottom: calc(100% + 12px); min-width: 180px; padding: 8px; border: 1px solid var(--glass-border); border-radius: 16px; background: var(--glass-strong); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); box-shadow: 0 8px 32px var(--shadow); }
 .tool-menu.align-right { left: auto; right: 0; }
 .tool-menu button { width: 100%; }
 .tool-menu button.selected { font-weight: 600; background: var(--brand-light); }
@@ -227,17 +234,17 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-/* Each section is a white card; the open one lifts with a soft shadow */
-.section { padding: 0 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); transition: box-shadow 0.2s ease; }
-.section[open] { box-shadow: 0 4px 16px var(--shadow); }
+/* Each section is its own round white card, resting with a faint shadow; the open one lifts more */
+.section { padding: 0 24px; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface); box-shadow: 0 1px 3px var(--shadow); transition: box-shadow 0.2s ease; }
+.section[open] { box-shadow: 0 8px 24px var(--shadow); }
 /* The gap is a margin of the card itself, so it also shrinks when a section fades out */
-.form-panel .section { margin-bottom: 12px; }
+.form-panel .section { margin-bottom: 14px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--surface); color: var(--text-muted); }
-/* The icon says whether the section has content: an empty ring while empty (it must not look
-   disabled), filled sage once something is written. A tick would wrongly say "finished". */
-.section.is-filled .section-icon { border-color: transparent; background: var(--brand-light); color: var(--brand-dark); }
+.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--background); color: var(--text-muted); }
+/* The icon says whether the section has content: cream while empty, sage once something is
+   written. A tick would wrongly say "finished". */
+.section.is-filled .section-icon { background: var(--brand-light); color: var(--brand-dark); }
 .section-icon svg { width: 20px; height: 20px; }
 /* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
 .section-heading { flex: 1; min-width: 0; }
@@ -245,7 +252,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
 .form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
 .form-panel .drag-handle:hover { background: var(--background); color: var(--text); }
-.sortable { position: relative; border-radius: var(--radius); }
+.sortable { position: relative; border-radius: var(--radius-card); }
 .sortable.dragging { z-index: 10; cursor: grabbing; }
 .sortable.dragging .section { box-shadow: 0 10px 28px var(--shadow); }
 .sortable.dragging .drag-handle { cursor: grabbing; }
@@ -272,7 +279,7 @@ button:hover .trash-lid { rotate: -16deg; }
   .eye-slash { transition: none; }
 }
 /* Hiding and showing fades instead of jumping, and the "Oculta en el CV" label pops in softly */
-.section-icon { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+.section-icon { transition: background-color 0.3s ease, color 0.3s ease; }
 .item > label, .item > .field, .item > .field-row { transition: opacity 0.3s ease; }
 .section-badge { animation: badge-in 0.25s var(--ease-out); }
 @keyframes badge-in { from { opacity: 0; scale: 0.9; } }
@@ -303,7 +310,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .field-hint { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
 .signature-pad { position: relative; margin-top: 6px; }
 /* touch-action: none, so a finger draws instead of scrolling the page */
-.signature-pad canvas { display: block; width: 100%; height: 160px; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--field); cursor: crosshair; touch-action: none; }
+.signature-pad canvas { display: block; width: 100%; height: 160px; border: 1px dashed var(--border-strong); border-radius: var(--radius-field); background: var(--field); cursor: crosshair; touch-action: none; }
 .signature-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; pointer-events: none; }
 .signature-actions { margin: 12px 0 20px; }
 /* The file picker hides inside its chip, still reachable with the keyboard */
@@ -419,9 +426,13 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel label, .form-panel .label, .date-label { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
 .form-panel label { margin-bottom: 16px; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
-  display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+  display: block; width: 100%; margin-top: 6px; padding: 12px 14px; border: 1px solid transparent; border-radius: var(--radius-field);
   background-color: var(--field); color: var(--text); font: inherit; font-size: 16px; font-weight: 400;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
+/* Same weight as the rule above, and before the boxes inside other fields (tags, link), which
+   stay see-through on hover */
+.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):hover { background-color: var(--field-hover); }
 /* The browser's own arrow sits against the edge and ignores padding, so Select.jsx draws its own */
 .form-panel select { appearance: none; padding-right: 44px; cursor: pointer; }
 .select { position: relative; display: block; margin-top: 6px; }
@@ -435,20 +446,22 @@ button:hover .trash-lid { rotate: -16deg; }
 @media (prefers-reduced-motion: reduce) {
   .select::after { transition: none; }
 }
-/* Fields are a very light cream so they stand out on the white cards.
-   The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
-.form-panel input:focus, .form-panel textarea:focus, .form-panel select:focus { outline: 1px solid var(--brand-dark); outline-offset: 0; border-color: var(--brand-dark); }
+/* Filled beige with no border on the white cards; white with a green edge and a soft ring while
+   typing. The ring shows on any focus, not just keyboard focus: it tells where you are typing. */
+.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):focus { outline: none; border-color: var(--brand-dark); background-color: var(--surface); box-shadow: 0 0 0 3px var(--field-focus-ring); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--text-muted); }
 /* The browser paints autofilled fields light blue; its background cannot be changed directly,
    so a wide inner shadow in our field colour covers it */
 .form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--field) inset; -webkit-text-fill-color: var(--text); caret-color: var(--text); }
 .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--surface) inset; }
+.form-panel input:not([type="checkbox"]):-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 100px var(--surface) inset, 0 0 0 3px var(--field-focus-ring); }
 .form-panel input[type="checkbox"] { accent-color: var(--brand-dark); }
 .long-text { line-height: 1.6; resize: vertical; }
 /* RichTextEditor.jsx: a field like the others, with a small toolbar on top */
 .rich-field { margin-bottom: 16px; }
-.rich-editor { margin-top: 6px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--field); }
-.rich-editor:focus-within { border-color: var(--brand-dark); outline: 1px solid var(--brand-dark); outline-offset: 0; }
+.rich-editor { margin-top: 6px; border: 1px solid transparent; border-radius: var(--radius-field); background: var(--field); transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+.rich-editor:hover { background: var(--field-hover); }
+.rich-editor:focus-within { border-color: var(--brand-dark); background: var(--surface); box-shadow: 0 0 0 3px var(--field-focus-ring); }
 .rich-toolbar { display: flex; gap: 2px; padding: 4px 6px; border-bottom: 1px solid var(--border); }
 .form-panel .rich-toolbar button { display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 6px; border: none; border-radius: 6px; background: transparent; color: var(--text); }
 .form-panel .rich-toolbar button:hover, .form-panel .rich-toolbar button[aria-expanded="true"] { background: var(--surface-sunken); }
@@ -461,7 +474,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .rich-link { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px; border-bottom: 1px solid var(--border); }
 .form-panel .rich-link input:not([type="checkbox"]):not([type="file"]) { flex: 1; width: auto; min-width: 160px; height: 30px; margin: 0; padding: 0 10px; font-size: 13px; }
 /* No ring of its own: the whole editor around it already shows one */
-.form-panel .rich-link input:focus { outline: none; border-color: var(--border-strong); }
+.form-panel .rich-link input:not([type="checkbox"]):not([type="file"]):focus { border-color: var(--border-strong); box-shadow: none; }
 .form-panel .rich-link .chip { height: 30px; padding: 0 12px; font-size: 13px; line-height: 1; }
 .rich-content { position: relative; min-height: 120px; padding: 12px 14px; color: var(--text); font-size: 16px; line-height: 1.6; outline: none; overflow-wrap: anywhere; }
 .rich-content ul { margin: 0; padding-left: 22px; }
@@ -490,19 +503,20 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }
 /* Driving licence (LicenseField.jsx): a field with small tags inside and suggestions below */
-.tags-input { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; margin-top: 6px; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--field); cursor: text; }
-.tags-input:focus-within { border-color: var(--brand-dark); outline: 1px solid var(--brand-dark); }
+.tags-input { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; margin-top: 6px; padding: 7px 10px; border: 1px solid transparent; border-radius: var(--radius-field); background: var(--field); cursor: text; transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+.tags-input:hover { background: var(--field-hover); }
+.tags-input:focus-within { border-color: var(--brand-dark); background: var(--surface); box-shadow: 0 0 0 3px var(--field-focus-ring); }
 .tag { display: inline-flex; align-items: center; gap: 2px; height: 28px; padding: 0 4px 0 10px; border-radius: 999px; background: var(--brand-light); color: var(--brand-dark); font-size: 14px; font-weight: 600; animation: badge-in 0.2s var(--ease-out); }
 .form-panel .tag button { display: flex; padding: 3px; border: none; border-radius: 50%; background: transparent; color: inherit; }
 .form-panel .tag button:hover { background: var(--surface); }
 .tag svg { width: 12px; height: 12px; }
 /* The typing spot inside the box: no box of its own. The :not() parts outweigh the general field rule. */
 .form-panel .tags-input input:not([type="checkbox"]):not([type="file"]) { flex: 1; width: auto; min-width: 70px; margin: 0; padding: 4px 2px; border: none; background: transparent; font-size: 16px; }
-.form-panel .tags-input input:focus { outline: none; }
+.form-panel .tags-input input:not([type="checkbox"]):not([type="file"]):focus { background: transparent; box-shadow: none; }
 .tags-suggestions { position: absolute; top: calc(100% - 10px); right: 0; left: 0; z-index: 20; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 24px var(--shadow); animation: rise-in 0.18s var(--ease-out); }
 .tags-suggestions-title { flex-basis: 100%; color: var(--text-muted); font-size: 12px; font-weight: 600; }
-.form-panel .tag-suggestion { height: 28px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--field); color: var(--text); font-size: 13px; font-weight: 600; }
-.form-panel .tag-suggestion:hover { border-color: var(--brand-dark); }
+.form-panel .tag-suggestion { height: 28px; padding: 0 10px; border: none; border-radius: 999px; background: var(--field); color: var(--text); font-size: 13px; font-weight: 600; }
+.form-panel .tag-suggestion:hover { background: var(--field-hover); }
 @media (prefers-reduced-motion: reduce) {
   .tag, .tags-suggestions { animation: none; }
 }
@@ -513,9 +527,9 @@ button:hover .trash-lid { rotate: -16deg; }
 
 .personal-header { display: grid; grid-template-columns: 128px 1fr; gap: 20px; }
 .photo-field { position: relative; }
-.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--field); color: var(--text-muted); cursor: pointer; }
+.form-panel .photo-box { display: flex; align-items: center; justify-content: center; width: 128px; height: 128px; margin: 6px 0 0; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: var(--radius-field); background: var(--field); color: var(--text-muted); cursor: pointer; }
 .photo-box:hover { border-color: var(--brand-dark); }
-.photo-box:focus-within { outline: 1px solid var(--brand-dark); outline-offset: 0; border-color: var(--brand-dark); border-style: solid; }
+.photo-box:focus-within { border-color: var(--brand-dark); border-style: solid; box-shadow: 0 0 0 3px var(--field-focus-ring); }
 .photo-box svg { width: 48px; height: 48px; }
 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 /* Visually hidden but still reachable with the keyboard (display: none would remove it) */
@@ -524,8 +538,9 @@ button:hover .trash-lid { rotate: -16deg; }
 .photo-remove svg { width: 14px; height: 14px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text); font-size: 15px; font-weight: 400; }
-.form-panel .chip:hover { border-color: var(--brand-dark); }
+/* Filled beige pills like the fields, darker under the pointer */
+.form-panel .chip { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid transparent; border-radius: 999px; background: var(--field); color: var(--text); font-size: 15px; font-weight: 400; transition: background-color 0.15s; }
+.form-panel .chip:hover { background: var(--field-hover); }
 .chip svg { width: 16px; height: 16px; color: var(--brand-dark); transition: transform 0.25s ease; }
 /* 90°, not 45°: a plus turned 45° would look like the × that removes things */
 .chip:hover svg { transform: rotate(90deg); }
@@ -551,7 +566,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .date-selects { display: grid; grid-template-columns: 3fr 2fr; gap: 8px; margin-top: 6px; }
 .date-selects .select { margin-top: 0; }
 /* Same height as the menus it replaces, so both columns stay aligned */
-.date-current { display: flex; align-items: center; margin-top: 6px; padding: 12px 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+.date-current { display: flex; align-items: center; margin-top: 6px; padding: 12px 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius-field); color: var(--text-muted); font-size: 16px; line-height: 1.5; }
 
 /* Our own on/off switch instead of the browser's checkbox ("Presente", references) */
 .form-panel .switch-label { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 14px; font-weight: 400; cursor: pointer; }
