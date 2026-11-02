@@ -48,7 +48,7 @@
 .confirm-actions button { padding: 10px 18px; border-radius: var(--radius); font: inherit; font-weight: 600; cursor: pointer; }
 .cancel-button { border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); }
 .cancel-button:hover { border-color: var(--brand-dark); background: var(--background); }
-/* Terracotta like Descargar — the dialog's text already warns that it cannot be undone */
+/* Terracotta, kept for this button only — the dialog's text already warns that it cannot be undone */
 .danger-button { border: none; background: var(--accent-strong); color: var(--text-on-accent); }
 .danger-button:hover { background: var(--accent-strong-hover); }
 
@@ -76,7 +76,10 @@
 /* The strip comes out from under the top bar: a negative margin of its own height (measured in
    PublicMode.jsx) pulls it up behind the bar, and the form below follows it with no gap.
    It hides the same way back. */
-.public-slot { overflow-y: clip; margin: 8px 16px 0; }
+/* The gap above the strip is its own margin, not the slot's: it slides with the strip, so the
+   panels below never jump by it when the strip comes or goes */
+.public-slot { overflow-y: clip; margin-inline: 16px; }
+.public-bar { margin-top: 8px; }
 .public-bar.appearing { animation: bar-in 0.3s var(--ease-out); }
 .public-bar.leaving { animation: bar-out 0.25s ease-in forwards; }
 @keyframes bar-in { from { margin-top: calc(-1 * var(--bar-height)); } }
@@ -99,7 +102,7 @@ button:hover .trash-lid { rotate: -16deg; }
 @keyframes icon-in { from { scale: 0; opacity: 0; } }
 @keyframes icon-out { to { scale: 0; opacity: 0; } }
 
-/* UndoToast.jsx: bottom left, over the form, where the removal happened. Dark like the top bar,
+/* UndoToast.jsx: bottom left, over the form, where the removal happened. Dark green like Descargar,
    so it stands out from the white cards without a new colour. */
 .undo-toast { position: fixed; left: 24px; bottom: 24px; z-index: 300; display: flex; align-items: center; gap: 4px; max-width: calc(100vw - 48px); padding: 8px 8px 8px 16px; border-radius: var(--radius); background: var(--brand-dark); color: var(--text-on-brand); font-size: 14px; box-shadow: 0 6px 20px var(--shadow); animation: rise-in 0.2s var(--ease-out); }
 .undo-toast span { margin-right: 8px; }
