@@ -319,8 +319,10 @@ button:hover .trash-lid { rotate: -16deg; }
 .library-text { flex: 1; min-width: 0; }
 .library-title { display: block; font-size: 15px; font-weight: 600; }
 .library-hint { display: block; margin-top: 2px; color: var(--ink-muted); font-size: 13px; line-height: 1.35; }
-.library-plus { display: flex; margin-top: 8px; color: var(--forest); }
+/* Ink at rest; forest, and a quarter turn, once the pointer is on the card */
+.library-plus { display: flex; margin-top: 8px; color: var(--ink); transition: color var(--t-fast); }
 .library-plus svg { width: 16px; height: 16px; transition: transform 0.25s ease; }
+.library-card:hover .library-plus { color: var(--forest); }
 .library-card:hover .library-plus svg { transform: rotate(90deg); }
 /* The custom section's two kinds, on a paper card above its own card.
    cqw: at most the form's width, as the form panel is a size container. */
@@ -332,7 +334,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .library-popover .library-icon { width: 30px; height: 30px; }
 @media (prefers-reduced-motion: reduce) {
   .tool-menu .swatch { transition: none; }
-  .library-plus svg { transition: none; }
+  .library-plus, .library-plus svg { transition: none; }
   .library-popover { animation: none; }
 }
 /* A plain round arrow: a soft tint appears when the pointer is anywhere on the header */
