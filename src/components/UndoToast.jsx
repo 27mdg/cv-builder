@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import texts from '../locales/es.js'
-import { CloseIcon } from './Icons.jsx'
+import { CloseIcon, UndoIcon } from './Icons.jsx'
 
 // Long enough to read it and react, short enough not to stay in the way
 const duration = 8000
@@ -20,16 +20,17 @@ function UndoToast({ undo, onUndo, onClose }) {
   return (
     <div
       key={undo.id}
-      className="undo-toast"
+      className="undo-toast frost toast"
       role="status"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
+      <span className="toast-icon"><UndoIcon/></span>
       <span>{undo.message}</span>
-      <button type="button" className="undo-button" onClick={onUndo}>{texts.undo.button}</button>
-      <button type="button" className="undo-close" aria-label={texts.undo.close} title={texts.undo.close} onClick={onClose}>
+      <button type="button" className="btn btn-ghost btn-small undo-button" onClick={onUndo}>{texts.undo.button}</button>
+      <button type="button" className="btn btn-ghost btn-icon btn-small" aria-label={texts.undo.close} title={texts.undo.close} onClick={onClose}>
         <CloseIcon/>
       </button>
     </div>

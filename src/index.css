@@ -29,30 +29,8 @@
   --brand: #6B8F71;
   --brand-dark: #4F6F55;
   --brand-light: #E6EEE7;
-  /* White text on --brand-dark (Descargar, the "Deshacer" notice): 5.6:1 */
+  /* White text on --brand-dark (the calendar's chosen day): 5.6:1 */
   --text-on-brand: #FFFFFF;
-  --brand-dark-hover: #435F49;
-  --brand-shadow: rgba(79, 111, 85, 0.28);
-
-  /* Frosted glass of the floating top bar: what scrolls behind it shows through blurred */
-  --glass: rgb(255 255 255 / 0.6);
-  --glass-border: rgb(255 255 255 / 0.7);
-  --glass-highlight: rgb(255 255 255 / 0.8);
-  --glass-field: rgb(255 255 255 / 0.55);
-  --glass-blur: blur(20px) saturate(180%);
-  --glass-brand: rgb(230 238 231 / 0.8);
-  --glass-hover: rgb(255 255 255 / 0.7);
-  /* Menus that open over the PDF: clearer glass with a stronger blur, which smudges the text
-     behind into soft grey so the menu's own text stays readable. Lighter at the top, like light
-     falling on a pane. */
-  --glass-menu: linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.3));
-  /* Over a white page the pane would vanish: a bright rim on top and sides, a faint dark outline
-     and a soft inner glow give it its glass edge */
-  --glass-menu-edge: inset 0 1px 0 rgb(255 255 255 / 0.95), inset 0 0 0 1px rgb(255 255 255 / 0.35), inset 0 0 24px rgb(255 255 255 / 0.3), 0 0 0 1px rgb(43 38 34 / 0.06);
-  --glass-menu-blur: blur(28px) saturate(190%);
-  --glass-menu-hover: rgb(43 38 34 / 0.06);
-  /* Hover of a button without a border on --brand-dark (the "Deshacer" notice) */
-  --hover-on-brand: rgb(255 255 255 / 0.14);
 
   /* Terracotta only on the confirm button of dialogs that delete. White text needs the deeper tone (5.3:1);
      on the base #D9825B it would be 2.9:1. */
@@ -110,6 +88,8 @@
   --frost-rim: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 0 0 1px rgb(60 45 30 / 0.07);
   /* Where blur is unavailable or the user asks for less transparency */
   --frost-solid: #F7F4EE;
+  /* The public mode strip's glass */
+  --frost-mint: rgb(221 233 224 / 0.72);
 
   /* A white knob lifted off its track (switches, sliders) */
   --knob-shadow: 0 0 0 1px rgb(60 45 30 / 0.06), 0 2px 6px rgb(60 45 30 / 0.2);

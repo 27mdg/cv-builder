@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import texts from '../locales/es.js'
-import { ArrowIcon } from './Icons.jsx'
 
 // children is a function that receives `close`, so the menu can close after a choice.
 // alignRight: for the tools on the right edge, whose menu would overflow the panel.
@@ -30,6 +29,7 @@ function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
     <span className={wide ? 'tool wide' : 'tool'} ref={box} title={disabled ? texts.tools.comingSoon : undefined}>
       <button
         type="button"
+        className="btn btn-ghost"
         disabled={disabled}
         aria-expanded={open}
         // On a narrow preview only the icon shows: the title keeps the name for the mouse and screen readers
@@ -38,10 +38,9 @@ function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
       >
         {icon}
         <span className="tool-label">{label}</span>
-        <ArrowIcon/>
       </button>
       {open && (
-        <div className={['tool-menu', alignRight && 'align-right', wide && 'wide'].filter(Boolean).join(' ')}>
+        <div className={['tool-menu frost', alignRight && 'align-right', wide && 'wide'].filter(Boolean).join(' ')}>
           {children(() => setOpen(false))}
         </div>
       )}

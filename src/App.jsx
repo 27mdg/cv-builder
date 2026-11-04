@@ -350,7 +350,7 @@ function App() {
     <UndoContext value={offerUndo}>
       <div className="app">
         <div className="top-layer" ref={topLayer}>
-          <header className="topbar">
+          <header className="topbar frost-behind">
             {/* Temporary logo: it will link to the home page once there is one */}
             <a href="/" className="logo">{texts.app.title}</a>
             <input

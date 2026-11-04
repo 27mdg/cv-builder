@@ -6,7 +6,7 @@ function Tooltip({ id, text, alignRight, children }) {
   return (
     <span className="has-tooltip">
       {children}
-      <span className={alignRight ? 'tooltip align-right' : 'tooltip'} id={id} role="tooltip">{text}</span>
+      <span className={alignRight ? 'tooltip frost tip align-right' : 'tooltip frost tip'} id={id} role="tooltip">{text}</span>
     </span>
   )
 }

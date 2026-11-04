@@ -122,13 +122,18 @@
 .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
 
 /* The one glass, for what floats above the content. Solid where blur is missing or the user
-   asks for less transparency. */
-.frost { background: var(--frost-solid); box-shadow: var(--frost-rim), var(--e3); }
+   asks for less transparency. --frost-tint can colour it (the public mode strip is mint).
+   .frost-behind puts the glass on a layer behind the content instead: an element with a
+   backdrop filter only lets its children blur what is inside it, so bars whose menus and
+   bubbles must blur the page behind them use this one. */
+.frost { background: var(--frost-tint-solid, var(--frost-solid)); box-shadow: var(--frost-rim), var(--e3); }
+.frost-behind { position: relative; isolation: isolate; box-shadow: var(--e3); }
+.frost-behind::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--frost-solid); box-shadow: var(--frost-rim); }
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .frost { background: var(--frost); -webkit-backdrop-filter: var(--frost-blur); backdrop-filter: var(--frost-blur); }
+  .frost, .frost-behind::before { background: var(--frost-tint, var(--frost)); -webkit-backdrop-filter: var(--frost-blur); backdrop-filter: var(--frost-blur); }
 }
 @media (prefers-reduced-transparency: reduce) {
-  .frost { background: var(--frost-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .frost, .frost-behind::before { background: var(--frost-tint-solid, var(--frost-solid)); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 .tip { padding: 8px 12px; border-radius: var(--r-sm); color: var(--ink); font-size: 13px; line-height: 1.4; }
 .toast { display: inline-flex; align-items: center; gap: 12px; padding: 6px 6px 6px 6px; border-radius: var(--r-pill); color: var(--ink); font-size: 14px; }

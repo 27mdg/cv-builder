@@ -42,7 +42,7 @@ function DownloadButton({ cv, publicMode }) {
         </button>
       </Tooltip>
       {reminder && (
-        <div className="save-reminder" role="status">
+        <div className="save-reminder frost" role="status">
           <p>{texts.download.reminder}</p>
           <button
             type="button"

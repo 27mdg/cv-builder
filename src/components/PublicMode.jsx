@@ -64,7 +64,7 @@ export function PublicModeBar({ appear, leaving, onLeft, onFinish, onTurnOff }) 
     else setAppearing(false)
   }
 
-  const classes = ['public-bar', appearing && 'appearing', leaving && 'leaving'].filter(Boolean)
+  const classes = ['public-bar frost', appearing && 'appearing', leaving && 'leaving'].filter(Boolean)
   return (
     <div className="public-slot">
       <div ref={bar} className={classes.join(' ')} role="status" inert={leaving} onAnimationEnd={handleAnimationEnd}>
