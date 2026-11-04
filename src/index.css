@@ -2,20 +2,26 @@
    templates have their own): "warm paper, deep forest, frosted glass". The colour stays in the
    details, so it does not clash with the CV preview. Contrast checked against WCAG AA (text 4.5:1). */
 :root {
-  /* The form sits on ivory paper; the preview on a slightly deeper warm "desk", so the white
-     CV stands out and the change of tone is the seam between the two halves */
-  --ivory: #FAF8F3;
-  --desk: #EFEBE3;
-  --paper: #FFFDF9;
-  /* Pure white: the PDF sheet, and a paper button under the pointer */
+  /* Soft, almost neutral creams that do not glare: the page is the lightest, the section cards
+     a touch darker and flat (no shadow), and the preview's "desk" darker still, so the white CV
+     stands out and the change of tone is the seam between the two halves */
+  --ivory: #FAF9F5;
+  --card: #F5F4ED;
+  --desk: #F0EEE6;
+  /* The light raised things: fields, knobs, the chosen pill, popovers and dialogs */
+  --paper: #FDFDFB;
+  /* Pure white: the PDF sheet */
   --surface: #FFFFFF;
-  --sunken: #F3EFE7;
-  --sunken-hover: #ECE7DD;
-  /* Fields look pressed into the paper */
-  --sunken-inset: inset 0 1px 2px rgb(60 45 30 / 0.07);
-  --stone: #D9D4CB;
-  --ink: #2B2622;
-  --ink-muted: #6B6159;
+  /* One shade below the cards: pills, secondary buttons, the segmented track */
+  --sunken: #EBE9E1;
+  --sunken-hover: #E3E0D6;
+  /* Fine edges of fields and secondary buttons */
+  --line: #E0DDD4;
+  --line-strong: #CBC8BE;
+  --stone: #D3D0C7;
+  /* Almost black and its grey: 15:1 and 5.4:1 on the cards */
+  --ink: #1F1E1D;
+  --ink-muted: #63625C;
 
   /* Forest: the main button, switches, sliders, focus and what is chosen. 7.9:1 on white, so
      text and icons can use it too. Mint behind chosen things (forest text on it: 6.3:1). */
@@ -25,7 +31,7 @@
   --on-forest: #FFFFFF;
   --mint: #DDE9E0;
   /* Ghost buttons: a soft tint of the ink appears under the pointer */
-  --tint: rgb(43 38 34 / 0.06);
+  --tint: rgb(31 30 29 / 0.06);
 
   /* Terracotta only on the confirm button of dialogs that delete (white text on it: 5.3:1) */
   --accent-strong: #A9532F;
@@ -33,36 +39,38 @@
   --text-on-accent: #FFFFFF;
   --danger: #B3261E;
   /* Behind a dialog */
-  --overlay: rgb(43 38 34 / 0.4);
-  /* Warm grey, 3:1 against the page so the scrollbar is easy to spot */
-  --scrollbar-thumb: #938D84;
+  --overlay: rgb(31 30 29 / 0.4);
+  /* Grey, 3:1 against the page so the scrollbar is easy to spot */
+  --scrollbar-thumb: #94928B;
   /* The off state of switches: 3:1 against white, so the switch can be seen */
-  --switch-off: #938D84;
+  --switch-off: #94928B;
 
   --r-sm: 10px;
   --r-md: 16px;
   --r-lg: 24px;
   --r-pill: 999px;
 
-  /* Three heights instead of a shadow per component: resting paper, lifted, floating */
-  --e1: 0 1px 2px rgb(60 45 30 / 0.05), 0 4px 14px rgb(60 45 30 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.9);
-  --e2: 0 2px 6px rgb(60 45 30 / 0.06), 0 12px 32px rgb(60 45 30 / 0.1), inset 0 1px 0 rgb(255 255 255 / 0.9);
-  --e3: 0 2px 8px rgb(60 45 30 / 0.06), 0 16px 48px rgb(60 45 30 / 0.14);
+  /* Three heights, kept soft and neutral: a small raised thing (the chosen pill, a thumbnail),
+     lifted (a card under the pointer, the PDF sheet) and floating (bars, menus, dialogs). The
+     section cards themselves are flat. */
+  --e1: 0 1px 2px rgb(31 30 29 / 0.06), 0 1px 1px rgb(31 30 29 / 0.03);
+  --e2: 0 2px 6px rgb(31 30 29 / 0.05), 0 8px 24px rgb(31 30 29 / 0.07);
+  --e3: 0 2px 8px rgb(31 30 29 / 0.06), 0 16px 48px rgb(31 30 29 / 0.12);
 
   /* The one glass, only for what floats above the content. The rim (bright edge, soft inner
      edge, faint dark outline) keeps it visible even over the white PDF. */
-  --frost: rgb(252 250 245 / 0.62);
+  --frost: rgb(250 249 245 / 0.66);
   --frost-blur: blur(24px) saturate(160%);
-  --frost-rim: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 0 0 1px rgb(60 45 30 / 0.07);
+  --frost-rim: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 0 0 1px rgb(31 30 29 / 0.07);
   /* Where blur is unavailable or the user asks for less transparency */
-  --frost-solid: #F7F4EE;
+  --frost-solid: #F5F4ED;
   /* The public mode strip's glass */
   --frost-mint: rgb(221 233 224 / 0.72);
 
   /* The edge of a colour swatch, so white or pale colours still show their circle */
-  --swatch-edge: rgb(43 38 34 / 0.14);
+  --swatch-edge: rgb(31 30 29 / 0.14);
   /* A white knob lifted off its track (switches, sliders, the splitter) */
-  --knob-shadow: 0 0 0 1px rgb(60 45 30 / 0.06), 0 2px 6px rgb(60 45 30 / 0.2);
+  --knob-shadow: 0 0 0 1px rgb(31 30 29 / 0.06), 0 2px 6px rgb(31 30 29 / 0.18);
 
   --focus-halo: rgb(47 90 67 / 0.18);
   --focus-ring: 0 0 0 2px var(--forest), 0 0 0 6px var(--focus-halo);

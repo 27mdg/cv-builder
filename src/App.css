@@ -12,9 +12,9 @@
 .topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; margin: 12px 16px 0; padding: 8px 8px 8px 28px; border-radius: var(--r-pill); }
 .logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--ink); text-decoration: none; }
 /* A field pressed into the glass, like the form's; until something is typed, the hint is grey */
-.file-name { width: 280px; height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: var(--r-pill); background: var(--sunken); box-shadow: var(--sunken-inset); color: var(--ink); font: inherit; text-align: center; transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
+.file-name { width: 280px; height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper); color: var(--ink); font: inherit; text-align: center; transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
 .file-name::placeholder { color: var(--ink-muted); }
-.file-name:hover { background: var(--sunken-hover); }
+.file-name:hover { border-color: var(--line-strong); }
 .file-name:focus { outline: none; border-color: var(--forest); background: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
 .actions { justify-self: end; display: flex; align-items: center; gap: 4px; }
 .actions-divider { width: 1px; height: 20px; margin-inline: 6px; background: var(--stone); }
@@ -215,15 +215,13 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-/* Each section is its own paper card with no border, resting on the page; the open one lifts.
-   The shadow only changes on a click, never on hover, so its transition costs nothing. */
-.section { padding: 0 24px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e1); transition: box-shadow 0.25s ease; }
-.section[open] { box-shadow: var(--e2); }
+/* Each section is its own flat card, a touch darker than the page, with no border or shadow */
+.section { padding: 0 24px; border-radius: var(--r-lg); background: var(--card); }
 /* The gap is a margin of the card itself, so it also shrinks when a section fades out */
 .form-panel .section { margin-bottom: 14px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--ivory); color: var(--ink-muted); }
+.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--sunken); color: var(--ink-muted); }
 /* The icon says whether the section has content: ivory while empty, mint once something is
    written. A tick would wrongly say "finished". */
 .section.is-filled .section-icon { background: var(--mint); color: var(--forest); }
@@ -315,7 +313,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* SectionLibrary.jsx: small paper cards with a line of help, as many per row as fit; they lift
    under the pointer (.card-lift) */
 .section-library { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
-.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: none; border-radius: var(--r-md); background: var(--paper); box-shadow: var(--e1); color: var(--ink); text-align: left; }
+.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: none; border-radius: var(--r-md); background: var(--card); color: var(--ink); text-align: left; }
 .library-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: var(--r-sm); background: var(--mint); color: var(--forest); }
 .library-icon svg { width: 18px; height: 18px; }
 .library-text { flex: 1; min-width: 0; }
@@ -327,7 +325,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* The custom section's two kinds, on a paper card above its own card.
    cqw: at most the form's width, as the form panel is a size container. */
 .library-custom { position: relative; }
-.form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: var(--e1), 0 0 0 2px var(--forest); }
+.form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--forest); }
 .library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 14px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e3); transform: translateX(-50%); animation: rise-in 0.18s var(--spring); }
 .library-question { margin: 0 2px 2px; color: var(--ink-muted); font-size: 13px; font-weight: 600; }
 .form-panel .library-popover .library-card { padding: 10px 12px; background: var(--sunken); box-shadow: none; }
@@ -410,12 +408,12 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel label { margin-bottom: 16px; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
   display: block; width: 100%; margin-top: 6px; padding: 12px 16px; border: 1px solid transparent; border-radius: var(--r-md);
-  background-color: var(--sunken); box-shadow: var(--sunken-inset); color: var(--ink); font: inherit; font-size: 16px; font-weight: 400;
+  background-color: var(--paper); border-color: var(--line); color: var(--ink); font: inherit; font-size: 16px; font-weight: 400;
   transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
 }
 /* Same weight as the rule above, and before the boxes inside other fields (tags, link), which
    stay see-through on hover */
-.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):hover { background-color: var(--sunken-hover); }
+.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):hover { border-color: var(--line-strong); }
 /* The browser's own arrow sits against the edge and ignores padding, so Select.jsx draws its own */
 .form-panel select { appearance: none; padding-right: 44px; cursor: pointer; }
 .select { position: relative; display: block; margin-top: 6px; }
@@ -435,13 +433,13 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--ink-muted); }
 /* The browser paints autofilled fields light blue; its background cannot be changed directly,
    so a wide inner shadow in our field colour covers it */
-.form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--sunken) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
+.form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--paper) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
 .form-panel input:not([type="checkbox"]):-webkit-autofill:focus, .file-name:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 100px var(--paper) inset, 0 0 0 4px var(--focus-halo); }
 .long-text { line-height: 1.6; resize: vertical; }
 /* RichTextEditor.jsx: a field like the others, with a small toolbar on top */
 .rich-field { margin-bottom: 16px; }
-.rich-editor { margin-top: 6px; border: 1px solid transparent; border-radius: var(--r-md); background: var(--sunken); box-shadow: var(--sunken-inset); transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
-.rich-editor:hover { background: var(--sunken-hover); }
+.rich-editor { margin-top: 6px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
+.rich-editor:hover { border-color: var(--line-strong); }
 .rich-editor:focus-within { border-color: var(--forest); background: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
 /* The format buttons sit inside the field, above a hairline */
 .rich-toolbar { display: flex; gap: 2px; padding: 6px 8px; border-bottom: 1px solid var(--stone); }
@@ -485,8 +483,8 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel .custom-field input:not([type="checkbox"]) { margin-top: 0; }
 .form-panel .custom-field .field-remove { position: static; }
 /* Driving licence (LicenseField.jsx): a field with small tags inside and suggestions below */
-.tags-input { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; margin-top: 6px; padding: 7px 12px; border: 1px solid transparent; border-radius: var(--r-md); background: var(--sunken); box-shadow: var(--sunken-inset); cursor: text; transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
-.tags-input:hover { background: var(--sunken-hover); }
+.tags-input { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 50px; margin-top: 6px; padding: 7px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); cursor: text; transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
+.tags-input:hover { border-color: var(--line-strong); }
 .tags-input:focus-within { border-color: var(--forest); background: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
 .tag { display: inline-flex; align-items: center; gap: 2px; height: 28px; padding: 0 4px 0 10px; border-radius: var(--r-pill); background: var(--mint); color: var(--forest); font-size: 14px; font-weight: 600; animation: badge-in 0.2s var(--spring); }
 .form-panel .tag button { display: flex; padding: 3px; border: none; border-radius: 50%; background: transparent; color: inherit; }
