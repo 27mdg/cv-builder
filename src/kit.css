@@ -29,8 +29,8 @@
 .btn-danger:hover:not(:disabled) { background: var(--accent-strong-hover); }
 .btn-icon { width: 40px; padding: 0; }
 .btn-icon.btn-small { width: 32px; }
-/* A chosen or open tool shows as a raised pill inside its bar */
-.btn-icon[aria-pressed="true"], .btn-ghost[aria-expanded="true"] { background: var(--paper); box-shadow: var(--e1); }
+/* A chosen or open tool shows as a raised pill inside its bar, also under the pointer */
+.btn-icon[aria-pressed="true"]:not(:disabled), .btn-ghost[aria-expanded="true"]:not(:disabled) { background: var(--paper); box-shadow: var(--e1); }
 
 /* Small "+ something" pills; the + sits in a mint circle and turns on hover */
 .chip {
@@ -89,15 +89,18 @@
 .range::-moz-range-progress { height: 6px; border-radius: var(--r-pill); background: var(--forest); }
 .range::-moz-range-thumb { width: 20px; height: 20px; border: none; border-radius: 50%; background: var(--paper); box-shadow: var(--knob-shadow); }
 
-/* One choice out of a few, side by side; the chosen one rises as a paper pill */
-.segmented { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-pill); background: var(--sunken); box-shadow: var(--sunken-inset); }
+/* One choice out of a few, side by side (Segmented.jsx). The chosen one sits on a paper pill
+   that glides under the buttons to the new choice and takes its width. */
+.segmented { position: relative; isolation: isolate; display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-pill); background: var(--sunken); box-shadow: var(--sunken-inset); }
+.segmented-pill { position: absolute; top: 4px; bottom: 4px; left: 0; z-index: -1; border-radius: var(--r-pill); background: var(--paper); box-shadow: var(--e1); }
+.segmented-pill.placed { transition: translate 0.35s var(--spring), width 0.35s var(--spring); }
 .segmented button {
   height: 32px; padding: 0 16px; border: none; border-radius: var(--r-pill); background: transparent;
-  color: var(--ink-muted); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  color: var(--ink-muted); font: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer;
   transition: background-color var(--t-fast), color var(--t-fast), box-shadow var(--t-fast);
 }
 .segmented button:hover { color: var(--ink); }
-.segmented button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: var(--e1); }
+.segmented button[aria-pressed="true"] { color: var(--ink); }
 
 /* One focus ring for every control: forest edge with a soft halo */
 :is(.btn, .chip, .segmented button, .toggle, .check):focus-visible { outline: none; box-shadow: var(--focus-ring); }
@@ -141,6 +144,6 @@
 .toast-icon svg { width: 16px; height: 16px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .btn, .chip, .toggle, .toggle::after, .check, .card-lift, .card-lift::after, .icon-tile, .chip-plus svg { transition: none; }
+  .btn, .chip, .toggle, .toggle::after, .check, .card-lift, .card-lift::after, .icon-tile, .chip-plus svg, .segmented-pill.placed { transition: none; }
   .btn:active, .chip:active, .card-lift:hover { transform: none; }
 }

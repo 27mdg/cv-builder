@@ -135,6 +135,8 @@ button:hover .trash-lid { rotate: -16deg; }
 
 /* The frosted toolbar pill (.frost-behind, so its menus can blur the PDF) with the round
    full-screen button beside it */
+/* While a label changes width (ToolMenu.jsx), the old or new name must not spill out of it */
+.tool-label { overflow-x: clip; }
 .toolbar-dock { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; }
 .toolbar { display: flex; align-items: center; gap: 2px; padding: 6px; border-radius: var(--r-pill); white-space: nowrap; }
 .full-screen-button { width: 52px; height: 52px; padding: 0; }
@@ -145,8 +147,7 @@ button:hover .trash-lid { rotate: -16deg; }
 :root:active-view-transition .toolbar-dock { view-transition-name: toolbar; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
 .tool { position: relative; }
-.tool-menu button { display: flex; align-items: center; gap: 6px; width: 100%; padding: 8px 12px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; cursor: pointer; transition: background-color var(--t-fast); }
-.tool-menu button:hover:not(:disabled) { background: var(--tint); }
+
 /* Each corner turns half a round on its own centre: pointing out to enter full screen, in to leave */
 .full-screen-icon path { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--ease-out); }
 .full-screen-icon.is-in path { transform: rotate(180deg); }
@@ -156,7 +157,6 @@ button:hover .trash-lid { rotate: -16deg; }
 /* A frosted card (.frost) above its tool */
 .tool-menu { position: absolute; left: 0; bottom: calc(100% + 14px); min-width: 180px; padding: 8px; border-radius: var(--r-lg); }
 .tool-menu.align-right { left: auto; right: 0; }
-.tool-menu button.selected { background: var(--mint); color: var(--forest); font-weight: 600; }
 .design-menu { width: 260px; max-height: 60vh; overflow-y: auto; padding: 6px; white-space: normal; }
 /* Thin pills like the panels' scrollbars (the template strip scrolls sideways); the browser's
    grey bar looked pasted onto the glass */
@@ -168,18 +168,23 @@ button:hover .trash-lid { rotate: -16deg; }
 @supports not selector(::-webkit-scrollbar) {
   .design-menu, .template-picker { scrollbar-color: var(--scrollbar-thumb) transparent; scrollbar-width: thin; }
 }
-.menu-subtitle, .slider-title { display: block; margin: 10px 4px 4px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-.slider { display: block; margin-bottom: 10px; }
-.slider-row { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
-.slider-row input { flex: 1; accent-color: var(--brand-dark); }
-.slider-value { min-width: 32px; text-align: right; }
-.option-list button { justify-content: flex-start; text-align: left; }
+.menu-subtitle, .slider-title { display: block; margin: 10px 6px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+.slider { display: block; margin-bottom: 12px; }
+.slider-row { display: flex; align-items: center; gap: 14px; padding: 0 6px; }
+.slider-row .range { flex: 1; }
+.slider-value { min-width: 36px; color: var(--ink); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.option-list button { display: flex; align-items: center; justify-content: flex-start; gap: 6px; width: 100%; padding: 8px 12px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; transition: background-color var(--t-fast); }
+.option-list button:hover { background: var(--tint); }
+.option-list button.selected { background: var(--mint); color: var(--forest); font-weight: 600; }
 /* The tick takes its room on every option, so the names stay aligned whichever is chosen */
 .option-list button::before { content: '✓'; margin-right: 6px; visibility: hidden; }
 .option-list button.selected::before { visibility: visible; }
-.color-menu { display: flex; flex-wrap: wrap; gap: 10px; width: 236px; padding: 8px; }
-.tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: 3px solid var(--surface); border-radius: 50%; box-shadow: 0 0 0 1px var(--border-strong); cursor: pointer; }
-.tool-menu .swatch.selected { box-shadow: 0 0 0 2px var(--text); }
+.date-menu { width: auto; padding: 6px 8px 8px; }
+/* Raised circles of colour; the chosen one gets a forest ring with a gap */
+.color-menu { display: flex; flex-wrap: wrap; gap: 12px; width: 244px; padding: 10px; }
+.tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--swatch-edge), 0 1px 3px var(--swatch-edge); cursor: pointer; transition: transform var(--t-fast) var(--spring); }
+.tool-menu .swatch:hover { transform: scale(1.08); }
+.tool-menu .swatch.selected { box-shadow: inset 0 0 0 1px var(--swatch-edge), 0 0 0 3px var(--paper), 0 0 0 5px var(--forest); }
 
 /* Positioned against the whole toolbar instead of its own button */
 .tool.wide { position: static; }
@@ -196,10 +201,12 @@ button:hover .trash-lid { rotate: -16deg; }
   .toolbar .tool-menu, .toolbar .tool-menu.align-right { left: 50%; right: auto; transform: translateX(-50%); }
 }
 .template-picker { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
-.toolbar .template-card { flex: 0 0 auto; flex-direction: column; gap: 8px; width: auto; padding: 8px; scroll-snap-align: start; font-weight: 400; }
-.toolbar .template-card.selected { background: var(--brand-light); font-weight: 600; }
-.template-thumbnail { display: block; width: 150px; aspect-ratio: 210 / 297; overflow: hidden; border: 2px solid var(--border); border-radius: var(--radius); background: var(--surface-sunken); }
-.template-card.selected .template-thumbnail { border-color: var(--brand-dark); }
+.toolbar .template-card { display: flex; flex: 0 0 auto; flex-direction: column; align-items: center; gap: 8px; padding: 8px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; scroll-snap-align: start; cursor: pointer; transition: background-color var(--t-fast); }
+.toolbar .template-card:hover { background: var(--tint); }
+.toolbar .template-card.selected { background: var(--mint); color: var(--forest); font-weight: 600; }
+/* A small sheet of paper; the chosen one gets a forest outline */
+.template-thumbnail { display: block; width: 150px; aspect-ratio: 210 / 297; overflow: hidden; border-radius: var(--r-sm); background: var(--sunken); box-shadow: var(--e1); }
+.template-card.selected .template-thumbnail { box-shadow: var(--e1), 0 0 0 2px var(--forest); }
 .template-thumbnail img { display: block; width: 100%; height: 100%; }
 /* A rainbow, on purpose: it stands for "any colour" in the colour menu */
 .swatch-rainbow { position: relative; background: conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red); }
@@ -317,6 +324,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel .library-popover .library-card { padding: 10px 12px; background: var(--sunken); box-shadow: none; }
 .library-popover .library-icon { width: 30px; height: 30px; }
 @media (prefers-reduced-motion: reduce) {
+  .tool-menu .swatch { transition: none; }
   .library-plus svg { transition: none; }
   .library-popover { animation: none; }
 }

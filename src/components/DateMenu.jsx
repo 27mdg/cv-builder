@@ -1,31 +1,23 @@
 import texts from '../locales/es.js'
 import { dateFormats } from '../data/design.js'
 import { formatDate } from '../templates/format.js'
+import Segmented from './Segmented.jsx'
 
 // The examples use this month, so the user sees a real date in each format
 const today = new Date()
 const example = { month: String(today.getMonth() + 1), year: String(today.getFullYear()) }
 
-function DateMenu({ design, onChange, onClose }) {
+// It stays open after a choice, so the formats can be tried one after another on the preview
+function DateMenu({ design, onChange }) {
   return (
-    <div className="design-menu">
+    <div className="design-menu date-menu">
       <p className="menu-subtitle">{texts.tools.dateFormat}</p>
-      <div className="option-list">
-        {dateFormats.map((format) => (
-          <button
-            key={format}
-            type="button"
-            className={format === design.dateFormat ? 'selected' : ''}
-            aria-pressed={format === design.dateFormat}
-            onClick={() => {
-              onChange('dateFormat', format)
-              onClose()
-            }}
-          >
-            {formatDate(example, format)}
-          </button>
-        ))}
-      </div>
+      <Segmented
+        label={texts.tools.dateFormat}
+        options={dateFormats.map((format) => ({ value: format, label: formatDate(example, format) }))}
+        value={design.dateFormat}
+        onChange={(format) => onChange('dateFormat', format)}
+      />
     </div>
   )
 }

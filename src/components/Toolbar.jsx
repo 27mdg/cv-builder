@@ -31,8 +31,8 @@ function Toolbar({
         <ToolMenu icon={<SpacingIcon/>} label={texts.tools.spacing}>
           {() => <SpacingMenu design={design} onChange={onDesignChange}/>}
         </ToolMenu>
-        <ToolMenu icon={<CalendarIcon/>} label={texts.tools.date}>
-          {(close) => <DateMenu design={design} onChange={onDesignChange} onClose={close}/>}
+        <ToolMenu icon={<CalendarIcon/>} label={texts.tools.date} alignRight>
+          {() => <DateMenu design={design} onChange={onDesignChange}/>}
         </ToolMenu>
         <ToolMenu icon={<ColorsIcon/>} label={texts.tools.colors} alignRight>
           {() => <ColorMenu design={design} defaultColor={info.defaultColor} onChange={onDesignChange}/>}
