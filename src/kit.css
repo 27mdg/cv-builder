@@ -41,9 +41,6 @@
 }
 .chip:hover { background: var(--sunken-hover); }
 .chip:active { transform: scale(0.97); }
-/* Next to small buttons, such as an item's actions */
-.chip-small { height: 32px; padding: 0 14px 0 4px; font-size: 14px; }
-.chip-small .chip-plus { width: 24px; height: 24px; }
 .chip-plus { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: var(--forest); }
 .chip-plus svg { width: 14px; height: 14px; transition: transform 0.25s var(--spring); }
 /* 90°, not 45°: a plus turned 45° would look like the × that removes things */

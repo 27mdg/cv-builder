@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import texts from '../locales/es.js'
-import { ResizeIcon } from './Icons.jsx'
+import { GripIcon } from './Icons.jsx'
 
 // Separate from the CV: it is a screen preference, so it is neither exported nor cleared
 const storageKey = 'cv-gratis-split'
@@ -110,7 +110,7 @@ function Splitter() {
       onDoubleClick={() => setShare(50)}
       onKeyDown={handleKeyDown}
     >
-      <span className="splitter-knob" style={{ translate: `0 ${knobOffset}px` }}><ResizeIcon/></span>
+      <span className="splitter-knob" style={{ translate: `0 ${knobOffset}px` }}><GripIcon/></span>
     </div>
   )
 }

@@ -315,9 +315,9 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                         <CopyIcon/>{texts.common.duplicate}
                       </button>
                       {fields.filter((field) => !shows(item, field)).map((field) => (
-                        <button type="button" className="chip chip-small" key={field.name}
+                        <button type="button" className="btn btn-ghost btn-small add-field" key={field.name}
                           onClick={() => setOpenedOptional([...openedOptional, optionalKey(item, field)])}>
-                          <span className="chip-plus"><PlusIcon/></span>{labelFor(sectionKey, field.name)}
+                          <PlusIcon/>{labelFor(sectionKey, field.name)}
                         </button>
                       ))}
                       <button type="button" className="btn btn-ghost btn-small" aria-pressed={Boolean(item.hidden)}
@@ -334,7 +334,9 @@ function ListSection({ sectionKey, fields, list, onChange }) {
         </SortableContext>
       </DndContext>
       <div className="list-actions">
-        <button type="button" className="chip" onClick={add}><span className="chip-plus"><PlusIcon/></span>{texts[sectionKey].add}</button>
+        {/* Another entry of the same kind: a plain button like its neighbours. The pills are for
+            fields that were not there before (personal details). */}
+        <button type="button" className="btn btn-ghost btn-small add-field" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
         {hasDates && list.length > 1 && (
           <button
             type="button"

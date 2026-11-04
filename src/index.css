@@ -2,13 +2,10 @@
    templates have their own): "warm paper, deep forest, frosted glass". The colour stays in the
    details, so it does not clash with the CV preview. Contrast checked against WCAG AA (text 4.5:1). */
 :root {
+  /* The form sits on ivory paper; the preview on a slightly deeper warm "desk", so the white
+     CV stands out and the change of tone is the seam between the two halves */
   --ivory: #FAF8F3;
-  /* The one background behind form and preview: the ivory with two faint sage glows, so the
-     glass bars pick up a hint of green when they blur it */
-  --page:
-    radial-gradient(ellipse at 0% 0%, rgb(107 143 113 / 0.16), transparent 55%),
-    radial-gradient(ellipse at 100% 100%, rgb(107 143 113 / 0.10), transparent 50%),
-    var(--ivory);
+  --desk: #EFEBE3;
   --paper: #FFFDF9;
   /* Pure white: the PDF sheet, and a paper button under the pointer */
   --surface: #FFFFFF;
