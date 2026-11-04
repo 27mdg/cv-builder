@@ -43,7 +43,8 @@
   --danger: #B3261E;
   /* Behind a dialog */
   --overlay: rgb(31 30 29 / 0.4);
-  /* Grey, 3:1 against the page so the scrollbar is easy to spot */
+  /* Scrollbars: light while reading; grey, 3:1 against the page, once the pointer is on the panel */
+  --scrollbar-soft: #CDCAC1;
   --scrollbar-thumb: #94928B;
   /* The off state of switches: 3:1 against white, so the switch can be seen */
   --switch-off: #94928B;

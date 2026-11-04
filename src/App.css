@@ -124,10 +124,16 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel::-webkit-scrollbar, .preview::-webkit-scrollbar { width: 14px; }
 .form-panel::-webkit-scrollbar-track, .preview::-webkit-scrollbar-track { margin: calc(var(--top-height, 80px) + 4px) 0 4px; background: transparent; }
 .preview-panel.full-screen .preview::-webkit-scrollbar-track { margin-top: 4px; }
-/* The transparent border leaves a thin pill floating in the middle of its lane */
-.form-panel::-webkit-scrollbar-thumb, .preview::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb) padding-box; }
+/* The transparent border leaves a thin pill floating in the middle of its lane. Thin and light
+   while reading, so it does not draw a hard line next to the splitter; it widens and darkens
+   under the pointer and while dragged. (Chrome does not restyle it when only the panel is
+   hovered, so the change is on the bar itself.) */
+.form-panel::-webkit-scrollbar-thumb, .preview::-webkit-scrollbar-thumb { border: 5px solid transparent; border-radius: 999px; background: var(--scrollbar-soft) padding-box; }
+.form-panel::-webkit-scrollbar-thumb:hover, .preview::-webkit-scrollbar-thumb:hover,
+.form-panel::-webkit-scrollbar-thumb:active, .preview::-webkit-scrollbar-thumb:active { border-width: 4px; background: var(--scrollbar-thumb) padding-box; }
 @supports not selector(::-webkit-scrollbar) {
-  .form-panel, .preview { scrollbar-color: var(--scrollbar-thumb) transparent; }
+  .form-panel, .preview { scrollbar-color: var(--scrollbar-soft) transparent; }
+  .form-panel:hover, .preview:hover { scrollbar-color: var(--scrollbar-thumb) transparent; }
 }
 /* The sheet keeps square corners: it is paper */
 .pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: var(--e2); }
