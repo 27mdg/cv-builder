@@ -3,12 +3,12 @@
    Contrast checked against WCAG AA (text 4.5:1). */
 :root {
   --background: #F6F5F2;
-  /* The one background behind form and preview: the cream with two faint sage glows, so the
+  /* The one background behind form and preview: the ivory with two faint sage glows, so the
      glass bars pick up a hint of green when they blur it */
   --page:
     radial-gradient(ellipse at 0% 0%, rgb(107 143 113 / 0.16), transparent 55%),
     radial-gradient(ellipse at 100% 100%, rgb(107 143 113 / 0.10), transparent 50%),
-    var(--background);
+    var(--ivory);
   --surface: #FFFFFF;
   --surface-sunken: #E9E8E5;
   /* Form fields: filled warm beige with no border; white with a ring while typing */
@@ -22,7 +22,6 @@
   --border-strong: #D6D2CA;
   --radius: 10px;
   --radius-field: 12px;
-  --radius-card: 22px;
 
   /* Sage: only for focus, links, logo, icons and active states, never as a large background.
      The base sage is 3.6:1 on white, so text, icons and focus use the darker one (5.6:1). */
@@ -111,7 +110,7 @@
 * { box-sizing: border-box; margin: 0; }
 
 body {
-  background: var(--background);
+  background: var(--ivory);
   color: var(--text);
   font-family: var(--font-body);
   font-weight: 400;

@@ -206,27 +206,29 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-/* Each section is its own round white card, resting with a faint shadow; the open one lifts more */
-.section { padding: 0 24px; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface); box-shadow: 0 1px 3px var(--shadow); transition: box-shadow 0.2s ease; }
-.section[open] { box-shadow: 0 8px 24px var(--shadow); }
+/* Each section is its own paper card with no border, resting on the page; the open one lifts.
+   The shadow only changes on a click, never on hover, so its transition costs nothing. */
+.section { padding: 0 24px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e1); transition: box-shadow 0.25s ease; }
+.section[open] { box-shadow: var(--e2); }
 /* The gap is a margin of the card itself, so it also shrinks when a section fades out */
 .form-panel .section { margin-bottom: 14px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
-.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--background); color: var(--text-muted); }
-/* The icon says whether the section has content: cream while empty, sage once something is
+.section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--ivory); color: var(--ink-muted); }
+/* The icon says whether the section has content: ivory while empty, mint once something is
    written. A tick would wrongly say "finished". */
-.section.is-filled .section-icon { background: var(--brand-light); color: var(--brand-dark); }
+.section.is-filled .section-icon { background: var(--mint); color: var(--forest); }
 .section-icon svg { width: 20px; height: 20px; }
 /* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
 .section-heading { flex: 1; min-width: 0; }
-.section > summary h2 { display: flex; align-items: center; gap: 8px; font-size: 20px; color: var(--text); }
+.section > summary h2 { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-size: 22px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
-.form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: grab; touch-action: none; }
-.form-panel .drag-handle:hover { background: var(--background); color: var(--text); }
-.sortable { position: relative; border-radius: var(--radius-card); }
+.form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--r-sm); background: transparent; color: var(--ink-muted); cursor: grab; touch-action: none; transition: background-color var(--t-fast), color var(--t-fast); }
+.form-panel .drag-handle:hover { background: var(--tint); color: var(--ink); }
+.sortable { position: relative; border-radius: var(--r-lg); }
 .sortable.dragging { z-index: 10; cursor: grabbing; }
-.sortable.dragging .section { box-shadow: 0 10px 28px var(--shadow); }
+/* Picked up: it floats above the other cards */
+.sortable.dragging .section { box-shadow: var(--e3); }
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .section-action, .section-remove { color: var(--ink-muted); }
 .section-action:hover { color: var(--ink); }
@@ -285,7 +287,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel .signature-actions label.btn { position: relative; display: inline-flex; margin: 0; font-size: 14px; font-weight: 600; }
 .signature-actions label.btn:focus-within { box-shadow: var(--focus-ring); }
 .footer-actions { margin: 0 0 8px; }
-.section-badge { padding: 2px 8px; border-radius: 999px; background: var(--surface-sunken); color: var(--text-muted); font-family: var(--font-body); font-size: 12px; font-weight: 600; }
+.section-badge { padding: 2px 10px; border-radius: var(--r-pill); background: var(--sunken); color: var(--ink-muted); font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: 0; }
 /* Spins on hover like the + of the add buttons. 90°, not 45°: a × turned 45° would become a + */
 .section-remove svg { transition: transform 0.25s ease; }
 .section-remove:hover svg { transform: rotate(90deg); }
@@ -319,11 +321,11 @@ button:hover .trash-lid { rotate: -16deg; }
   .library-plus svg { transition: none; }
   .library-popover { animation: none; }
 }
-.section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--border-strong); border-radius: 50%; color: var(--brand-dark); transition: transform 0.2s; }
-.section-arrow svg { width: 16px; height: 16px; }
-/* Filled while open, like on hover. Cream, not white: the card itself is white now. */
-.section[open] .section-arrow { transform: rotate(180deg); background: var(--background); }
-.section > summary:hover .section-arrow { background: var(--background); }
+/* A plain round arrow: a soft tint appears when the pointer is anywhere on the header */
+.section-arrow { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: var(--ink-muted); transition: transform 0.25s var(--spring), background-color var(--t-fast), color var(--t-fast); }
+.section-arrow svg { width: 18px; height: 18px; }
+.section[open] .section-arrow { transform: rotate(180deg); }
+.section > summary:hover .section-arrow { background: var(--tint); color: var(--ink); }
 .section-content { padding-bottom: 24px; }
 
 /* DatePicker.jsx: our own calendar in a bubble like the top bar tooltips */
