@@ -222,14 +222,14 @@ function PersonalDetails({ data, onChange }) {
         {hidden.map((field) => (
           <button type="button" className="chip" key={field.name}
             onClick={() => setOpened([...opened, field.name])}>
-            <PlusIcon/>{texts.personal[field.name]}
+            <span className="chip-plus"><PlusIcon/></span>{texts.personal[field.name]}
           </button>
         ))}
         <button type="button" className="chip" onClick={addLink}>
-          <PlusIcon/>{texts.links.button}
+          <span className="chip-plus"><PlusIcon/></span>{texts.links.button}
         </button>
         <button type="button" className="chip" onClick={addCustom}>
-          <PlusIcon/>{texts.customFields.button}
+          <span className="chip-plus"><PlusIcon/></span>{texts.customFields.button}
         </button>
       </div>
     </>

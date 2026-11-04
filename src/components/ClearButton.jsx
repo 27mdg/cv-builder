@@ -12,7 +12,7 @@ function ClearButton({ onClear }) {
       <Tooltip id="clear-tooltip" text={texts.clear.tooltip}>
         <button
           type="button"
-          className="secondary-button icon-button"
+          className="btn btn-ghost btn-icon"
           aria-label={texts.clear.button}
           aria-describedby="clear-tooltip"
           onClick={() => setConfirming(true)}

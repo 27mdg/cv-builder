@@ -36,7 +36,7 @@ function DownloadButton({ cv, publicMode }) {
     <div className="download">
       {error && <span className="download-error">{texts.download.error}</span>}
       <Tooltip id="download-tooltip" text={texts.download.tooltip} alignRight>
-        <button type="button" className="download-button" aria-describedby="download-tooltip" onClick={download} disabled={generating}>
+        <button type="button" className="btn btn-primary download-button" aria-describedby="download-tooltip" onClick={download} disabled={generating}>
           {!generating && <DownloadIcon/>}
           {generating ? texts.download.generating : texts.download.button}
         </button>
@@ -46,7 +46,7 @@ function DownloadButton({ cv, publicMode }) {
           <p>{texts.download.reminder}</p>
           <button
             type="button"
-            className="secondary-button"
+            className="btn btn-primary btn-small"
             onClick={() => {
               exportCv(cv)
               setReminder(false)
@@ -56,7 +56,7 @@ function DownloadButton({ cv, publicMode }) {
           </button>
           <button
             type="button"
-            className="save-reminder-close"
+            className="btn btn-ghost btn-icon btn-small save-reminder-close"
             aria-label={texts.download.reminderClose}
             title={texts.download.reminderClose}
             onClick={() => setReminder(false)}

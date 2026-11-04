@@ -35,7 +35,7 @@ function Section({
         {onRename && (
           <button
             type="button"
-            className={scribbling ? 'section-action rename-button scribbling' : 'section-action rename-button'}
+            className={['btn btn-ghost btn-icon btn-small section-action rename-button', scribbling && 'scribbling'].filter(Boolean).join(' ')}
             title={texts.rename.button}
             aria-label={`${texts.rename.button}: ${shownTitle}`}
             aria-expanded={renaming}
@@ -54,7 +54,7 @@ function Section({
         {onToggleHidden && (
           <button
             type="button"
-            className="section-action"
+            className="btn btn-ghost btn-icon btn-small section-action"
             title={hidden ? texts.visibility.show : texts.visibility.hide}
             aria-label={`${hidden ? texts.visibility.show : texts.visibility.hide}: ${title}`}
             aria-pressed={hidden}
@@ -69,7 +69,7 @@ function Section({
         {onRemove && (
           <button
             type="button"
-            className="section-remove"
+            className="btn btn-ghost btn-icon btn-small section-remove"
             title={texts.extraSections.remove}
             aria-label={`${texts.extraSections.remove}: ${title}`}
             onClick={(e) => {

@@ -7,7 +7,7 @@ function ExportButton({ cv }) {
     <Tooltip id="export-tooltip" text={texts.file.exportTooltip}>
       <button
         type="button"
-        className="secondary-button"
+        className="btn btn-ghost"
         aria-describedby="export-tooltip"
         onClick={() => exportCv(cv)}
       >

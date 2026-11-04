@@ -42,8 +42,15 @@
   --glass-blur: blur(20px) saturate(180%);
   --glass-brand: rgb(230 238 231 / 0.8);
   --glass-hover: rgb(255 255 255 / 0.7);
-  /* Menus that open over the PDF: frosted too, but opaque enough to read on any page */
-  --glass-strong: rgb(255 255 255 / 0.88);
+  /* Menus that open over the PDF: clearer glass with a stronger blur, which smudges the text
+     behind into soft grey so the menu's own text stays readable. Lighter at the top, like light
+     falling on a pane. */
+  --glass-menu: linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.3));
+  /* Over a white page the pane would vanish: a bright rim on top and sides, a faint dark outline
+     and a soft inner glow give it its glass edge */
+  --glass-menu-edge: inset 0 1px 0 rgb(255 255 255 / 0.95), inset 0 0 0 1px rgb(255 255 255 / 0.35), inset 0 0 24px rgb(255 255 255 / 0.3), 0 0 0 1px rgb(43 38 34 / 0.06);
+  --glass-menu-blur: blur(28px) saturate(190%);
+  --glass-menu-hover: rgb(43 38 34 / 0.06);
   /* Hover of a button without a border on --brand-dark (the "Deshacer" notice) */
   --hover-on-brand: rgb(255 255 255 / 0.14);
 
@@ -63,6 +70,59 @@
   --switch-off: #938D84;
   /* Shape of the dropdown arrow, used as a mask: its colour comes from App.css */
   --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  /* The redesign's system ("warm paper, deep forest, frosted glass"). The tokens above go away
+     as each piece of the interface moves over to these. */
+  --ivory: #FAF8F3;
+  --paper: #FFFDF9;
+  --sunken: #F3EFE7;
+  --sunken-hover: #ECE7DD;
+  /* Fields look pressed into the paper */
+  --sunken-inset: inset 0 1px 2px rgb(60 45 30 / 0.07);
+  /* 7.9:1 on white: text, icons and focus can all use it */
+  --forest: #2F5A43;
+  --forest-hover: #264A37;
+  --forest-shadow: 0 2px 8px rgb(47 90 67 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  /* Forest text on mint: 6.3:1 */
+  --mint: #DDE9E0;
+  --stone: #D9D4CB;
+  --ink: #2B2622;
+  --ink-muted: #6B6159;
+  --on-forest: #FFFFFF;
+  /* Ghost buttons: a soft tint of the ink appears under the pointer */
+  --tint: rgb(43 38 34 / 0.06);
+  --tint-strong: rgb(43 38 34 / 0.1);
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  /* Three heights instead of a shadow per component: resting paper, lifted, floating */
+  --e1: 0 1px 2px rgb(60 45 30 / 0.05), 0 4px 14px rgb(60 45 30 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --e2: 0 2px 6px rgb(60 45 30 / 0.06), 0 12px 32px rgb(60 45 30 / 0.1), inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --e3: 0 2px 8px rgb(60 45 30 / 0.06), 0 16px 48px rgb(60 45 30 / 0.14);
+
+  /* The one glass, only for what floats above the content. The rim (bright edge, soft inner
+     edge, faint dark outline) keeps it visible even over the white PDF. */
+  --frost: rgb(252 250 245 / 0.62);
+  --frost-blur: blur(24px) saturate(160%);
+  --frost-rim: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.45), 0 0 0 1px rgb(60 45 30 / 0.07);
+  /* Where blur is unavailable or the user asks for less transparency */
+  --frost-solid: #F7F4EE;
+
+  /* A white knob lifted off its track (switches, sliders) */
+  --knob-shadow: 0 0 0 1px rgb(60 45 30 / 0.06), 0 2px 6px rgb(60 45 30 / 0.2);
+
+  --focus-halo: rgb(47 90 67 / 0.18);
+  --focus-ring: 0 0 0 2px var(--forest), 0 0 0 6px var(--focus-halo);
+
+  --t-fast: 120ms;
+  --t-med: 180ms;
+  --spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* White tick for checked checkboxes; the shape is drawn here so App.css stays free of colours */
+  --check-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E");
 
   --font-heading: 'Fraunces Variable', Georgia, serif;
   --font-body: 'DM Sans Variable', system-ui, sans-serif;

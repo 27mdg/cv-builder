@@ -120,8 +120,8 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
                   if (e.key === 'Escape') setLinkOpen(false)
                 }}
               />
-              <button type="button" className="chip" onClick={() => applyLink(false)}>{t.applyLink}</button>
-              <button type="button" className="chip" onClick={() => applyLink(true)}>{t.removeLink}</button>
+              <button type="button" className="btn btn-secondary btn-small" onClick={() => applyLink(false)}>{t.applyLink}</button>
+              <button type="button" className="btn btn-ghost btn-small" onClick={() => applyLink(true)}>{t.removeLink}</button>
             </div>
           </Animated>
         )}

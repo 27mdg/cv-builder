@@ -29,7 +29,7 @@ export function PublicModeButton({ appear, leaving, onLeft, onTurnOn }) {
       <Tooltip id="public-tooltip" text={t.tooltip}>
         <button
           type="button"
-          className={glaring ? 'secondary-button icon-button glaring' : 'secondary-button icon-button'}
+          className={glaring ? 'btn btn-ghost btn-icon glaring' : 'btn btn-ghost btn-icon'}
           aria-label={t.button}
           aria-describedby="public-tooltip"
           onClick={onTurnOn}
@@ -70,8 +70,8 @@ export function PublicModeBar({ appear, leaving, onLeft, onFinish, onTurnOff }) 
       <div ref={bar} className={classes.join(' ')} role="status" inert={leaving} onAnimationEnd={handleAnimationEnd}>
         <ComputerIcon/>
         <span>{t.notice}</span>
-        <button type="button" className="public-finish" onClick={() => setConfirming(true)}>{t.finish}</button>
-        <button type="button" className="public-off" onClick={onTurnOff}>{t.turnOff}</button>
+        <button type="button" className="btn btn-secondary btn-small" onClick={() => setConfirming(true)}>{t.finish}</button>
+        <button type="button" className="btn btn-ghost btn-small" onClick={onTurnOff}>{t.turnOff}</button>
         <ConfirmDialog
           open={confirming}
           title={t.confirmTitle}

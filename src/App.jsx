@@ -426,7 +426,7 @@ function App() {
                         </label>
                         <div className="chips footer-actions">
                           <button type="button" className="chip" onClick={() => changeSection('footer', texts.footer.dataProtection)}>
-                            <PlusIcon/>{texts.footer.useDataProtection}
+                            <span className="chip-plus"><PlusIcon/></span>{texts.footer.useDataProtection}
                           </button>
                         </div>
                       </>

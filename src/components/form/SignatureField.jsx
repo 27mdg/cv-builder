@@ -123,9 +123,9 @@ function SignatureField({ value, onChange }) {
         {!value.image && <span className="signature-hint">{t.draw}</span>}
       </div>
       <div className="chips signature-actions">
-        {value.image && <button type="button" className="chip" onClick={clear}>{t.clear}</button>}
-        {/* <label> so the whole chip opens the hidden file picker */}
-        <label className="chip">
+        {value.image && <button type="button" className="btn btn-secondary btn-small" onClick={clear}>{t.clear}</button>}
+        {/* <label> so the whole button opens the hidden file picker */}
+        <label className="btn btn-secondary btn-small">
           {t.upload}
           <input type="file" accept="image/*" onChange={handleFile}/>
         </label>

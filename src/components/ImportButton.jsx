@@ -35,7 +35,7 @@ function ImportButton({ currentCv, onImport }) {
       <Tooltip id="import-tooltip" text={texts.file.importTooltip}>
         <button
           type="button"
-          className="secondary-button"
+          className="btn btn-ghost"
           aria-describedby="import-tooltip"
           onClick={() => picker.current.click()}
         >

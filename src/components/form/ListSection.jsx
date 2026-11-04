@@ -310,17 +310,17 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                         : rendered
                     })}
                     <div className="item-actions">
-                      <button type="button" className="chip" onClick={() => remove(item.id)}>{texts.common.remove}</button>
-                      <button type="button" className="chip copy-chip" onClick={() => duplicate(item.id)}>
+                      <button type="button" className="btn btn-ghost btn-small" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+                      <button type="button" className="btn btn-ghost btn-small copy-chip" onClick={() => duplicate(item.id)}>
                         <CopyIcon/>{texts.common.duplicate}
                       </button>
                       {fields.filter((field) => !shows(item, field)).map((field) => (
-                        <button type="button" className="chip" key={field.name}
+                        <button type="button" className="chip chip-small" key={field.name}
                           onClick={() => setOpenedOptional([...openedOptional, optionalKey(item, field)])}>
-                          <PlusIcon/>{labelFor(sectionKey, field.name)}
+                          <span className="chip-plus"><PlusIcon/></span>{labelFor(sectionKey, field.name)}
                         </button>
                       ))}
-                      <button type="button" className="chip" aria-pressed={Boolean(item.hidden)}
+                      <button type="button" className="btn btn-ghost btn-small" aria-pressed={Boolean(item.hidden)}
                         onClick={() => change(item.id, 'hidden', !item.hidden)}>
                         <VisibilityIcon hidden={item.hidden}/>
                         {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
@@ -334,11 +334,11 @@ function ListSection({ sectionKey, fields, list, onChange }) {
         </SortableContext>
       </DndContext>
       <div className="list-actions">
-        <button type="button" className="chip" onClick={add}><PlusIcon/>{texts[sectionKey].add}</button>
+        <button type="button" className="chip" onClick={add}><span className="chip-plus"><PlusIcon/></span>{texts[sectionKey].add}</button>
         {hasDates && list.length > 1 && (
           <button
             type="button"
-            className={arrowDropping ? 'chip sort-chip dropping' : 'chip sort-chip'}
+            className={arrowDropping ? 'btn btn-ghost btn-small dropping' : 'btn btn-ghost btn-small'}
             onClick={sortByDate}
             onMouseEnter={() => setArrowDropping(!prefersReducedMotion())}
             onAnimationEnd={(e) => e.animationName === 'arrow-drop' && setArrowDropping(false)}
