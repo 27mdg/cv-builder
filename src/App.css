@@ -259,11 +259,11 @@ button:hover .trash-lid { rotate: -16deg; }
   .section-icon, .item > label, .item > .field, .item > .field-row { transition: none; }
   .section-badge { animation: none; }
 }
-.item-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.item-actions { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 -4px -8px; }
 /* A hidden item stays editable; only its fields look faded */
 .item.is-hidden > label, .item.is-hidden > .field, .item.is-hidden > .field-row, .item.is-hidden > .rich-field { opacity: 0.55; }
 .section-badge.item-badge { display: inline-block; margin-bottom: 12px; }
-.list-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.list-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 /* Its arrow drops out of sight and comes back in from above. Started on hover by ListSection.jsx
    (.dropping), so it always finishes. */
 .dropping .sort-arrow { animation: arrow-drop 0.6s ease-in-out; }
@@ -294,28 +294,27 @@ button:hover .trash-lid { rotate: -16deg; }
 @media (prefers-reduced-motion: reduce) {
   .section-remove svg { transition: none; }
 }
-.extra-sections { padding: 28px 0 8px; }
-.extra-sections-title { font-size: 14px; font-weight: 600; color: var(--text-muted); }
-/* SectionLibrary.jsx: small cards with a line of help, as many per row as fit */
-.section-library { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 14px; }
-.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); text-align: left; }
-.form-panel button.library-card:hover { border-color: var(--brand-dark); }
-.library-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: var(--brand-light); color: var(--brand-dark); }
+.extra-sections { padding: 32px 0 8px; }
+.extra-sections-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
+/* SectionLibrary.jsx: small paper cards with a line of help, as many per row as fit; they lift
+   under the pointer (.card-lift) */
+.section-library { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
+.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: none; border-radius: var(--r-md); background: var(--paper); box-shadow: var(--e1); color: var(--ink); text-align: left; }
+.library-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: var(--r-sm); background: var(--mint); color: var(--forest); }
 .library-icon svg { width: 18px; height: 18px; }
 .library-text { flex: 1; min-width: 0; }
 .library-title { display: block; font-size: 15px; font-weight: 600; }
-.library-hint { display: block; margin-top: 2px; color: var(--text-muted); font-size: 13px; line-height: 1.35; }
-.library-plus { display: flex; margin-top: 8px; color: var(--brand-dark); }
+.library-hint { display: block; margin-top: 2px; color: var(--ink-muted); font-size: 13px; line-height: 1.35; }
+.library-plus { display: flex; margin-top: 8px; color: var(--forest); }
 .library-plus svg { width: 16px; height: 16px; transition: transform 0.25s ease; }
 .library-card:hover .library-plus svg { transform: rotate(90deg); }
-/* The custom section's two kinds, in a bubble above its card (arrow pointing down at it).
+/* The custom section's two kinds, on a paper card above its own card.
    cqw: at most the form's width, as the form panel is a size container. */
 .library-custom { position: relative; }
-.form-panel .library-custom > .library-card[aria-expanded="true"] { border-color: var(--brand-dark); }
-.library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 24px var(--shadow); transform: translateX(-50%); animation: rise-in 0.18s var(--ease-out); }
-.library-popover::after { content: ''; position: absolute; bottom: -7px; left: 50%; width: 12px; height: 12px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); transform: translateX(-50%) rotate(45deg); }
-.library-question { margin: 0 2px 2px; color: var(--text-muted); font-size: 13px; font-weight: 600; }
-.form-panel .library-popover .library-card { padding: 10px 12px; background: var(--sunken); }
+.form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: var(--e1), 0 0 0 2px var(--forest); }
+.library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 14px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e3); transform: translateX(-50%); animation: rise-in 0.18s var(--spring); }
+.library-question { margin: 0 2px 2px; color: var(--ink-muted); font-size: 13px; font-weight: 600; }
+.form-panel .library-popover .library-card { padding: 10px 12px; background: var(--sunken); box-shadow: none; }
 .library-popover .library-icon { width: 30px; height: 30px; }
 @media (prefers-reduced-motion: reduce) {
   .library-plus svg { transition: none; }
@@ -507,12 +506,13 @@ button:hover .trash-lid { rotate: -16deg; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 
-/* Temporary: the list sections still need a redesign */
-.item { position: relative; margin-bottom: 16px; padding: 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+/* Each entry of a list is a soft ivory panel inside its section's card: no box inside a box */
+.item { position: relative; margin-bottom: 12px; padding: 20px; border-radius: var(--r-md); background: var(--ivory); }
 /* Each item can be dragged within its section by the handle in its corner */
-.sortable-item { position: relative; border-radius: var(--radius); }
+.sortable-item { position: relative; border-radius: var(--r-md); }
 .sortable-item.dragging { z-index: 10; cursor: grabbing; }
-.sortable-item.dragging .item { box-shadow: 0 10px 28px var(--shadow); }
+/* Picked up: it comes up to paper and floats */
+.sortable-item.dragging .item { background: var(--paper); box-shadow: var(--e3); }
 .form-panel .item-handle { position: absolute; top: 10px; right: 10px; margin: 0; }
 /* Pairs side by side, like start and end dates (ListSection.jsx groups them); one under the other if narrow */
 .field-row { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }

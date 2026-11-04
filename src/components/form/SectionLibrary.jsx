@@ -8,7 +8,7 @@ const t = texts.extraSections
 // A card that adds something to the CV: icon, name, one line of help and a +
 function Card({ icon: Icon, title, hint, onClick, expanded }) {
   return (
-    <button type="button" className="library-card" onClick={onClick} aria-expanded={expanded}>
+    <button type="button" className="library-card card-lift" onClick={onClick} aria-expanded={expanded}>
       <span className="library-icon"><Icon/></span>
       <span className="library-text">
         <span className="library-title">{title}</span>
