@@ -27,6 +27,10 @@
 /* Kept for the confirm button of dialogs that delete */
 .btn-danger { background: var(--accent-strong); color: var(--text-on-accent); }
 .btn-danger:hover:not(:disabled) { background: var(--accent-strong-hover); }
+/* Removing something: terracotta like the delete confirmation, but only as text, so a row of
+   entries is not full of loud buttons; it can always be undone */
+.btn-remove { color: var(--accent-strong); }
+.btn-remove:hover:not(:disabled) { background: var(--accent-tint); }
 .btn-icon { width: 40px; padding: 0; }
 .btn-icon.btn-small { width: 32px; }
 /* A chosen or open tool shows as a raised pill inside its bar, also under the pointer */
@@ -107,7 +111,7 @@
 
 /* Content sits on flat cards. A clickable card lifts under the pointer: its shadow is
    drawn once on a layer that only fades in, which is cheaper than animating the shadow. */
-.card { border-radius: var(--r-lg); background: var(--card); }
+.card { border-radius: var(--r-lg); background: var(--card); box-shadow: var(--card-edge); }
 .card-lift { position: relative; transition: transform var(--t-med) var(--spring); }
 .card-lift::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--e2); opacity: 0; transition: opacity var(--t-med); pointer-events: none; }
 .card-lift:hover { transform: translateY(-1px); }

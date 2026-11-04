@@ -310,7 +310,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                         : rendered
                     })}
                     <div className="item-actions">
-                      <button type="button" className="btn btn-ghost btn-small" onClick={() => remove(item.id)}>{texts.common.remove}</button>
+                      <button type="button" className="btn btn-ghost btn-small btn-remove" onClick={() => remove(item.id)}>{texts.common.remove}</button>
                       <button type="button" className="btn btn-ghost btn-small copy-chip" onClick={() => duplicate(item.id)}>
                         <CopyIcon/>{texts.common.duplicate}
                       </button>

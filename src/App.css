@@ -215,8 +215,8 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
 .swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 
-/* Each section is its own flat card, a touch darker than the page, with no border or shadow */
-.section { padding: 0 24px; border-radius: var(--r-lg); background: var(--card); }
+/* Each section is its own flat card, a touch darker than the page, with a fine edge (--card-edge) */
+.section { padding: 0 24px; border-radius: var(--r-lg); background: var(--card); box-shadow: var(--card-edge); }
 /* The gap is a margin of the card itself, so it also shrinks when a section fades out */
 .form-panel .section { margin-bottom: 14px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
@@ -235,11 +235,11 @@ button:hover .trash-lid { rotate: -16deg; }
 .sortable { position: relative; border-radius: var(--r-lg); }
 .sortable.dragging { z-index: 10; cursor: grabbing; }
 /* Picked up: it floats above the other cards */
-.sortable.dragging .section { box-shadow: var(--e3); }
+.sortable.dragging .section { box-shadow: var(--card-edge), var(--e3); }
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .section-action, .section-remove { color: var(--ink-muted); }
 .section-action:hover { color: var(--ink); }
-.section-remove:hover { color: var(--danger); }
+.section-remove:hover:not(:disabled) { color: var(--accent-strong); background: var(--accent-tint); }
 /* When clicked, the pencil scribbles a little */
 .rename-button.scribbling svg { animation: scribble 0.45s ease-in-out; }
 /* The eye's slash is drawn in when something gets hidden and drawn out when it is shown again.
@@ -313,7 +313,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* SectionLibrary.jsx: small paper cards with a line of help, as many per row as fit; they lift
    under the pointer (.card-lift) */
 .section-library { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 14px; }
-.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: none; border-radius: var(--r-md); background: var(--card); color: var(--ink); text-align: left; }
+.form-panel .library-card { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; border: none; border-radius: var(--r-md); background: var(--card); box-shadow: var(--card-edge); color: var(--ink); text-align: left; }
 .library-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: var(--r-sm); background: var(--mint); color: var(--forest); }
 .library-icon svg { width: 18px; height: 18px; }
 .library-text { flex: 1; min-width: 0; }
@@ -325,7 +325,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* The custom section's two kinds, on a paper card above its own card.
    cqw: at most the form's width, as the form panel is a size container. */
 .library-custom { position: relative; }
-.form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--forest); }
+.form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: var(--card-edge), 0 0 0 2px var(--forest); }
 .library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 14px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e3); transform: translateX(-50%); animation: rise-in 0.18s var(--spring); }
 .library-question { margin: 0 2px 2px; color: var(--ink-muted); font-size: 13px; font-weight: 600; }
 .form-panel .library-popover .library-card { padding: 10px 12px; background: var(--sunken); box-shadow: none; }

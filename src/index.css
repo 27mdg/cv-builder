@@ -33,9 +33,12 @@
   /* Ghost buttons: a soft tint of the ink appears under the pointer */
   --tint: rgb(31 30 29 / 0.06);
 
-  /* Terracotta only on the confirm button of dialogs that delete (white text on it: 5.3:1) */
+  /* Terracotta for removing: filled only on the confirm button of dialogs that delete (white text
+     on it: 5.3:1); as text on "Quitar" (5.2:1 on the list entries) */
   --accent-strong: #A9532F;
   --accent-strong-hover: #95472A;
+  /* Behind a terracotta "Quitar" under the pointer */
+  --accent-tint: rgb(169 83 47 / 0.1);
   --text-on-accent: #FFFFFF;
   --danger: #B3261E;
   /* Behind a dialog */
@@ -50,6 +53,9 @@
   --r-lg: 24px;
   --r-pill: 999px;
 
+  /* The edge of every card, like the rim of the glass bars: a fine dark outline that marks its
+     shape and a bright line along the top, so cards read clearly against the page */
+  --card-edge: inset 0 1px 0 rgb(255 255 255 / 0.85), 0 0 0 1px rgb(31 30 29 / 0.1), 0 1px 2px rgb(31 30 29 / 0.04);
   /* Three heights, kept soft and neutral: a small raised thing (the chosen pill, a thumbnail),
      lifted (a card under the pointer, the PDF sheet) and floating (bars, menus, dialogs). The
      section cards themselves are flat. */
