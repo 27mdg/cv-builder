@@ -317,7 +317,7 @@ function App() {
             <input
               type="checkbox"
               role="switch"
-              className="switch"
+              className="toggle"
               checked={!cv.sectionSettings.skills?.hideLevel}
               onChange={(e) => changeSectionSetting('skills', 'hideLevel', !e.target.checked)}
             />
@@ -335,7 +335,7 @@ function App() {
           <input
             type="checkbox"
             role="switch"
-            className="switch"
+            className="toggle"
             checked={cv.referencesOnRequest}
             onChange={(e) => changeSection('referencesOnRequest', e.target.checked)}
           />

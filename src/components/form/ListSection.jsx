@@ -55,7 +55,7 @@ function Field({ sectionKey, field, item, onChange, autoFocus }) {
           <input
             type="checkbox"
             role="switch"
-            className="switch"
+            className="toggle"
             checked={item.current}
             onChange={(e) => onChange('current', e.target.checked)}
           />

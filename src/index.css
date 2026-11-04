@@ -11,25 +11,18 @@
     var(--ivory);
   --surface: #FFFFFF;
   --surface-sunken: #E9E8E5;
-  /* Form fields: filled warm beige with no border; white with a ring while typing */
-  --field: #F3EEE6;
-  --field-hover: #ECE6DC;
-  --field-focus-ring: rgb(79 111 85 / 0.18);
   --text: #2B2622;
   --text-muted: #6B6159;
   --border: #E5E2DC;
   /* Fields and cards. Only 1.5:1 against white (WCAG asks 3:1 for field edges): chosen by the user */
   --border-strong: #D6D2CA;
   --radius: 10px;
-  --radius-field: 12px;
 
   /* Sage: only for focus, links, logo, icons and active states, never as a large background.
      The base sage is 3.6:1 on white, so text, icons and focus use the darker one (5.6:1). */
   --brand: #6B8F71;
   --brand-dark: #4F6F55;
   --brand-light: #E6EEE7;
-  /* White text on --brand-dark (the calendar's chosen day): 5.6:1 */
-  --text-on-brand: #FFFFFF;
 
   /* Terracotta only on the confirm button of dialogs that delete. White text needs the deeper tone (5.3:1);
      on the base #D9825B it would be 2.9:1. */

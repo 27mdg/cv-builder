@@ -99,16 +99,12 @@ function DatePicker({ label, value, onChange }) {
     const bubbleBox = bubble.current
     bubbleBox.showPopover?.()
     const fieldBox = field.current.getBoundingClientRect()
-    const buttonBox = button.current.getBoundingClientRect()
     const { offsetWidth: width, offsetHeight: height } = bubbleBox
     const fitsBelow = fieldBox.bottom + 12 + height <= window.innerHeight - 8
     const top = fitsBelow || fieldBox.top - 12 - height < 8 ? fieldBox.bottom + 12 : fieldBox.top - 12 - height
     const left = Math.min(Math.max(fieldBox.right - width, 8), window.innerWidth - width - 8)
     bubbleBox.style.top = `${top}px`
     bubbleBox.style.left = `${left}px`
-    // The little arrow points at the calendar button
-    bubbleBox.style.setProperty('--arrow-left', `${buttonBox.left + buttonBox.width / 2 - left - 6}px`)
-    bubbleBox.classList.toggle('above', top < fieldBox.top)
   }, [open])
 
   useEffect(() => {
@@ -125,9 +121,10 @@ function DatePicker({ label, value, onChange }) {
     function handleKeyDown(e) {
       if (e.key === 'Escape') close(true)
     }
-    // It is placed once: if the page moves, it closes instead of floating in the wrong place
+    // It is placed once: if the page moves, it closes instead of floating in the wrong place.
+    // A resize comes from the window itself, which is not a node of the page.
     function handleMove(e) {
-      if (!bubble.current.contains(e.target)) close(false)
+      if (e.target === window || !bubble.current?.contains(e.target)) close(false)
     }
     document.addEventListener('pointerdown', handlePointerDown)
     document.addEventListener('keydown', handleKeyDown)
