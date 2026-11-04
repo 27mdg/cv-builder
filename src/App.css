@@ -32,10 +32,12 @@
 .tooltip.align-right { left: auto; right: 0; transform: none; }
 
 /* margin: auto centres it; index.css sets margin: 0 on everything, which would pin it top left */
-.confirm-dialog { margin: auto; width: min(440px, calc(100vw - 32px)); padding: 28px; border: none; border-radius: var(--radius); background: var(--surface); color: var(--text); box-shadow: 0 16px 48px var(--shadow); }
-.confirm-dialog::backdrop { background: var(--overlay); }
-.confirm-dialog h2 { margin-bottom: 12px; font-size: 22px; }
-.confirm-dialog p { line-height: 1.55; color: var(--text-muted); }
+/* A solid paper card (it is content, so no glass); the page behind dims and blurs a little,
+   only 4px, so it stays cheap even on modest computers */
+.confirm-dialog { margin: auto; width: min(440px, calc(100vw - 32px)); padding: 28px; border: none; border-radius: var(--r-lg); background: var(--paper); color: var(--ink); box-shadow: var(--e3); }
+.confirm-dialog::backdrop { background: var(--overlay); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.confirm-dialog h2 { margin-bottom: 10px; font-family: var(--font-heading); font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
+.confirm-dialog p { line-height: 1.55; color: var(--ink-muted); }
 .confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 
 .download { position: relative; display: flex; align-items: center; gap: 12px; }
@@ -56,7 +58,7 @@
    panels below never jump by it when the strip comes or goes */
 .public-slot { overflow-y: clip; margin-inline: 16px; }
 .public-bar { margin-top: 8px; }
-.public-bar.appearing { animation: bar-in 0.3s var(--ease-out); }
+.public-bar.appearing { animation: bar-in 0.3s var(--spring); }
 .public-bar.leaving { animation: bar-out 0.25s ease-in forwards; }
 @keyframes bar-in { from { margin-top: calc(-1 * var(--bar-height)); } }
 @keyframes bar-out { to { margin-top: calc(-1 * var(--bar-height)); } }
@@ -69,11 +71,11 @@
 .screen-glare { translate: -10px 0; }
 .glaring .screen-glare { animation: glare 0.6s ease-in-out; }
 /* The trash lid lifts a little on its left end while hovered, as if opening before throwing */
-.trash-lid { transform-origin: 4px 7px; transition: rotate 0.2s var(--ease-out); }
+.trash-lid { transform-origin: 4px 7px; transition: rotate 0.2s var(--spring); }
 button:hover .trash-lid { rotate: -16deg; }
 @keyframes glare { from { translate: -10px 0; } to { translate: 18px 0; } }
-.public-button-slot.appearing { animation: icon-in 0.25s var(--ease-out); }
-.public-button-slot.leaving { animation: icon-out 0.25s var(--ease-out) forwards; }
+.public-button-slot.appearing { animation: icon-in 0.25s var(--spring); }
+.public-button-slot.leaving { animation: icon-out 0.25s var(--spring) forwards; }
 .public-button-slot.leaving .tooltip { display: none; }
 @keyframes icon-in { from { scale: 0; opacity: 0; } }
 @keyframes icon-out { to { scale: 0; opacity: 0; } }
@@ -96,23 +98,23 @@ button:hover .trash-lid { rotate: -16deg; }
    inside it. The visible 1 px line is a background in the middle of the lane, which is
    otherwise see-through, like both panels. */
 .workspace { --gutter: 18px; }
-.splitter { --line: var(--border-strong); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; cursor: col-resize; touch-action: none; }
-.splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text-muted); box-shadow: 0 1px 4px var(--shadow); }
+.splitter { --line: var(--stone); flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(var(--line), var(--line)) center / 1px 100% no-repeat; cursor: col-resize; touch-action: none; }
+.splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border-radius: var(--r-pill); background: var(--paper); color: var(--ink-muted); box-shadow: var(--knob-shadow); }
 .splitter-knob svg { width: 14px; height: 14px; }
 /* Gliding back to the middle when released, a little slower so the eye can follow it */
-.splitter-knob { transition: translate 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.splitter-knob { transition: translate 0.35s var(--spring), color var(--t-fast); }
 /* While dragging, a short ease: it flies to the pointer on the first click and then
    trails it smoothly instead of jumping pixel by pixel */
 .splitter.dragging .splitter-knob { transition-duration: 0.15s; }
 @media (prefers-reduced-motion: reduce) {
   .splitter-knob { transition: none; }
 }
-.splitter:hover, .splitter.dragging { --line: var(--brand-dark); }
-.splitter:hover .splitter-knob, .splitter.dragging .splitter-knob { border-color: var(--brand-dark); color: var(--brand-dark); }
+.splitter:hover, .splitter.dragging { --line: var(--forest); }
+.splitter:hover .splitter-knob, .splitter.dragging .splitter-knob { color: var(--forest); }
 /* The resize cursor stays on even when the pointer leaves the lane while dragging */
 .app:has(.splitter.dragging) { cursor: col-resize; }
 .splitter:focus-visible { outline: none; }
-.splitter:focus-visible .splitter-knob { outline: 3px solid var(--brand-dark); outline-offset: 2px; }
+.splitter:focus-visible .splitter-knob { box-shadow: var(--knob-shadow), var(--focus-ring); }
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
 .preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; }
 /* Full screen covers the bar, so nothing has to start below it */
@@ -128,8 +130,9 @@ button:hover .trash-lid { rotate: -16deg; }
 @supports not selector(::-webkit-scrollbar) {
   .form-panel, .preview { scrollbar-color: var(--scrollbar-thumb) transparent; }
 }
-.pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: 0 2px 12px var(--shadow); }
-.loading { padding: 16px; color: var(--text-muted); }
+/* The sheet keeps square corners: it is paper */
+.pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: var(--e2); }
+.loading { padding: 48px 16px; color: var(--ink-muted); text-align: center; }
 /* Fixed over the whole app, so it brings its own copy of the background */
 .preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; background: var(--page); }
 
@@ -145,11 +148,11 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Named only while the animation runs: a named element stops everything inside it from blurring
    what is behind, and the menus' glass would go flat */
 :root:active-view-transition .toolbar-dock { view-transition-name: toolbar; }
-::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: var(--spring); }
 .tool { position: relative; }
 
 /* Each corner turns half a round on its own centre: pointing out to enter full screen, in to leave */
-.full-screen-icon path { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--ease-out); }
+.full-screen-icon path { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--spring); }
 .full-screen-icon.is-in path { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) {
   .full-screen-icon path { transition: none; }
@@ -247,7 +250,7 @@ button:hover .trash-lid { rotate: -16deg; }
    direction: drawing slows down at the end (it settles), drawing out speeds up (it vanishes),
    or its last bit would seem to freeze. */
 .eye-slash { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.22s ease-in; }
-.eye-slash.is-on { stroke-dashoffset: 0; transition: stroke-dashoffset 0.3s var(--ease-out); }
+.eye-slash.is-on { stroke-dashoffset: 0; transition: stroke-dashoffset 0.3s var(--spring); }
 @keyframes scribble {
   25% { transform: translate(1.5px, -1px) rotate(-8deg); }
   50% { transform: translate(-1px, 1px) rotate(4deg); }
@@ -260,7 +263,7 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Hiding and showing fades instead of jumping, and the "Oculta en el CV" label pops in softly */
 .section-icon { transition: background-color 0.3s ease, color 0.3s ease; }
 .item > label, .item > .field, .item > .field-row { transition: opacity 0.3s ease; }
-.section-badge { animation: badge-in 0.25s var(--ease-out); }
+.section-badge { animation: badge-in 0.25s var(--spring); }
 @keyframes badge-in { from { opacity: 0; scale: 0.9; } }
 @media (prefers-reduced-motion: reduce) {
   .section-icon, .item > label, .item > .field, .item > .field-row { transition: none; }
@@ -278,15 +281,15 @@ button:hover .trash-lid { rotate: -16deg; }
   45% { translate: 0 8px; opacity: 0; }
   55% { translate: 0 -8px; opacity: 0; }
 }
-.copy-front, .copy-back { transition: translate 0.25s var(--ease-out); }
+.copy-front, .copy-back { transition: translate 0.25s var(--spring); }
 .copy-chip:hover .copy-front { translate: 1.5px 1.5px; }
 .copy-chip:hover .copy-back { translate: -1.5px -1.5px; }
 .form-panel .rename-field { margin-bottom: 20px; }
-.field-hint { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; font-weight: 400; }
+.field-hint { display: block; margin-top: 6px; color: var(--ink-muted); font-size: 13px; font-weight: 400; }
 .signature-pad { position: relative; margin-top: 6px; }
 /* touch-action: none, so a finger draws instead of scrolling the page */
 .signature-pad canvas { display: block; width: 100%; height: 160px; border: 1.5px dashed var(--stone); border-radius: var(--r-lg); background: var(--sunken); cursor: crosshair; touch-action: none; }
-.signature-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; pointer-events: none; }
+.signature-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--ink-muted); font-size: 14px; pointer-events: none; }
 .signature-actions { margin: 12px 0 20px; }
 /* The file picker hides inside its chip, still reachable with the keyboard */
 .signature-actions input { position: absolute; width: 1px; height: 1px; opacity: 0; }
@@ -364,14 +367,13 @@ button:hover .trash-lid { rotate: -16deg; }
 
 /* Smooth animations. Short, and mostly opacity and position, which even cheap phones move
    without effort; height only on small pieces. Everything is switched off for reduced motion. */
-:root { --ease-out: cubic-bezier(0.22, 1, 0.36, 1); }
 /* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
 .animated { display: grid; grid-template-rows: 1fr; }
 .animated-inner { min-height: 0; }
 /* Clipped top and bottom while it grows or shrinks, but not at the sides: the focus ring of a
    new field (which gets the cursor at once) sticks out there */
 .animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow-x: visible; overflow-y: clip; }
-.animated.appearing { animation: grow-in 0.25s var(--ease-out); }
+.animated.appearing { animation: grow-in 0.25s var(--spring); }
 .animated.leaving { animation: shrink-out 0.2s ease-in forwards; }
 @keyframes grow-in { from { grid-template-rows: 0fr; opacity: 0; } }
 @keyframes shrink-out { to { grid-template-rows: 0fr; opacity: 0; } }
@@ -380,13 +382,13 @@ button:hover .trash-lid { rotate: -16deg; }
    free for the fields' focus rings, and a clip margin would let the content peek out below. */
 @supports (interpolate-size: allow-keywords) {
   .section { interpolate-size: allow-keywords; }
-  .section::details-content { height: 0; overflow-x: visible; overflow-y: clip; transition: height 0.25s var(--ease-out), content-visibility 0.25s allow-discrete; }
+  .section::details-content { height: 0; overflow-x: visible; overflow-y: clip; transition: height 0.25s var(--spring), content-visibility 0.25s allow-discrete; }
   .section[open]::details-content { height: auto; }
 }
-.confirm-dialog[open] { animation: pop-in 0.2s var(--ease-out); }
+.confirm-dialog[open] { animation: pop-in 0.2s var(--spring); }
 .confirm-dialog[open]::backdrop { animation: fade-in 0.2s ease; }
 /* translate, not transform: some menus are already centred with transform */
-.tool-menu { animation: rise-in 0.18s var(--ease-out); }
+.tool-menu { animation: rise-in 0.18s var(--spring); }
 @keyframes pop-in { from { opacity: 0; scale: 0.96; } }
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
@@ -456,7 +458,7 @@ button:hover .trash-lid { rotate: -16deg; }
    cursor would sit after it instead of at the start. */
 .rich-content.is-empty::before { content: attr(data-placeholder); position: absolute; top: 12px; right: 16px; left: 16px; color: var(--ink-muted); pointer-events: none; }
 /* :where() keeps this a fallback with no weight, so the kit's buttons are never overridden */
-:where(.form-panel button) { padding: 8px 14px; border-radius: var(--radius); font: inherit; cursor: pointer; }
+:where(.form-panel button) { padding: 8px 14px; border-radius: var(--r-sm); font: inherit; cursor: pointer; }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
 /* Narrow form: two columns would leave fields too small to read what is typed */
