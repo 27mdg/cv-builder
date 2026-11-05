@@ -28,7 +28,7 @@ function Section({
         {Icon && <span className="section-icon"><Icon/></span>}
         <div className="section-heading">
           <h2>
-            {shownTitle}
+            <span className="section-title">{shownTitle}</span>
             {hidden && <span className="section-badge">{texts.visibility.hidden}</span>}
           </h2>
         </div>

@@ -243,6 +243,20 @@ button:hover .trash-lid { rotate: -16deg; }
 /* min-width: 0 lets a long summary shrink to an ellipsis instead of pushing the arrow out */
 .section-heading { flex: 1; min-width: 0; }
 .section > summary h2 { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-size: 22px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+/* A narrow form: the side margins and the header shrink so the titles still fit, and a title
+   that still does not fit ends in an ellipsis instead of running under the buttons. The
+   panel's padding cannot follow its own width (it is the container), so its children step
+   into it with a negative margin instead. */
+@container (max-width: 480px) {
+  .form-panel > * { margin-inline: -32px; }
+  .section { padding-inline: 16px; }
+  .section > summary { gap: 8px; }
+  .section-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+/* Container widths leave out the panel's padding: 300px is a panel of about 400px */
+@container (max-width: 300px) {
+  .section-icon { display: none; }
+}
 /* touch-action: none lets a finger drag the handle instead of scrolling the page */
 .form-panel .drag-handle { display: flex; margin: 0 -6px 0 -10px; padding: 4px; border: none; border-radius: var(--r-sm); background: transparent; color: var(--ink-muted); cursor: grab; touch-action: none; transition: background-color var(--t-fast), color var(--t-fast); }
 .form-panel .drag-handle:hover { background: var(--tint); color: var(--ink); }
@@ -389,7 +403,9 @@ button:hover .trash-lid { rotate: -16deg; }
    without effort; height only on small pieces. Everything is switched off for reduced motion. */
 /* Animated.jsx: the grid row goes from 0fr to its natural height (1fr) and back */
 .animated { display: grid; grid-template-rows: 1fr; }
-.animated-inner { min-height: 0; }
+/* min-width: 0 too: as a grid item it would otherwise never get narrower than its content, and
+   on a narrow form each section card would widen to fit its own title */
+.animated-inner { min-width: 0; min-height: 0; }
 /* Clipped top and bottom while it grows or shrinks, but not at the sides: the focus ring of a
    new field (which gets the cursor at once) sticks out there */
 .animated.appearing .animated-inner, .animated.leaving .animated-inner { overflow-x: visible; overflow-y: clip; }
