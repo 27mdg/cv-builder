@@ -235,6 +235,10 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel .section { margin-bottom: 14px; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
+/* The header is a square strip inside the card's padding: its keyboard ring goes on the whole
+   card instead, following its round corners like the library cards' */
+.section > summary:focus-visible { outline: none; }
+.section:has(> summary:focus-visible) { outline: 2px solid var(--forest); outline-offset: 2px; }
 .section-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--r-sm); background: var(--sunken); color: var(--ink-muted); }
 /* The icon says whether the section has content: ivory while empty, mint once something is
    written. A tick would wrongly say "finished". */
