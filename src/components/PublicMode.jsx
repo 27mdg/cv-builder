@@ -44,18 +44,18 @@ export function PublicModeButton({ appear, leaving, onLeft, onTurnOn }) {
 }
 
 /**
- * Strip under the top bar while the mode is on, so the user never forgets to finish. It comes
- * out from under the top bar when `appear` and goes back when `leaving` (then onLeft).
+ * Strip under the top bar while the mode is on, so the user never forgets to finish. It pops up
+ * in place when `appear` and shrinks away when `leaving` (then onLeft).
  */
 export function PublicModeBar({ appear, leaving, onLeft, onFinish, onTurnOff }) {
   const [confirming, setConfirming] = useState(false)
   const [appearing, setAppearing] = useState(() => Boolean(appear) && !prefersReducedMotion())
-  const bar = useRef(null)
+  const slot = useRef(null)
 
-  // The animations pull the strip up by its own height (CSS margin, so the form follows it with
-  // no gap). Measured, as it wraps onto more lines on narrow screens.
+  // The animations give back the slot's room by its own height (CSS margin, so the panels follow
+  // with no gap). Measured, as the strip wraps onto more lines on narrow screens.
   useLayoutEffect(() => {
-    bar.current.style.setProperty('--bar-height', `${bar.current.offsetHeight}px`)
+    slot.current.style.setProperty('--slot-height', `${slot.current.offsetHeight}px`)
   }, [appearing, leaving])
 
   function handleAnimationEnd(e) {
@@ -64,10 +64,10 @@ export function PublicModeBar({ appear, leaving, onLeft, onFinish, onTurnOff }) 
     else setAppearing(false)
   }
 
-  const classes = ['public-bar frost', appearing && 'appearing', leaving && 'leaving'].filter(Boolean)
+  const classes = ['public-slot', appearing && 'appearing', leaving && 'leaving'].filter(Boolean)
   return (
-    <div className="public-slot">
-      <div ref={bar} className={classes.join(' ')} role="status" inert={leaving} onAnimationEnd={handleAnimationEnd}>
+    <div ref={slot} className={classes.join(' ')} inert={leaving} onAnimationEnd={handleAnimationEnd}>
+      <div className="public-bar frost" role="status">
         <ComputerIcon/>
         <span>{t.notice}</span>
         <button type="button" className="btn btn-secondary btn-small" onClick={() => setConfirming(true)}>{t.finish}</button>

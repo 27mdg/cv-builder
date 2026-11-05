@@ -9,7 +9,9 @@
 .top-layer > * { pointer-events: auto; }
 /* A frosted pill (.frost-behind). The right padding equals the gap around Descargar, so its
    round ends sit concentric with the bar's. */
-.topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; margin: 12px 16px 0; padding: 8px 8px 8px 28px; border-radius: var(--r-pill); }
+/* z-index: the public mode strip below is a layer of its own too and, painted later, would cover
+   the bar's bubbles */
+.topbar { z-index: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; margin: 12px 16px 0; padding: 8px 8px 8px 28px; border-radius: var(--r-pill); }
 .logo { justify-self: start; font-family: var(--font-heading); font-size: 22px; font-weight: 600; color: var(--ink); text-decoration: none; }
 /* A field pressed into the glass, like the form's; until something is typed, the hint is grey */
 .file-name { width: 280px; height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper); color: var(--ink); font: inherit; text-align: center; transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
@@ -51,17 +53,20 @@
 .public-bar { --frost-tint: var(--frost-mint); --frost-tint-solid: var(--mint); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 6px 6px 6px 24px; border-radius: var(--r-pill); color: var(--ink); font-size: 14px; }
 .public-bar > svg { flex: none; color: var(--forest); }
 .public-bar span { flex: 1; min-width: 200px; }
-/* The strip comes out from under the top bar: a negative margin of its own height (measured in
-   PublicMode.jsx) pulls it up behind the bar, and the form below follows it with no gap.
-   It hides the same way back. */
-/* The gap above the strip is its own margin, not the slot's: it slides with the strip, so the
-   panels below never jump by it when the strip comes or goes */
-.public-slot { overflow-y: clip; margin-inline: 16px; }
-.public-bar { margin-top: 8px; }
-.public-bar.appearing { animation: bar-in 0.3s var(--spring); }
-.public-bar.leaving { animation: bar-out 0.25s ease-in forwards; }
-@keyframes bar-in { from { margin-top: calc(-1 * var(--bar-height)); } }
-@keyframes bar-out { to { margin-top: calc(-1 * var(--bar-height)); } }
+/* The strip pops up in its own place like a bubble, never crossing the top bar. Meanwhile the
+   slot's negative bottom margin (its own height, measured in PublicMode.jsx) gives its room
+   back little by little, so the panels below slide down smoothly instead of jumping. Not
+   clipped: a clip would cut the strip's shadow. */
+.public-slot { margin-inline: 16px; padding-top: 8px; }
+.public-slot.appearing { animation: slot-in 0.3s var(--spring); }
+.public-slot.leaving { animation: slot-out 0.25s ease-in forwards; }
+.public-slot.appearing .public-bar { animation: bubble-in 0.3s var(--spring); }
+.public-slot.leaving .public-bar { animation: bubble-out 0.2s ease-in forwards; }
+.public-bar { transform-origin: 50% 0; }
+@keyframes slot-in { from { margin-bottom: calc(-1 * var(--slot-height)); } }
+@keyframes slot-out { to { margin-bottom: calc(-1 * var(--slot-height)); } }
+@keyframes bubble-in { from { scale: 0.94; opacity: 0; } }
+@keyframes bubble-out { to { scale: 0.94; opacity: 0; } }
 /* Its button shrinks on its own centre and vanishes where it is. Its place is not animated: the
    buttons are aligned to the right, so a narrowing place would slide the button towards them,
    and on its left there is nothing that has to move. */
@@ -409,7 +414,7 @@ button:hover .trash-lid { rotate: -16deg; }
 @keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) {
   .animated.appearing, .animated.leaving, .confirm-dialog[open], .confirm-dialog[open]::backdrop, .tool-menu, .date-popover,
-  .save-reminder, .undo-toast, .public-bar, .public-button-slot, .screen-glare { animation: none; }
+  .save-reminder, .undo-toast, .public-slot, .public-bar, .public-button-slot, .screen-glare { animation: none; }
   .has-tooltip:is(:hover, :focus-within) .tooltip { animation: none; }
   .copy-front, .copy-back, .trash-lid { transition: none; }
   .section::details-content { transition: none; }
