@@ -97,7 +97,9 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Its own lane, so the knob never covers the form's scrollbar. No line: the lane is half
    ivory, half desk, so the change of tone is the seam, and only the knob floats on it. */
 .workspace { --gutter: 18px; }
-.splitter { flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(to right, var(--ivory) 50%, var(--desk) 50%); cursor: col-resize; touch-action: none; }
+/* Positioned with a z-index: the preview panel next to it is positioned too and, painted later,
+   would cover the right half of the knob and its shadow */
+.splitter { position: relative; z-index: 1; flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(to right, var(--ivory) 50%, var(--desk) 50%); cursor: col-resize; touch-action: none; }
 .splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border-radius: var(--r-pill); background: var(--paper); color: var(--ink-muted); box-shadow: var(--knob-shadow); }
 .splitter-knob svg { width: 14px; height: 14px; }
 /* Gliding back to the middle when released, a little slower so the eye can follow it */
@@ -109,7 +111,8 @@ button:hover .trash-lid { rotate: -16deg; }
   .splitter-knob { transition: none; }
 }
 /* scale, not transform: the knob already moves with translate while it is dragged */
-.splitter:hover .splitter-knob, .splitter.dragging .splitter-knob { scale: 1.08; color: var(--forest); }
+/* Only the knob itself reacts to the pointer passing by; the whole lane can still be dragged */
+.splitter-knob:hover, .splitter.dragging .splitter-knob { scale: 1.08; color: var(--forest); }
 /* The resize cursor stays on even when the pointer leaves the lane while dragging */
 .app:has(.splitter.dragging) { cursor: col-resize; }
 .splitter:focus-visible { outline: none; }
