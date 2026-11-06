@@ -622,7 +622,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--ink-muted); }
 /* The browser paints autofilled fields light blue; its background cannot be changed directly,
    so a wide inner shadow in our field colour covers it */
-.form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--paper) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--ink); }
+.form-panel input:-webkit-autofill, .file-name:-webkit-autofill { -webkit-box-shadow: 0 0 0 100px var(--paper) inset; -webkit-text-fill-color: var(--ink); caret-color: var(--forest); }
 .form-panel input:not([type="checkbox"]):-webkit-autofill:focus, .file-name:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 100px var(--paper) inset, 0 0 0 4px var(--focus-halo); }
 .long-text { line-height: 1.6; resize: vertical; }
 /* RichTextEditor.jsx: a field like the others, with a small toolbar on top */

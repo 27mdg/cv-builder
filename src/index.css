@@ -75,6 +75,9 @@
   --knob-shadow: 0 0 0 1px rgb(31 30 29 / 0.06), 0 2px 6px rgb(31 30 29 / 0.18);
 
   --focus-halo: rgb(47 90 67 / 0.18);
+  /* Selected text: a forest wash instead of the browser's blue. Stronger than mint, which is too
+     faint to see on the near-white fields; the text keeps its own colour on it. */
+  --selection: rgb(47 90 67 / 0.24);
   --focus-ring: 0 0 0 2px var(--forest), 0 0 0 6px var(--focus-halo);
 
   --t-fast: 120ms;
@@ -99,6 +102,10 @@ body {
   font-weight: 400;
   line-height: 1.5;
 }
+
+::selection { background: var(--selection); }
+/* The typing cursor in forest, like the edge of the field being typed in */
+input, textarea, [contenteditable] { caret-color: var(--forest); }
 
 /* Fraunces is for the logo and the titles of sections and dialogs */
 h1, h2 { font-weight: 600; }
