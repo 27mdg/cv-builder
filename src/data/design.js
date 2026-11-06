@@ -42,19 +42,19 @@ export const lineHeight = { min: 1, max: 2, step: 0.05 }
 export const dateFormats = ['short', 'long', 'numeric']
 
 // One accent colour per option; each template derives the tones it needs from it
+// The colours most advised for CVs, most advised first: navy and blue (trust), charcoal and black
+// (serious, print well), dark greens (calm; health, environment, tech), burgundy as an accent and
+// taupe (Arco's own). Bright, orange and near-duplicate shades were left out; any other colour
+// is the custom one. A saved id that is no longer here falls back to the template's colour.
 export const colors = [
-  { id: 'forest', value: '#3F5B4C' },
   { id: 'navy', value: '#233a5c' },
-  { id: 'midnight', value: '#0b2545' },
-  { id: 'slate', value: '#2b4466' },
   { id: 'blue', value: '#1f5fa8' },
-  { id: 'teal', value: '#2c5f5d' },
-  { id: 'green', value: '#2f6b41' },
-  { id: 'burgundy', value: '#8c2f39' },
-  { id: 'ochre', value: '#b06d27' },
-  { id: 'taupe', value: '#a5806d' },
-  { id: 'purple', value: '#5b4a8b' },
+  { id: 'charcoal', value: '#3d434b' },
   { id: 'black', value: '#111111' },
+  { id: 'forest', value: '#3F5B4C' },
+  { id: 'teal', value: '#2c5f5d' },
+  { id: 'burgundy', value: '#8c2f39' },
+  { id: 'taupe', value: '#a5806d' },
 ]
 
 function channels(hex) {
