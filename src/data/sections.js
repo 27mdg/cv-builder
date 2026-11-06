@@ -70,7 +70,8 @@ const sections = [
   {
     key: 'skills',
     fields: [
-      { name: 'skill', type: 'text' },
+      // pasteList: a pasted "Excel, Word" becomes one entry each (ListSection)
+      { name: 'skill', type: 'text', pasteList: true },
       { name: 'level', type: 'skillLevel' },
       // Skills with the same category go together in the CV, under its name
       { name: 'category', type: 'text', optional: true },
@@ -84,7 +85,7 @@ const sections = [
       { name: 'certificate', type: 'text' },
     ],
   },
-  { key: 'hobbies', fields: [{ name: 'interest', type: 'text' }] },
+  { key: 'hobbies', fields: [{ name: 'interest', type: 'text', pasteList: true }] },
   {
     key: 'courses',
     fields: [
@@ -119,7 +120,7 @@ const sections = [
       { name: 'description', type: 'longText' },
     ],
   },
-  { key: 'qualities', fields: [{ name: 'quality', type: 'text' }] },
+  { key: 'qualities', fields: [{ name: 'quality', type: 'text', pasteList: true }] },
   {
     key: 'projects',
     fields: [

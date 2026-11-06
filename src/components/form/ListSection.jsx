@@ -33,7 +33,16 @@ function emptyItem(fields) {
   return item
 }
 
-function Field({ sectionKey, field, item, onChange, autoFocus }) {
+// "Excel, Word", one per line or a column copied from a spreadsheet → ['Excel', 'Word'], without
+// bullets or numbers in front. "y" does not split: "Trabajo en equipo y liderazgo" is one item.
+function splitList(text) {
+  return text
+    .split(/[,;\n\r\t•·]+/)
+    .map((piece) => piece.trim().replace(/^(?:[-*–—]\s*|\d{1,2}[.)]\s+)/, '').trim())
+    .filter(Boolean)
+}
+
+function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
   const label = labelFor(sectionKey, field.name)
   const value = item[field.name]
 
@@ -86,10 +95,27 @@ function Field({ sectionKey, field, item, onChange, autoFocus }) {
       </label>
     )
   }
+  function handlePaste(e) {
+    const pieces = splitList(e.clipboardData.getData('text'))
+    // A single thing is pasted as usual
+    if (pieces.length < 2) return
+    e.preventDefault()
+    const input = e.target
+    // Empty or all selected: the paste would replace what is there
+    const replace = input.selectionStart === 0 && input.selectionEnd === input.value.length
+    onPasteList(field.name, pieces, replace)
+  }
+
   return (
     <label>
       {label}
-      <input value={value} autoFocus={autoFocus} onChange={(e) => onChange(field.name, e.target.value)}/>
+      <input
+        value={value}
+        autoFocus={autoFocus}
+        placeholder={field.pasteList ? texts.common.pasteListHint : undefined}
+        onPaste={field.pasteList ? handlePaste : undefined}
+        onChange={(e) => onChange(field.name, e.target.value)}
+      />
     </label>
   )
 }
@@ -166,7 +192,7 @@ function Entry({ transitionName, ...body }) {
 // opened: the optional fields opened in this visit, by name ("link").
 const EntryBody = memo(function EntryBody({
   item, fields, sectionKey, draggable, appear, leaving, opened, handleAttributes, handleListeners, handleRef,
-  onLeft, onChangeItem, onRemove, onDuplicate, onOpenOptional, onCloseOptional,
+  onLeft, onChangeItem, onPasteList, onRemove, onDuplicate, onOpenOptional, onCloseOptional,
 }) {
   const id = item.id
   const openedNames = opened ? opened.split(',') : []
@@ -201,6 +227,7 @@ const EntryBody = memo(function EntryBody({
                 field={field}
                 item={item}
                 onChange={(name, value) => onChangeItem(id, name, value)}
+                onPasteList={(name, pieces, replace) => onPasteList(id, name, pieces, replace)}
                 autoFocus={field.optional && openedNames.includes(field.name)}
               />
             )
@@ -292,6 +319,41 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     onChange((current) => current.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
   }, [onChange])
 
+  // A pasted list: the first piece goes in the field if the paste replaces its text, the rest
+  // become entries right below. Pieces already in the list are skipped. The entry's other text
+  // fields (a skill's category) are shared by the new ones.
+  const pasteList = useCallback((id, name, pieces, replace) => {
+    const target = latestList.current.find((item) => item.id === id)
+    const known = new Set(latestList.current
+      .filter((item) => !(replace && item.id === id))
+      .map((item) => String(item[name] ?? '').trim().toLowerCase()))
+    const fresh = pieces.filter((piece) => {
+      const key = piece.toLowerCase()
+      if (known.has(key)) return false
+      known.add(key)
+      return true
+    })
+    if (!fresh.length) return
+
+    const [first, ...rest] = replace ? fresh : [null, ...fresh]
+    const shared = Object.fromEntries(fields
+      .filter((field) => field.type === 'text' && field.name !== name && target[field.name])
+      .map((field) => [field.name, target[field.name]]))
+    const created = rest.map((piece) => ({ ...emptyItem(fields), ...shared, [name]: piece }))
+    const createdIds = created.map((item) => item.id)
+    const withFirst = (item, text) => (replace && item.id === id ? { ...item, [name]: text } : item)
+
+    setAdded((ids) => [...ids, ...createdIds])
+    onChange((current) => {
+      const next = current.map((item) => withFirst(item, first))
+      next.splice(next.findIndex((item) => item.id === id) + 1, 0, ...created)
+      return next
+    })
+    offerUndo(texts.undo.pasted(fresh.length), () => onChange((current) => current
+      .filter((item) => !createdIds.includes(item.id))
+      .map((item) => withFirst(item, target[name]))))
+  }, [fields, offerUndo, onChange])
+
   const openOptional = useCallback((id, name) => {
     setOpenedOptional((opened) => [...opened, `${id}:${name}`])
   }, [])
@@ -365,6 +427,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
               opened={openedOf(item.id)}
               onLeft={left}
               onChangeItem={changeItem}
+              onPasteList={pasteList}
               onRemove={remove}
               onDuplicate={duplicate}
               onOpenOptional={openOptional}
