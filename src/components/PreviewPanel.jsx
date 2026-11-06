@@ -11,12 +11,19 @@ const Preview = lazy(() => import('./Preview.jsx'))
 // The browser animates from a snapshot of the page before to the page after (for full screen:
 // pages and toolbar glide, the form fades out). flushSync: React must finish the change inside
 // the callback, or the "after" snapshot would still be the old page. Without support it just switches.
-function withTransition(update) {
+// `direction` ('enter' or 'exit') is marked on the page meanwhile: the top bar's frosted backdrop
+// fades out or in by it (App.css).
+function withTransition(update, direction) {
   if (!document.startViewTransition || prefersReducedMotion()) {
     update()
     return
   }
-  document.startViewTransition(() => flushSync(update))
+  const root = document.documentElement
+  root.dataset.fullScreenTransition = direction
+  const transition = document.startViewTransition(() => flushSync(update))
+  transition.finished.finally(() => {
+    if (root.dataset.fullScreenTransition === direction) delete root.dataset.fullScreenTransition
+  })
 }
 
 /**
@@ -28,13 +35,13 @@ function PreviewPanel({ cv, onTemplateChange, onDesignChange }) {
   const [fullScreen, setFullScreen] = useState(false)
 
   function changeFullScreen(value) {
-    withTransition(() => setFullScreen(value))
+    withTransition(() => setFullScreen(value), value ? 'enter' : 'exit')
   }
 
   useEffect(() => {
     if (!fullScreen) return
     function handleKeyDown(e) {
-      if (e.key === 'Escape') withTransition(() => setFullScreen(false))
+      if (e.key === 'Escape') withTransition(() => setFullScreen(false), 'exit')
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)

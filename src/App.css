@@ -185,22 +185,48 @@ button:hover .trash-lid { rotate: -16deg; }
 .toolbar-dock { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; }
 .toolbar { display: flex; align-items: center; gap: 2px; padding: 6px; border-radius: var(--r-pill); white-space: nowrap; }
 .full-screen-button { width: 52px; height: 52px; padding: 0; }
-/* Full-screen animation (withTransition in App.jsx): the toolbar, the zoom pill and each page
+/* Full-screen animation (withTransition in PreviewPanel.jsx): the toolbar, the zoom pill and each page
    (PdfPage.jsx) are named so they glide to their new place; the rest of the page simply fades */
 /* Named only while the animation runs: a named element stops everything inside it from blurring
    what is behind, and the menus' glass would go flat */
-:root:active-view-transition .toolbar-dock { view-transition-name: toolbar; }
+/* The pill and the round button are two pieces, not the whole dock: each gets its own rounded
+   frosted backdrop below (the dock's would be one rectangle, blurring the gap between them) */
+:root:active-view-transition .toolbar { view-transition-name: toolbar; }
+:root:active-view-transition .full-screen-button { view-transition-name: full-screen-button; }
+/* A named piece's glass can only blur what is inside it (nothing), so while it glided it was a
+   clear film over a sharp CV. The box the browser moves it in can blur what is behind, so the
+   blur goes there, with the piece's round shape: the glass stays frosted all the way. */
+::view-transition-group(toolbar), ::view-transition-group(full-screen-button), ::view-transition-group(zoom-pill) {
+  border-radius: var(--r-pill); -webkit-backdrop-filter: var(--frost-blur); backdrop-filter: var(--frost-blur);
+}
 /* Named pieces are drawn above the rest of the page while they glide, so the pages flew over
    the top bar, which then snapped back on top at the end. The bar is named too, but only
    outside full screen: a piece only in the state before stays above those it was above, and
    one only in the state after goes on top, so it fades out over the pages when full screen
-   opens and fades in over them when it closes. Solid glass meanwhile, like the zoom pill. */
-:root:active-view-transition .app:not(:has(.preview-panel.full-screen)) .top-layer { view-transition-name: top-bar; }
-:root:active-view-transition .topbar::before,
-:root:active-view-transition .public-bar { background: var(--frost-tint-solid, var(--frost-solid)); -webkit-backdrop-filter: none; backdrop-filter: none; }
-/* While it glides, its glass is the solid one: the browser's snapshot of a blurring element is a
-   rectangle, and its corners showed what was behind (the green Download button) around the pill */
-:root:active-view-transition .zoom-reset { view-transition-name: zoom-pill; background: var(--frost-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+   opens and fades in over them when it closes. The bar and the public mode strip are separate
+   pieces, so each gets its own rounded frosted backdrop, as the toolbar does. */
+:root:active-view-transition .app:not(:has(.preview-panel.full-screen)) .topbar { view-transition-name: top-bar; }
+:root:active-view-transition .app:not(:has(.preview-panel.full-screen)) .public-bar { view-transition-name: public-bar; }
+::view-transition-group(top-bar), ::view-transition-group(public-bar) {
+  border-radius: var(--r-pill); -webkit-backdrop-filter: var(--frost-blur); backdrop-filter: var(--frost-blur);
+}
+/* They fade instead of gliding, and the fade is on their snapshot, not on the box holding the
+   blur, which would vanish all at once at the end: the box fades along (direction from
+   PreviewPanel.jsx) */
+:root[data-full-screen-transition="enter"]::view-transition-group(top-bar),
+:root[data-full-screen-transition="enter"]::view-transition-group(public-bar) { animation: frost-out 0.4s var(--spring) both; }
+:root[data-full-screen-transition="exit"]::view-transition-group(top-bar),
+:root[data-full-screen-transition="exit"]::view-transition-group(public-bar) { animation: frost-in 0.4s var(--spring) both; }
+@keyframes frost-out { to { opacity: 0; } }
+@keyframes frost-in { from { opacity: 0; } }
+:root:active-view-transition .public-bar,
+:root:active-view-transition .topbar::before { -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* While they glide, the blur is the moving box's (above), not their own: the browser's snapshot of
+   an element that blurs is a rectangle, and its corners showed what was behind around the pill.
+   They keep their tint. */
+:root:active-view-transition .zoom-reset { view-transition-name: zoom-pill; }
+:root:active-view-transition :is(.zoom-reset, .full-screen-button),
+:root:active-view-transition .toolbar::before { -webkit-backdrop-filter: none; backdrop-filter: none; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: var(--spring); }
 .tool { position: relative; }
 
