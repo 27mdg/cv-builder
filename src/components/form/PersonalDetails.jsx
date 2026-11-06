@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import texts from '../../locales/es.js'
 import PhotoField from './PhotoField.jsx'
 import DatePicker from './DatePicker.jsx'
@@ -236,4 +236,5 @@ function PersonalDetails({ data, onChange }) {
   )
 }
 
-export default PersonalDetails
+// memo: it only redraws when the personal details change
+export default memo(PersonalDetails)

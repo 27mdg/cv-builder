@@ -69,9 +69,11 @@ function App() {
   const [undo, setUndo] = useState(null)
   const closeUndo = useCallback(() => setUndo(null), [])
 
-  function offerUndo(message, restore) {
+  // Stable (useCallback), like the change functions below: the form's sections only redraw when
+  // what they receive changes (memo), and a new function on every render would count as a change
+  const offerUndo = useCallback((message, restore) => {
     setUndo({ id: crypto.randomUUID(), message, restore })
-  }
+  }, [])
 
   function runUndo() {
     undo?.restore()
@@ -110,30 +112,41 @@ function App() {
   // to resize), the second one does not wipe out the first.
   // `value` can also be a function of the section's latest value: an item that fades out is
   // removed a moment later, and by then the user may have typed something else
-  function changeSection(key, value) {
+  const changeSection = useCallback((key, value) => {
     setCv((previous) => ({ ...previous, [key]: typeof value === 'function' ? value(previous[key]) : value }))
+  }, [])
+
+  // One onChange per section, made once and kept, so its section (memo) can skip redrawing
+  const sectionChangers = useRef(new Map())
+  function changerFor(key) {
+    if (!sectionChangers.current.has(key)) sectionChangers.current.set(key, (value) => changeSection(key, value))
+    return sectionChangers.current.get(key)
   }
 
-  function changeDesign(field, value) {
+  const changeDesign = useCallback((field, value) => {
     setCv((previous) => ({ ...previous, design: { ...previous.design, [field]: value } }))
-  }
+  }, [])
 
   // Like changeSection, `value` can be a function of the field's latest value
-  function changePersonal(field, value) {
+  const changePersonal = useCallback((field, value) => {
     setCv((previous) => {
       const next = typeof value === 'function' ? value(previous.personal[field]) : value
       return { ...previous, personal: { ...previous.personal, [field]: next } }
     })
-  }
+  }, [])
+
+  const changeSignature = useCallback((field, value) => {
+    changeSection('signature', (signature) => ({ ...signature, [field]: value }))
+  }, [changeSection])
 
   // A new template starts with its own colour and font, so it looks like its thumbnail
-  function changeTemplate(id) {
+  const changeTemplate = useCallback((id) => {
     setCv((previous) => ({
       ...previous,
       template: id,
       design: { ...previous.design, color: '', font: '' },
     }))
-  }
+  }, [])
 
   // Only what the user typed is cleared; template, design and section order are not personal data
   function clearCv() {
@@ -265,19 +278,19 @@ function App() {
     if (isCustomKey(key)) {
       return Array.isArray(cv[key])
         // Its labels come from texts.customSection, as it has none of its own
-        ? <ListSection sectionKey="customSection" fields={customFields} list={cv[key]} onChange={(value) => changeSection(key, value)}/>
-        : <LongText value={cv[key]} hint={texts.customSection.hint} onChange={(value) => changeSection(key, value)}/>
+        ? <ListSection sectionKey="customSection" fields={customFields} list={cv[key]} onChange={changerFor(key)}/>
+        : <LongText value={cv[key]} hint={texts.customSection.hint} onChange={changerFor(key)}/>
     }
     const listSection = sections.find((section) => section.key === key)
     if (!listSection) {
-      return <LongText value={cv[key]} hint={texts[key].hint} onChange={(value) => changeSection(key, value)}/>
+      return <LongText value={cv[key]} hint={texts[key].hint} onChange={changerFor(key)}/>
     }
     const list = (
       <ListSection
         sectionKey={key}
         fields={listSection.fields}
         list={cv[key]}
-        onChange={(value) => changeSection(key, value)}
+        onChange={changerFor(key)}
       />
     )
     if (key === 'skills') {
@@ -386,7 +399,7 @@ function App() {
                   onRemove={() => removeSection(key)}
                 >
                   {key === 'signature'
-                    ? <SignatureField value={cv.signature} onChange={(field, value) => changeSection('signature', (s) => ({ ...s, [field]: value }))}/>
+                    ? <SignatureField value={cv.signature} onChange={changeSignature}/>
                     : (
                       <>
                         <label>

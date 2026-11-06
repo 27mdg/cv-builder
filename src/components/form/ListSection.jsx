@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import texts from '../../locales/es.js'
 import Animated from '../Animated.jsx'
@@ -141,28 +141,14 @@ function sortedByDate(list, fields) {
     .map(({ item }) => item)
 }
 
-// An item that can be dragged by its handle. children(handle) draws the item with the handle
-// inside; with a single item there is nothing to reorder, so no handle.
-// transitionName: only while sorting by date, so the browser can slide each item to its new place
-function SortableItem({ id, draggable, transitionName, children }) {
+// The draggable box of an entry. The drag library redraws every draggable box in the form on
+// any keystroke (it reads its own context, which memo cannot stop), so the box stays cheap and
+// the entry inside it (EntryBody, memo) is drawn again only when its own data changes.
+// transitionName: only while sorting by date, so the browser can slide each entry to its new place.
+function Entry({ transitionName, ...body }) {
   const {
     attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging,
-  } = useSortable({ id })
-
-  const handle = draggable && (
-    <button
-      type="button"
-      ref={setActivatorNodeRef}
-      className="drag-handle item-handle"
-      title={texts.reorderItems.handle}
-      aria-label={texts.reorderItems.handle}
-      {...attributes}
-      {...listeners}
-    >
-      <GripIcon/>
-    </button>
-  )
-
+  } = useSortable({ id: body.item.id })
   return (
     <div
       ref={setNodeRef}
@@ -170,10 +156,97 @@ function SortableItem({ id, draggable, transitionName, children }) {
       // Translate, not Transform: items have different heights and would be stretched
       style={{ transform: CSS.Translate.toString(transform), transition, viewTransitionName: transitionName }}
     >
-      {children(handle)}
+      <EntryBody {...body} handleAttributes={attributes} handleListeners={listeners} handleRef={setActivatorNodeRef}/>
     </div>
   )
 }
+
+// One entry of the list, with its drag handle (with a single entry there is nothing to reorder,
+// so no handle). Everything it receives is a plain value or a function that never changes.
+// opened: the optional fields opened in this visit, by name ("link").
+const EntryBody = memo(function EntryBody({
+  item, fields, sectionKey, draggable, appear, leaving, opened, handleAttributes, handleListeners, handleRef,
+  onLeft, onChangeItem, onRemove, onDuplicate, onOpenOptional, onCloseOptional,
+}) {
+  const id = item.id
+  const openedNames = opened ? opened.split(',') : []
+  const shows = (field) => !field.optional || Boolean(item[field.name]) || openedNames.includes(field.name)
+  const groups = groupPairs(fields.filter(shows))
+
+  const handle = draggable && (
+    <button
+      type="button"
+      ref={handleRef}
+      className="drag-handle item-handle"
+      title={texts.reorderItems.handle}
+      aria-label={texts.reorderItems.handle}
+      {...handleAttributes}
+      {...handleListeners}
+    >
+      <GripIcon/>
+    </button>
+  )
+
+  return (
+    <Animated appear={appear} leaving={leaving} onLeft={() => onLeft(id)}>
+      <div className={item.hidden ? 'item is-hidden' : 'item'} style={itemSize(groups)}>
+        {handle}
+        {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
+        {groups.map((group) => {
+          const rendered = group.map((field) => {
+            const input = (
+              <Field
+                key={field.name}
+                sectionKey={sectionKey}
+                field={field}
+                item={item}
+                onChange={(name, value) => onChangeItem(id, name, value)}
+                autoFocus={field.optional && openedNames.includes(field.name)}
+              />
+            )
+            if (!field.optional) return input
+            // An optional field can be taken away again with its ×, like the extra
+            // personal details: it is emptied and its "+" button comes back
+            return (
+              <div className="field" key={field.name}>
+                {input}
+                <button
+                  type="button"
+                  className="field-remove"
+                  title={texts.common.remove}
+                  aria-label={`${texts.common.remove}: ${labelFor(sectionKey, field.name)}`}
+                  onClick={() => onCloseOptional(id, field.name)}
+                >
+                  <CloseIcon/>
+                </button>
+              </div>
+            )
+          })
+          return pairOf(group[0])
+            ? <div className="field-row" key={group[0].name}>{rendered}</div>
+            : rendered
+        })}
+        <div className="item-actions">
+          <button type="button" className="btn btn-ghost btn-small btn-remove" onClick={() => onRemove(id)}>{texts.common.remove}</button>
+          <button type="button" className="btn btn-ghost btn-small copy-chip" onClick={() => onDuplicate(id)}>
+            <CopyIcon/>{texts.common.duplicate}
+          </button>
+          {fields.filter((field) => !shows(field)).map((field) => (
+            <button type="button" className="btn btn-ghost btn-small add-field" key={field.name}
+              onClick={() => onOpenOptional(id, field.name)}>
+              <PlusIcon/>{labelFor(sectionKey, field.name)}
+            </button>
+          ))}
+          <button type="button" className="btn btn-ghost btn-small" aria-pressed={Boolean(item.hidden)}
+            onClick={() => onChangeItem(id, 'hidden', !item.hidden)}>
+            <VisibilityIcon hidden={item.hidden}/>
+            {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
+          </button>
+        </div>
+      </div>
+    </Animated>
+  )
+})
 
 function ListSection({ sectionKey, fields, list, onChange }) {
   // Items added in this visit: only these grow in, so nothing animates on page load
@@ -182,9 +255,12 @@ function ListSection({ sectionKey, fields, list, onChange }) {
   const [openedOptional, setOpenedOptional] = useState([])
   const { isLeaving, leave, left } = useLeaving()
   const offerUndo = useUndo()
-  const optionalKey = (item, field) => `${item.id}:${field.name}`
-  const shows = (item, field) => !field.optional || Boolean(item[field.name])
-    || openedOptional.includes(optionalKey(item, field))
+  // The entries' functions must never change (see Entry), so instead of the `list` of the render
+  // they were made in, they read the latest one from here when they run
+  const latestList = useRef(list)
+  useEffect(() => {
+    latestList.current = list
+  })
 
   function add() {
     const item = emptyItem(fields)
@@ -192,9 +268,9 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     onChange([...list, item])
   }
 
-  function remove(id) {
-    const index = list.findIndex((item) => item.id === id)
-    const item = list[index]
+  const remove = useCallback((id) => {
+    const index = latestList.current.findIndex((item) => item.id === id)
+    const item = latestList.current[index]
     leave(id, () => {
       onChange((current) => current.filter((other) => other.id !== id))
       // An empty item is not worth a notice
@@ -202,15 +278,32 @@ function ListSection({ sectionKey, fields, list, onChange }) {
         offerUndo(texts.undo.item, () => onChange((current) => insertAt(current, index, item)))
       }
     })
-  }
+  }, [leave, offerUndo, onChange])
 
   // E.g. two positions at the same company: the copy goes right below and only needs a few changes
-  function duplicate(id) {
-    const index = list.findIndex((item) => item.id === id)
-    const copy = { ...list[index], id: crypto.randomUUID() }
-    setAdded([...added, copy.id])
-    onChange(insertAt(list, index + 1, copy))
-  }
+  const duplicate = useCallback((id) => {
+    const index = latestList.current.findIndex((item) => item.id === id)
+    const copy = { ...latestList.current[index], id: crypto.randomUUID() }
+    setAdded((ids) => [...ids, copy.id])
+    onChange((current) => insertAt(current, index + 1, copy))
+  }, [onChange])
+
+  const changeItem = useCallback((id, name, value) => {
+    onChange((current) => current.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
+  }, [onChange])
+
+  const openOptional = useCallback((id, name) => {
+    setOpenedOptional((opened) => [...opened, `${id}:${name}`])
+  }, [])
+
+  const closeOptional = useCallback((id, name) => {
+    changeItem(id, name, '')
+    setOpenedOptional((opened) => opened.filter((key) => key !== `${id}:${name}`))
+  }, [changeItem])
+
+  // As one plain string per entry, so an entry whose fields did not change can skip redrawing
+  const openedOf = (id) => openedOptional
+    .filter((key) => key.startsWith(`${id}:`)).map((key) => key.slice(id.length + 1)).join(',')
 
   const hasDates = fields.some((field) => field.type === 'date')
   const [sorting, setSorting] = useState(false)
@@ -232,10 +325,6 @@ function ListSection({ sectionKey, fields, list, onChange }) {
     flushSync(() => setSorting(true))
     document.startViewTransition(() => flushSync(() => onChange(sorted)))
       .finished.finally(() => setSorting(false))
-  }
-
-  function change(id, name, value) {
-    onChange(list.map((item) => (item.id === id ? { ...item, [name]: value } : item)))
   }
 
   const sensors = useDragSensors()
@@ -264,79 +353,23 @@ function ListSection({ sectionKey, fields, list, onChange }) {
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} accessibility={accessibility}>
         <SortableContext items={list.map((item) => item.id)} strategy={verticalListSortingStrategy}>
           {list.map((item) => (
-            <SortableItem
+            <Entry
               key={item.id}
-              id={item.id}
+              item={item}
+              fields={fields}
+              sectionKey={sectionKey}
               draggable={list.length > 1}
               transitionName={sorting ? `item-${item.id}` : undefined}
-            >
-              {(handle) => (
-                <Animated
-                  appear={added.includes(item.id)}
-                  leaving={isLeaving(item.id)}
-                  onLeft={() => left(item.id)}
-                >
-                  <div className={item.hidden ? 'item is-hidden' : 'item'} style={itemSize(groupPairs(fields.filter((field) => shows(item, field))))}>
-                    {handle}
-                    {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
-                    {groupPairs(fields.filter((field) => shows(item, field))).map((group) => {
-                      const rendered = group.map((field) => {
-                        const input = (
-                          <Field
-                            key={field.name}
-                            sectionKey={sectionKey}
-                            field={field}
-                            item={item}
-                            onChange={(name, value) => change(item.id, name, value)}
-                            autoFocus={field.optional && openedOptional.includes(optionalKey(item, field))}
-                          />
-                        )
-                        if (!field.optional) return input
-                        // An optional field can be taken away again with its ×, like the extra
-                        // personal details: it is emptied and its "+" button comes back
-                        return (
-                          <div className="field" key={field.name}>
-                            {input}
-                            <button
-                              type="button"
-                              className="field-remove"
-                              title={texts.common.remove}
-                              aria-label={`${texts.common.remove}: ${labelFor(sectionKey, field.name)}`}
-                              onClick={() => {
-                                change(item.id, field.name, '')
-                                setOpenedOptional(openedOptional.filter((key) => key !== optionalKey(item, field)))
-                              }}
-                            >
-                              <CloseIcon/>
-                            </button>
-                          </div>
-                        )
-                      })
-                      return pairOf(group[0])
-                        ? <div className="field-row" key={group[0].name}>{rendered}</div>
-                        : rendered
-                    })}
-                    <div className="item-actions">
-                      <button type="button" className="btn btn-ghost btn-small btn-remove" onClick={() => remove(item.id)}>{texts.common.remove}</button>
-                      <button type="button" className="btn btn-ghost btn-small copy-chip" onClick={() => duplicate(item.id)}>
-                        <CopyIcon/>{texts.common.duplicate}
-                      </button>
-                      {fields.filter((field) => !shows(item, field)).map((field) => (
-                        <button type="button" className="btn btn-ghost btn-small add-field" key={field.name}
-                          onClick={() => setOpenedOptional([...openedOptional, optionalKey(item, field)])}>
-                          <PlusIcon/>{labelFor(sectionKey, field.name)}
-                        </button>
-                      ))}
-                      <button type="button" className="btn btn-ghost btn-small" aria-pressed={Boolean(item.hidden)}
-                        onClick={() => change(item.id, 'hidden', !item.hidden)}>
-                        <VisibilityIcon hidden={item.hidden}/>
-                        {item.hidden ? texts.visibility.showItem : texts.visibility.hideItem}
-                      </button>
-                    </div>
-                  </div>
-                </Animated>
-              )}
-            </SortableItem>
+              appear={added.includes(item.id)}
+              leaving={isLeaving(item.id)}
+              opened={openedOf(item.id)}
+              onLeft={left}
+              onChangeItem={changeItem}
+              onRemove={remove}
+              onDuplicate={duplicate}
+              onOpenOptional={openOptional}
+              onCloseOptional={closeOptional}
+            />
           ))}
         </SortableContext>
       </DndContext>
@@ -360,4 +393,5 @@ function ListSection({ sectionKey, fields, list, onChange }) {
   )
 }
 
-export default ListSection
+// memo: it only redraws when its own list changes, not on every keystroke elsewhere in the CV
+export default memo(ListSection)

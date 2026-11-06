@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import texts from '../../locales/es.js'
 import DatePicker from './DatePicker.jsx'
 import { useUndo } from '../undo.js'
@@ -141,4 +141,4 @@ function SignatureField({ value, onChange }) {
   )
 }
 
-export default SignatureField
+export default memo(SignatureField)

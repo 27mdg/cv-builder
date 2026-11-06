@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import texts from '../locales/es.js'
 import { templateInfo } from '../templates/list.js'
 import { fontOf } from '../data/design.js'
@@ -51,4 +52,5 @@ function Toolbar({
   )
 }
 
-export default Toolbar
+// memo: the CV changes on every keystroke, its design and template much less often
+export default memo(Toolbar)

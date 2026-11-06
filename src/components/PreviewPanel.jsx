@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import texts from '../locales/es.js'
 import Toolbar from './Toolbar.jsx'
@@ -34,9 +34,10 @@ function withTransition(update, direction) {
 function PreviewPanel({ cv, onTemplateChange, onDesignChange }) {
   const [fullScreen, setFullScreen] = useState(false)
 
-  function changeFullScreen(value) {
+  // Stable, so the toolbar (memo) does not redraw on every keystroke
+  const changeFullScreen = useCallback((value) => {
     withTransition(() => setFullScreen(value), value ? 'enter' : 'exit')
-  }
+  }, [])
 
   useEffect(() => {
     if (!fullScreen) return

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import texts from '../../locales/es.js'
 import RichTextEditor from './RichTextEditor.jsx'
 
@@ -6,4 +7,4 @@ function LongText({ value, hint, onChange }) {
   return <RichTextEditor label={texts.common.description} value={value} placeholder={hint} onChange={onChange}/>
 }
 
-export default LongText
+export default memo(LongText)
