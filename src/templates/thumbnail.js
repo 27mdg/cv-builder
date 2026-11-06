@@ -1,7 +1,6 @@
-import { pdf } from '@react-pdf/renderer'
 import * as pdfjs from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import { cvDocument } from './document.jsx'
+import { buildPdf } from './pdfClient.js'
 import sampleCv from '../locales/sampleCv.es.js'
 
 // Loaded with import() from the template picker: it pulls in the heavy PDF libraries.
@@ -33,8 +32,7 @@ function placeholderPhoto() {
 async function render(id, width) {
   samplePhoto ??= placeholderPhoto()
   const cv = { ...sampleCv, template: id, personal: { ...sampleCv.personal, photo: samplePhoto } }
-  const blob = await pdf(cvDocument(cv)).toBlob()
-  const pdfDocument = await pdfjs.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise
+  const pdfDocument = await pdfjs.getDocument({ data: await buildPdf(cv) }).promise
   try {
     const page = await pdfDocument.getPage(1)
     const scale = (width / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1)

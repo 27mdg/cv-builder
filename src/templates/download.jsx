@@ -1,10 +1,9 @@
-import { pdf } from '@react-pdf/renderer'
-import { cvDocument } from './document.jsx'
+import { buildPdf } from './pdfClient.js'
 import { baseName, downloadBlob } from '../data/file.js'
 
-// The PDF library is heavy: this file is only loaded when "Download" is clicked.
+// Loaded with import() when "Download" is clicked
 
 export async function downloadPdf(cv) {
-  const blob = await pdf(cvDocument(cv)).toBlob()
-  downloadBlob(blob, baseName(cv) + '.pdf')
+  const bytes = await buildPdf(cv)
+  downloadBlob(new Blob([bytes], { type: 'application/pdf' }), baseName(cv) + '.pdf')
 }

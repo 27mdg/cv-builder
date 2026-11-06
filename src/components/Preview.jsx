@@ -1,9 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { pdf } from '@react-pdf/renderer'
 import * as pdfjs from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import texts from '../locales/es.js'
-import { cvDocument } from '../templates/document.jsx'
+import { buildPdf } from '../templates/pdfClient.js'
 import PdfPage from './PdfPage.jsx'
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
@@ -69,8 +68,7 @@ function Preview({ cv }) {
     let cancelled = false
     const timer = setTimeout(async () => {
       try {
-        const blob = await pdf(cvDocument(cv)).toBlob()
-        const loaded = await pdfjs.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise
+        const loaded = await pdfjs.getDocument({ data: await buildPdf(cv) }).promise
         if (cancelled) {
           loaded.loadingTask.destroy()
           return
