@@ -134,6 +134,26 @@ button:hover .trash-lid { rotate: -16deg; }
 .app:has(.splitter.dragging) { cursor: col-resize; }
 .splitter:focus-visible { outline: none; }
 .splitter:focus-visible .splitter-knob { box-shadow: var(--knob-shadow), var(--focus-ring); }
+/* Hint beside the knob after a short hover, like the browser's own one but in glass. It frosts
+   in and out by animating the blur, tint and text together: fading the whole box with opacity
+   makes glass look washed out. Hidden while dragging. */
+.splitter .splitter-tip {
+  position: absolute; top: 50%; left: calc(100% + 6px); translate: 0 -50%; padding: 6px 10px;
+  font-size: 12px; white-space: nowrap; pointer-events: none;
+  background: transparent; -webkit-backdrop-filter: blur(0) saturate(100%); backdrop-filter: blur(0) saturate(100%);
+  box-shadow: none; color: transparent;
+  transition: background-color var(--t-med), backdrop-filter var(--t-med), -webkit-backdrop-filter var(--t-med), box-shadow var(--t-med), color var(--t-med);
+}
+.splitter:hover:not(.dragging) .splitter-tip {
+  background: var(--frost); -webkit-backdrop-filter: var(--frost-blur); backdrop-filter: var(--frost-blur);
+  box-shadow: var(--frost-rim), var(--e3); color: var(--ink); transition-delay: 0.5s;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .splitter:hover:not(.dragging) .splitter-tip { background: var(--frost-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splitter .splitter-tip { transition-duration: 0s; }
+}
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
 /* Both ways: zoomed in, the pages get wider than the panel */
 .preview { box-sizing: border-box; height: 100%; overflow: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; }

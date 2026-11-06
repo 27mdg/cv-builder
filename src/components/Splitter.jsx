@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import texts from '../locales/es.js'
 import { GripIcon } from './Icons.jsx'
 
@@ -30,6 +30,8 @@ function Splitter() {
   // In px from the middle of the lane
   const [knobOffset, setKnobOffset] = useState(0)
   const bar = useRef(null)
+  const tip = useRef(null)
+  const hintId = useId()
 
   // Written straight onto the parent instead of going through App: otherwise the whole form
   // would re-render on every pixel of the drag. Layout effect, so the saved width shows
@@ -75,7 +77,12 @@ function Splitter() {
   }
 
   function handlePointerMove(e) {
-    if (!dragging) return
+    if (!dragging) {
+      // The hint sits beside the pointer, wherever it is along the lane. Set on the element, not
+      // through React, so hovering does not redraw anything.
+      tip.current.style.top = `${e.clientY - bar.current.getBoundingClientRect().top}px`
+      return
+    }
     moveTo(e.clientX)
     followPointer(e.clientY)
   }
@@ -102,7 +109,7 @@ function Splitter() {
       aria-valuenow={Math.round(share)}
       aria-valuetext={texts.splitter.value(Math.round(share))}
       tabIndex={0}
-      title={texts.splitter.hint}
+      aria-describedby={hintId}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={stopDragging}
@@ -111,6 +118,8 @@ function Splitter() {
       onKeyDown={handleKeyDown}
     >
       <span className="splitter-knob" style={{ translate: `0 ${knobOffset}px` }}><GripIcon/></span>
+      {/* Our own glass bubble instead of the browser's black title box, which cannot be styled */}
+      <span ref={tip} className="splitter-tip frost tip" id={hintId} role="tooltip">{texts.splitter.hint}</span>
     </div>
   )
 }
