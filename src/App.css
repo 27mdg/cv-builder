@@ -145,8 +145,15 @@ button:hover .trash-lid { rotate: -16deg; }
   .form-panel, .preview { scrollbar-color: var(--scrollbar-soft) transparent; }
   .form-panel:hover, .preview:hover { scrollbar-color: var(--scrollbar-thumb) transparent; }
 }
+/* The sheets grow with the panel up to 900px. When two fit side by side at 640px or more
+   (a panel of 1372px: 2 × 640 + the gap + the preview's padding), a CV of two or more pages
+   opens like a book. The same numbers are in Preview.jsx, which draws the pages at this size. */
+.pdf-pages { display: grid; grid-template-columns: min(100%, 900px); justify-content: center; gap: 28px; }
+@container (min-width: 1372px) {
+  .pdf-pages:has(> .pdf-page + .pdf-page) { grid-template-columns: repeat(2, minmax(0, 900px)); }
+}
 /* The sheet keeps square corners: it is paper */
-.pdf-page { display: block; width: 100%; max-width: 800px; margin: 0 auto 28px; background: var(--surface); box-shadow: var(--e2); }
+.pdf-page { display: block; width: 100%; background: var(--surface); box-shadow: var(--e2); }
 .loading { padding: 48px 16px; color: var(--ink-muted); text-align: center; }
 /* Fixed over the whole app, so it brings its own copy of the background */
 .preview-panel.full-screen { position: fixed; inset: 0; width: auto; z-index: 100; }

@@ -10,8 +10,19 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 
 // In ms. Generating the PDF is costly: it is not done on every keystroke, only after typing stops.
 const delay = 500
-// So pages do not look huge on large screens. Same as the max-width of .pdf-page in App.css.
-const maxWidth = 800
+// In px, the same as .pdf-pages in App.css, which sizes the pages on screen; here they only
+// decide the size the pages are drawn at. So pages do not look huge on large screens:
+const maxWidth = 900
+// Two pages side by side once each can be at least this wide:
+const minTwoWidth = 640
+const gap = 28
+
+/** Width of each page, in px, for a preview `available` px wide holding `pageCount` pages. */
+function pageWidth(available, pageCount) {
+  const half = (available - gap) / 2
+  const each = pageCount > 1 && half >= minTwoWidth ? half : available
+  return Math.floor(Math.min(each, maxWidth))
+}
 
 // Drawn with pdf.js on <canvas> instead of the browser's PDF viewer,
 // so its toolbar does not show and it does not flicker when regenerating.
@@ -56,7 +67,7 @@ function Preview({ cv }) {
 
   useEffect(() => {
     const observer = new ResizeObserver(([entry]) => {
-      setWidth(Math.floor(Math.min(entry.contentRect.width, maxWidth)))
+      setWidth(entry.contentRect.width)
     })
     observer.observe(container.current)
     return () => observer.disconnect()
@@ -64,19 +75,25 @@ function Preview({ cv }) {
 
   // While the panel is being resized the page is only stretched; it is redrawn sharp once it
   // stops, because redrawing on every pixel would make the drag stutter
+  const pageCount = pdfDocument?.numPages ?? 0
+  const targetWidth = pageWidth(width, pageCount)
   useEffect(() => {
-    const timer = setTimeout(() => setDrawWidth(width), 150)
+    const timer = setTimeout(() => setDrawWidth(targetWidth), 150)
     return () => clearTimeout(timer)
-  }, [width])
+  }, [targetWidth])
 
-  const pages = pdfDocument ? Array.from({ length: pdfDocument.numPages }, (_, i) => i + 1) : []
+  const pages = Array.from({ length: pageCount }, (_, i) => i + 1)
 
   return (
     <div className="preview" ref={container}>
       {!pdfDocument && <p className="loading">{texts.preview.loading}</p>}
-      {drawWidth > 0 && pages.map((number) => (
-        <PdfPage key={number} pdfDocument={pdfDocument} number={number} drawWidth={drawWidth}/>
-      ))}
+      {drawWidth > 0 && (
+        <div className="pdf-pages">
+          {pages.map((number) => (
+            <PdfPage key={number} pdfDocument={pdfDocument} number={number} drawWidth={drawWidth}/>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
