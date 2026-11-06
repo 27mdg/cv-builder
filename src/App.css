@@ -290,7 +290,9 @@ button:hover .trash-lid { rotate: -16deg; }
 .option-list button.selected::before { visibility: visible; }
 .date-menu { width: auto; padding: 6px 8px 8px; }
 /* Raised circles of colour; the chosen one gets a forest ring with a gap */
-.color-menu { display: flex; flex-wrap: wrap; gap: 12px; width: 244px; padding: 10px; }
+.color-menu { width: 244px; padding: 10px; }
+/* Four per row, spread over the whole width so they line up with the custom colour row below */
+.swatches { display: grid; grid-template-columns: repeat(4, 36px); justify-content: space-between; gap: 12px; }
 .tool-menu .swatch { display: block; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--swatch-edge), 0 1px 3px var(--swatch-edge); cursor: pointer; transition: transform var(--t-fast) var(--spring); }
 .tool-menu .swatch:hover { transform: scale(1.08); }
 .tool-menu .swatch.selected { box-shadow: inset 0 0 0 1px var(--swatch-edge), 0 0 0 3px var(--paper), 0 0 0 5px var(--forest); }
@@ -319,8 +321,33 @@ button:hover .trash-lid { rotate: -16deg; }
 .template-thumbnail img { display: block; width: 100%; height: 100%; }
 /* A rainbow, on purpose: it stands for "any colour" in the colour menu */
 .swatch-rainbow { position: relative; background: conic-gradient(red, orange, yellow, lime, cyan, blue, magenta, red); }
-/* Invisible but on top of the swatch, so the click lands on it and opens the colour picker */
-.swatch-rainbow input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+/* "Color personalizado": a pill as wide as the rows of swatches, its content centred, so it lines
+   up with them; mint when chosen */
+.tool-menu .custom-color {
+  display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 14px; padding: 6px 12px; border: none;
+  border-radius: var(--r-pill); background: var(--sunken); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer;
+  transition: background-color var(--t-fast);
+}
+.tool-menu .custom-color:hover { background: var(--sunken-hover); }
+.tool-menu .custom-color.selected { background: var(--mint); color: var(--forest); font-weight: 600; }
+.tool-menu .custom-color .swatch { flex: none; width: 24px; height: 24px; }
+
+/* ColorPicker.jsx: the square (hue + white across + black down), the hue slider and the code */
+.color-picker { display: grid; gap: 14px; padding-top: 12px; }
+.color-area {
+  position: relative; height: 140px; border-radius: var(--r-sm); cursor: crosshair; touch-action: none;
+  background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), hsl(var(--hue) 100% 50%);
+  box-shadow: inset 0 0 0 1px var(--swatch-edge);
+}
+.color-area:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--swatch-edge), var(--focus-ring); }
+/* The knob: the colour itself inside a paper ring, like the sliders' knobs */
+.color-knob { position: absolute; width: 18px; height: 18px; border: 3px solid var(--paper); border-radius: 50%; box-shadow: var(--knob-shadow); translate: -50% -50%; pointer-events: none; }
+.hue-range::-webkit-slider-runnable-track { background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+.hue-range::-moz-range-track { background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+.hue-range::-moz-range-progress { background: transparent; }
+.color-hex { display: flex; align-items: center; gap: 10px; }
+.color-preview { flex: none; width: 36px; height: 36px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--swatch-edge); }
+.color-hex .input { flex: 1; min-width: 0; height: 40px; padding: 0 14px; font-variant-numeric: tabular-nums; text-transform: uppercase; }
 
 /* Each section is its own flat card, a touch darker than the page, with a fine edge (--card-edge) */
 .section { padding: 0 24px; border-radius: var(--r-lg); background: var(--card); box-shadow: var(--card-edge); }

@@ -262,19 +262,21 @@ const es = {
   },
   // The ids must match `colors` in src/data/design.js
   colorNames: {
-    forest: 'Verde bosque',
     navy: 'Azul marino',
-    midnight: 'Azul noche',
-    slate: 'Pizarra',
     blue: 'Azul',
-    teal: 'Verde azulado',
-    green: 'Verde',
-    burgundy: 'Burdeos',
-    ochre: 'Ocre',
-    taupe: 'Topo',
-    purple: 'Morado',
+    charcoal: 'Gris carbón',
     black: 'Negro',
+    forest: 'Verde bosque',
+    teal: 'Verde azulado',
+    burgundy: 'Burdeos',
+    taupe: 'Topo',
     custom: 'Color personalizado',
+  },
+  colorPicker: {
+    area: 'Saturación y brillo',
+    areaValue: (saturation, brightness) => `Saturación ${saturation} %, brillo ${brightness} %`,
+    hue: 'Tono',
+    hex: 'Código del color',
   },
   // Only template names: the ids must match src/templates/list.js
   templates: {
