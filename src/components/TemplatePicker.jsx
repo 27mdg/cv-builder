@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import texts from '../locales/es.js'
 import templates from '../templates/list.js'
+import { prefersReducedMotion } from './useLeaving.js'
 
 const thumbnailWidth = 150
 
@@ -36,9 +37,43 @@ function Thumbnail({ id }) {
   )
 }
 
+// A wheel turn this big (in px) moves one template; touchpads send many small turns that add up
+const wheelStep = 60
+
+// The vertical wheel scrolls the strip sideways (down = right), one template per step. At either
+// end it is left alone, so the page goes on scrolling. A React onWheel cannot stop the page
+// scrolling (it is passive), hence the listener.
+function useWheelSideways(strip) {
+  useEffect(() => {
+    const element = strip.current
+    let pending = 0
+    function handleWheel(e) {
+      if (e.ctrlKey || e.shiftKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return
+      const direction = Math.sign(e.deltaY)
+      const atEnd = direction > 0
+        ? element.scrollLeft + element.clientWidth >= element.scrollWidth - 1
+        : element.scrollLeft <= 0
+      if (atEnd) return
+      e.preventDefault()
+      // Lines (some mice) to px
+      pending += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY
+      if (Math.abs(pending) < wheelStep) return
+      pending = 0
+      const card = element.firstElementChild
+      const gap = parseFloat(getComputedStyle(element).columnGap) || 0
+      element.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+    }
+    element.addEventListener('wheel', handleWheel, { passive: false })
+    return () => element.removeEventListener('wheel', handleWheel)
+  }, [strip])
+}
+
 function TemplatePicker({ selected, onSelect }) {
+  const strip = useRef(null)
+  useWheelSideways(strip)
+
   return (
-    <div className="template-picker">
+    <div className="template-picker" ref={strip}>
       {templates.map(({ id }) => (
         <button
           key={id}
