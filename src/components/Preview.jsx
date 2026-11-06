@@ -31,6 +31,15 @@ const maxZoom = 3
 // small steps of a touchpad pinch add up smoothly
 const zoomSpeed = 0.002
 
+function animating() {
+  try {
+    return document.documentElement.matches(':active-view-transition')
+  } catch {
+    // A browser that does not know the selector has no such animations either
+    return false
+  }
+}
+
 // The box around all the pages on screen. Not that of .pdf-pages: zoomed in, the pages spill
 // out of it, and it stays as wide as the panel.
 function pagesBox(preview) {
@@ -100,7 +109,14 @@ function Preview({ cv }) {
   const pageCount = pdfDocument?.numPages ?? 0
   const targetWidth = Math.round(pageWidth(width, pageCount) * zoom)
   useEffect(() => {
-    const timer = setTimeout(() => setDrawWidth(targetWidth), 150)
+    // Nor while the full-screen animation runs: redrawing big pages costs whole frames, and it
+    // made the end of the animation stutter. It waits for it to finish.
+    let timer
+    function draw() {
+      if (animating()) timer = setTimeout(draw, 100)
+      else setDrawWidth(targetWidth)
+    }
+    timer = setTimeout(draw, 150)
     return () => clearTimeout(timer)
   }, [targetWidth])
 

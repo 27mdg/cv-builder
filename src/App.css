@@ -110,6 +110,8 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Positioned with a z-index: the preview panel next to it is positioned too and, painted later,
    would cover the right half of the knob and its shadow */
 .splitter { position: relative; z-index: 1; flex: none; display: flex; align-items: center; justify-content: center; width: var(--gutter); background: linear-gradient(to right, var(--ivory) 50%, var(--desk) 50%); cursor: col-resize; touch-action: none; }
+/* Hidden with CSS and not removed by React, so full screen does not have to redraw the app */
+.workspace:has(> .preview-panel.full-screen) > .splitter { display: none; }
 .splitter-knob { display: flex; align-items: center; justify-content: center; width: var(--gutter); height: 44px; border-radius: var(--r-pill); background: var(--paper); color: var(--ink-muted); box-shadow: var(--knob-shadow); }
 .splitter-knob svg { width: 14px; height: 14px; }
 /* Gliding back to the middle when released, a little slower so the eye can follow it */

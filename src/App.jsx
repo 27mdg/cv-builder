@@ -1,5 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 import { isPublicMode, loadCv, saveCv, setPublicMode } from './data/storage.js'
 import initialCv from './data/initialCv.js'
@@ -21,32 +20,16 @@ import ClearButton from './components/ClearButton.jsx'
 import { PublicModeBar, PublicModeButton } from './components/PublicMode.jsx'
 import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
-import Toolbar from './components/Toolbar.jsx'
+import PreviewPanel from './components/PreviewPanel.jsx'
 import UndoToast from './components/UndoToast.jsx'
 import { UndoContext, insertAt } from './components/undo.js'
 import Splitter from './components/Splitter.jsx'
 import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
 import { LayersIcon, PlusIcon } from './components/Icons.jsx'
 
-// The preview is loaded separately (lazy) because the PDF library is heavy:
-// the form shows up instantly and the PDF a moment later.
-const Preview = lazy(() => import('./components/Preview.jsx'))
-
-// The browser animates from a snapshot of the page before to the page after (for full screen:
-// pages and toolbar glide, the form fades out). flushSync: React must finish the change inside
-// the callback, or the "after" snapshot would still be the old page. Without support it just switches.
-function withTransition(update) {
-  if (!document.startViewTransition || prefersReducedMotion()) {
-    update()
-    return
-  }
-  document.startViewTransition(() => flushSync(update))
-}
-
 function App() {
   const [cv, setCv] = useState(loadCv)
 
-  const [fullScreen, setFullScreen] = useState(false)
   const [publicMode, setPublicModeState] = useState(isPublicMode)
 
   // Also on a change of mode, so the CV moves to its new place (see setPublicMode)
@@ -121,19 +104,6 @@ function App() {
     observer.observe(layer)
     return () => observer.disconnect()
   }, [])
-
-  function changeFullScreen(value) {
-    withTransition(() => setFullScreen(value))
-  }
-
-  useEffect(() => {
-    if (!fullScreen) return
-    function handleKeyDown(e) {
-      if (e.key === 'Escape') withTransition(() => setFullScreen(false))
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [fullScreen])
 
   // Changes always start from the latest version of the CV (previous), not from `cv`.
   // That way, if two changes arrive almost at once (e.g. the photo, which takes a moment
@@ -441,20 +411,8 @@ function App() {
               onAddCustom={addCustomSection}
             />
           </section>
-          {!fullScreen && <Splitter/>}
-          <section className={fullScreen ? 'preview-panel full-screen' : 'preview-panel'}>
-            <Suspense fallback={<p className="loading">{texts.preview.loading}</p>}>
-              <Preview cv={cv}/>
-            </Suspense>
-            <Toolbar
-              template={cv.template}
-              onTemplateChange={changeTemplate}
-              design={cv.design}
-              onDesignChange={changeDesign}
-              fullScreen={fullScreen}
-              onFullScreenChange={changeFullScreen}
-            />
-          </section>
+          <Splitter/>
+          <PreviewPanel cv={cv} onTemplateChange={changeTemplate} onDesignChange={changeDesign}/>
         </main>
         <UndoToast undo={undo} onUndo={runUndo} onClose={closeUndo}/>
       </div>
