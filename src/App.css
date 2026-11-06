@@ -185,6 +185,14 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Named only while the animation runs: a named element stops everything inside it from blurring
    what is behind, and the menus' glass would go flat */
 :root:active-view-transition .toolbar-dock { view-transition-name: toolbar; }
+/* Named pieces are drawn above the rest of the page while they glide, so the pages flew over
+   the top bar, which then snapped back on top at the end. The bar is named too, but only
+   outside full screen: a piece only in the state before stays above those it was above, and
+   one only in the state after goes on top, so it fades out over the pages when full screen
+   opens and fades in over them when it closes. Solid glass meanwhile, like the zoom pill. */
+:root:active-view-transition .app:not(:has(.preview-panel.full-screen)) .top-layer { view-transition-name: top-bar; }
+:root:active-view-transition .topbar::before,
+:root:active-view-transition .public-bar { background: var(--frost-tint-solid, var(--frost-solid)); -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* While it glides, its glass is the solid one: the browser's snapshot of a blurring element is a
    rectangle, and its corners showed what was behind (the green Download button) around the pill */
 :root:active-view-transition .zoom-reset { view-transition-name: zoom-pill; background: var(--frost-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
