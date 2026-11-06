@@ -267,13 +267,14 @@ button:hover .trash-lid { rotate: -16deg; }
 .design-menu { width: 260px; max-height: 60vh; overflow-y: auto; padding: 6px; white-space: normal; }
 /* Thin pills like the panels' scrollbars (the template strip scrolls sideways); the browser's
    grey bar looked pasted onto the glass */
-.design-menu::-webkit-scrollbar, .template-picker::-webkit-scrollbar { width: 12px; height: 12px; }
+.design-menu::-webkit-scrollbar, .template-picker::-webkit-scrollbar, .select-list::-webkit-scrollbar { width: 12px; height: 12px; }
 .design-menu::-webkit-scrollbar-track { margin-block: 10px; background: transparent; }
 .template-picker::-webkit-scrollbar-track { margin-inline: 4px; background: transparent; }
-.design-menu::-webkit-scrollbar-thumb, .template-picker::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb) padding-box; }
-.design-menu::-webkit-scrollbar-button, .template-picker::-webkit-scrollbar-button { display: none; }
+.select-list::-webkit-scrollbar-track { margin-block: 8px; background: transparent; }
+.design-menu::-webkit-scrollbar-thumb, .template-picker::-webkit-scrollbar-thumb, .select-list::-webkit-scrollbar-thumb { border: 4px solid transparent; border-radius: 999px; background: var(--scrollbar-thumb) padding-box; }
+.design-menu::-webkit-scrollbar-button, .template-picker::-webkit-scrollbar-button, .select-list::-webkit-scrollbar-button { display: none; }
 @supports not selector(::-webkit-scrollbar) {
-  .design-menu, .template-picker { scrollbar-color: var(--scrollbar-thumb) transparent; scrollbar-width: thin; }
+  .design-menu, .template-picker, .select-list { scrollbar-color: var(--scrollbar-thumb) transparent; scrollbar-width: thin; }
 }
 .menu-subtitle, .slider-title { display: block; margin: 10px 6px 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
 .slider { display: block; margin-bottom: 12px; }
@@ -493,7 +494,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .date-popover { position: fixed; inset: auto; width: 312px; margin: 0; padding: 16px; overflow: visible; border: none; border-radius: var(--r-lg); background: var(--paper); color: var(--ink); box-shadow: var(--e3); animation: rise-in 0.18s var(--spring); }
 .date-header { display: grid; grid-template-columns: 32px 1fr 92px 32px; align-items: center; gap: 6px; margin-bottom: 10px; }
 .date-popover .select { margin-top: 0; }
-.form-panel .date-popover select { padding: 8px 30px 8px 10px; font-size: 14px; }
+.form-panel .date-popover .select-button { min-height: 0; padding: 8px 30px 8px 10px; font-size: 14px; }
 .date-popover .select::after { right: 10px; }
 .form-panel .date-nav { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%; background: transparent; color: var(--ink); }
 .form-panel .date-nav:hover { background: var(--tint); }
@@ -552,33 +553,44 @@ button:hover .trash-lid { rotate: -16deg; }
 
 .form-panel label, .form-panel .label, .date-label { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
 .form-panel label { margin-bottom: 16px; }
-/* contain on select: its width is set here, so the browser need not measure the text of all its
-   options to size it (each year dropdown has about seventy, and a long CV has hundreds) */
-.form-panel select { contain: inline-size; }
-.form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
+.form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel .select-button {
   display: block; width: 100%; margin-top: 6px; padding: 12px 16px; border: 1px solid transparent; border-radius: var(--r-md);
   background-color: var(--paper); border-color: var(--line); color: var(--ink); font: inherit; font-size: 16px; font-weight: 400;
   transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
 }
 /* Same weight as the rule above, and before the boxes inside other fields (tags, link), which
    stay see-through on hover */
-.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):hover { border-color: var(--line-strong); }
-/* The browser's own arrow sits against the edge and ignores padding, so Select.jsx draws its own */
-.form-panel select { appearance: none; padding-right: 44px; cursor: pointer; }
+.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, .select-button):hover { border-color: var(--line-strong); }
+/* Select.jsx: a button that looks like the other fields, with the arrow drawn by its wrapper */
+.form-panel .select-button { min-height: 50px; padding-right: 44px; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.form-panel .select-button.is-empty { color: var(--ink-muted); }
 .select { position: relative; display: block; margin-top: 6px; }
-.form-panel .select select { margin-top: 0; }
+.form-panel .select .select-button { margin-top: 0; }
 /* The SVG is only a mask (its shape): the colour is the background, so it can use the tokens */
 .select::after {
   content: ''; position: absolute; top: 50%; right: 16px; width: 14px; height: 14px; margin-top: -7px; pointer-events: none;
   background: var(--ink-muted); mask: var(--select-arrow) center / contain no-repeat; transition: rotate 0.2s ease;
 }
-.select:has(select:open)::after { rotate: 180deg; }
+.select:has(> .select-button[aria-expanded="true"])::after { rotate: 180deg; }
+/* The open list: a paper card like the calendar (content, so no glass), in the top layer.
+   The chosen option is mint with forest text; the one under the pointer or the keys, a tint. */
+.select-list {
+  position: fixed; inset: auto; box-sizing: border-box; max-height: min(300px, 50vh); margin: 0; padding: 6px;
+  overflow-y: auto; overscroll-behavior: contain; border: none; border-radius: var(--r-md);
+  background: var(--paper); color: var(--ink); box-shadow: var(--e3); font-size: 15px;
+  animation: rise-in 0.15s var(--spring);
+}
+.select-option { display: block; padding: 8px 12px; border-radius: var(--r-sm); white-space: nowrap; cursor: pointer; }
+.select-option.active { background: var(--tint); }
+.select-option[aria-selected="true"] { background: var(--mint); color: var(--forest); font-weight: 600; }
+.select-option[aria-selected="true"].active { box-shadow: inset 0 0 0 1.5px var(--forest); }
 @media (prefers-reduced-motion: reduce) {
   .select::after { transition: none; }
+  .select-list { animation: none; }
 }
 /* Like the kit's .input: pressed into the paper, and white with a forest edge and a soft halo while
    typing. The halo shows on any focus, not just keyboard focus: it tells where you are typing. */
-.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, select):focus { outline: none; border-color: var(--forest); background-color: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
+.form-panel :is(input:not([type="checkbox"]):not([type="file"]), textarea, .select-button):focus { outline: none; border-color: var(--forest); background-color: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
 .form-panel input::placeholder, .form-panel textarea::placeholder { color: var(--ink-muted); }
 /* The browser paints autofilled fields light blue; its background cannot be changed directly,
    so a wide inner shadow in our field colour covers it */
