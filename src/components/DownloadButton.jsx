@@ -58,7 +58,7 @@ function DownloadButton({ cv, publicMode }) {
             type="button"
             className="btn btn-ghost btn-icon btn-small save-reminder-close"
             aria-label={texts.download.reminderClose}
-            title={texts.download.reminderClose}
+            data-hint={texts.download.reminderClose}
             onClick={() => setReminder(false)}
           >
             <CloseIcon/>

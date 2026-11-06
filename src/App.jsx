@@ -22,6 +22,7 @@ import ImportButton from './components/ImportButton.jsx'
 import ExportButton from './components/ExportButton.jsx'
 import PreviewPanel from './components/PreviewPanel.jsx'
 import UndoToast from './components/UndoToast.jsx'
+import HintLayer from './components/HintLayer.jsx'
 import { UndoContext, insertAt } from './components/undo.js'
 import Splitter from './components/Splitter.jsx'
 import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
@@ -470,6 +471,7 @@ function App() {
           <PreviewPanel cv={cv} onTemplateChange={changeTemplate} onDesignChange={changeDesign}/>
         </main>
         <UndoToast undos={undos.list} shown={undos.shown} onShow={showUndo} onUndo={runUndo} onClose={closeUndo}/>
+        <HintLayer/>
       </div>
     </UndoContext>
   )

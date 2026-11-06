@@ -17,7 +17,7 @@ function SortableSection({ id, label, open, onRemove, extraProps, leaving, onLef
       type="button"
       ref={setActivatorNodeRef}
       className="drag-handle"
-      title={texts.reorder.handle}
+      data-hint={texts.reorder.handle}
       aria-label={`${texts.reorder.handle}: ${label}`}
       // The handle lives inside <summary>: without this, a click would also fold the section
       onClick={(e) => e.preventDefault()}

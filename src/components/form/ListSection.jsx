@@ -211,7 +211,7 @@ const EntryBody = memo(function EntryBody({
       type="button"
       ref={handleRef}
       className="drag-handle item-handle"
-      title={texts.reorderItems.handle}
+      data-hint={texts.reorderItems.handle}
       aria-label={texts.reorderItems.handle}
       {...handleAttributes}
       {...handleListeners}
@@ -247,7 +247,7 @@ const EntryBody = memo(function EntryBody({
                 <button
                   type="button"
                   className="field-remove"
-                  title={texts.common.remove}
+                  data-hint={texts.common.remove}
                   aria-label={`${texts.common.remove}: ${labelFor(sectionKey, field.name)}`}
                   onClick={() => onCloseOptional(id, field.name)}
                 >

@@ -179,7 +179,7 @@ function Preview({ cv }) {
       </div>
       {(percent !== 100 || lingering) && (
         <button type="button" className={percent === 100 ? 'zoom-reset frost btn btn-small fading' : 'zoom-reset frost btn btn-small'}
-          title={texts.preview.zoomReset} aria-label={`${texts.preview.zoom(percent)}. ${texts.preview.zoomReset}`}
+          data-hint={texts.preview.zoomReset} aria-label={`${texts.preview.zoom(percent)}. ${texts.preview.zoomReset}`}
           onClick={() => setZoom(1)} onAnimationEnd={(e) => e.animationName === 'zoom-fade' && setLingering(false)}>
           {texts.preview.zoom(percent)}
         </button>

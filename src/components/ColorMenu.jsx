@@ -13,7 +13,7 @@ function ColorMenu({ design, defaultColor, onChange }) {
           className={color.id === current ? 'swatch selected' : 'swatch'}
           style={{ backgroundColor: color.value }}
           aria-label={texts.colorNames[color.id]}
-          title={texts.colorNames[color.id]}
+          data-hint={texts.colorNames[color.id]}
           aria-pressed={color.id === current}
           onClick={() => onChange('color', color.id)}
         />
@@ -21,7 +21,7 @@ function ColorMenu({ design, defaultColor, onChange }) {
       {/* <label> instead of a button: clicking it opens the browser's colour picker */}
       <label
         className={current === 'custom' ? 'swatch swatch-rainbow selected' : 'swatch swatch-rainbow'}
-        title={texts.colorNames.custom}
+        data-hint={texts.colorNames.custom}
       >
         <input
           type="color"

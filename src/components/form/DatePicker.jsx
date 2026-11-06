@@ -171,7 +171,7 @@ function DatePicker({ label, value, onChange }) {
             className="date-button"
             ref={button}
             aria-label={t.open}
-            title={t.open}
+            data-hint={t.open}
             aria-expanded={open}
             onClick={() => (open ? close(false) : openCalendar())}
           >
@@ -182,7 +182,7 @@ function DatePicker({ label, value, onChange }) {
       {open && (
         <div ref={bubble} popover="manual" className="date-popover" role="dialog" aria-label={t.calendar}>
           <div className="date-header">
-            <button type="button" className="date-nav previous" aria-label={t.previous} title={t.previous}
+            <button type="button" className="date-nav previous" aria-label={t.previous} data-hint={t.previous}
               onClick={() => showMonth(year, month - 1)}>
               <ArrowIcon/>
             </button>
@@ -194,7 +194,7 @@ function DatePicker({ label, value, onChange }) {
               onChange={(e) => showMonth(Number(e.target.value), month)}>
               {years.map((y) => <option key={y} value={y}>{y}</option>)}
             </Select>
-            <button type="button" className="date-nav next" aria-label={t.next} title={t.next}
+            <button type="button" className="date-nav next" aria-label={t.next} data-hint={t.next}
               onClick={() => showMonth(year, month + 1)}>
               <ArrowIcon/>
             </button>

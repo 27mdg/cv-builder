@@ -41,20 +41,20 @@ function Notice({ undos, shown, onShow, onUndo, onClose }) {
       {undos.length > 1 && (
         <span className="undo-pages">
           <button type="button" className="btn btn-ghost btn-icon btn-small undo-page previous"
-            aria-label={texts.undo.previous} title={texts.undo.previous}
+            aria-label={texts.undo.previous} data-hint={texts.undo.previous}
             disabled={shown === 0} onClick={() => onShow(shown - 1)}>
             <ArrowIcon/>
           </button>
           <span className="undo-count">{texts.undo.page(shown + 1, undos.length)}</span>
           <button type="button" className="btn btn-ghost btn-icon btn-small undo-page next"
-            aria-label={texts.undo.next} title={texts.undo.next}
+            aria-label={texts.undo.next} data-hint={texts.undo.next}
             disabled={shown === undos.length - 1} onClick={() => onShow(shown + 1)}>
             <ArrowIcon/>
           </button>
         </span>
       )}
       <button type="button" className="btn btn-ghost btn-small undo-button" onClick={onUndo}>{texts.undo.button}</button>
-      <button type="button" className="btn btn-ghost btn-icon btn-small" aria-label={texts.undo.close} title={texts.undo.close} onClick={onClose}>
+      <button type="button" className="btn btn-ghost btn-icon btn-small" aria-label={texts.undo.close} data-hint={texts.undo.close} onClick={onClose}>
         <CloseIcon/>
       </button>
     </div>

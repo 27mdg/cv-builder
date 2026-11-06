@@ -30,7 +30,6 @@ function Splitter() {
   // In px from the middle of the lane
   const [knobOffset, setKnobOffset] = useState(0)
   const bar = useRef(null)
-  const tip = useRef(null)
   const hintId = useId()
 
   // Written straight onto the parent instead of going through App: otherwise the whole form
@@ -77,12 +76,7 @@ function Splitter() {
   }
 
   function handlePointerMove(e) {
-    if (!dragging) {
-      // The hint sits beside the pointer, wherever it is along the lane. Set on the element, not
-      // through React, so hovering does not redraw anything.
-      tip.current.style.top = `${e.clientY - bar.current.getBoundingClientRect().top}px`
-      return
-    }
+    if (!dragging) return
     moveTo(e.clientX)
     followPointer(e.clientY)
   }
@@ -110,6 +104,7 @@ function Splitter() {
       aria-valuetext={texts.splitter.value(Math.round(share))}
       tabIndex={0}
       aria-describedby={hintId}
+      data-hint={texts.splitter.hint}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={stopDragging}
@@ -118,8 +113,8 @@ function Splitter() {
       onKeyDown={handleKeyDown}
     >
       <span className="splitter-knob" style={{ translate: `0 ${knobOffset}px` }}><GripIcon/></span>
-      {/* Our own glass bubble instead of the browser's black title box, which cannot be styled */}
-      <span ref={tip} className="splitter-tip frost tip" id={hintId} role="tooltip">{texts.splitter.hint}</span>
+      {/* The hint the pointer sees (data-hint, HintLayer.jsx), for screen readers */}
+      <span id={hintId} hidden>{texts.splitter.hint}</span>
     </div>
   )
 }

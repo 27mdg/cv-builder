@@ -36,7 +36,7 @@ function Section({
           <button
             type="button"
             className={['btn btn-ghost btn-icon btn-small section-action rename-button', scribbling && 'scribbling'].filter(Boolean).join(' ')}
-            title={texts.rename.button}
+            data-hint={texts.rename.button}
             aria-label={`${texts.rename.button}: ${shownTitle}`}
             aria-expanded={renaming}
             onClick={(e) => {
@@ -55,7 +55,7 @@ function Section({
           <button
             type="button"
             className="btn btn-ghost btn-icon btn-small section-action"
-            title={hidden ? texts.visibility.show : texts.visibility.hide}
+            data-hint={hidden ? texts.visibility.show : texts.visibility.hide}
             aria-label={`${hidden ? texts.visibility.show : texts.visibility.hide}: ${title}`}
             aria-pressed={hidden}
             onClick={(e) => {
@@ -70,7 +70,7 @@ function Section({
           <button
             type="button"
             className="btn btn-ghost btn-icon btn-small section-remove"
-            title={texts.extraSections.remove}
+            data-hint={texts.extraSections.remove}
             aria-label={`${texts.extraSections.remove}: ${title}`}
             onClick={(e) => {
               // Inside <summary>, a click would also fold or unfold the section
@@ -81,7 +81,7 @@ function Section({
             <CloseIcon/>
           </button>
         )}
-        <span className="section-arrow" title={texts.common.toggle}><ArrowIcon/></span>
+        <span className="section-arrow" data-hint={texts.common.toggle}><ArrowIcon/></span>
       </summary>
       <div className="section-content">
         {renaming && (

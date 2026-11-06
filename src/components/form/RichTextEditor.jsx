@@ -99,11 +99,11 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
       <div className="rich-editor">
         {/* onMouseDown + preventDefault: clicking a button must not take the selection away */}
         <div className="rich-toolbar">
-          <button type="button" className="rich-bold" title={t.bold} aria-label={t.bold} aria-pressed={active.bold}
+          <button type="button" className="rich-bold" data-hint={t.bold} aria-label={t.bold} aria-pressed={active.bold}
             onMouseDown={(e) => e.preventDefault()} onClick={() => format('bold')}>B</button>
-          <button type="button" title={t.list} aria-label={t.list} aria-pressed={active.list}
+          <button type="button" data-hint={t.list} aria-label={t.list} aria-pressed={active.list}
             onMouseDown={(e) => e.preventDefault()} onClick={() => format('insertUnorderedList')}><ListIcon/></button>
-          <button type="button" title={t.link} aria-label={t.link} aria-expanded={linkOpen} aria-pressed={active.link}
+          <button type="button" data-hint={t.link} aria-label={t.link} aria-expanded={linkOpen} aria-pressed={active.link}
             onMouseDown={(e) => e.preventDefault()} onClick={() => (linkOpen ? setLinkOpen(false) : openLink())}><LinkIcon/></button>
         </div>
         {linkOpen && (

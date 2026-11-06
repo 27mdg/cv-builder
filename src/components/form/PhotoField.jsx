@@ -39,15 +39,15 @@ function PhotoField({ value, onChange }) {
     <div className="photo-field">
       <span className="label">{texts.personal.photo}</span>
       {/* <label> so the whole box opens the file picker hidden inside it */}
-      <label className="photo-box" title={texts.personal.choosePhoto}>
+      <label className="photo-box" data-hint={texts.personal.choosePhoto}>
         {value ? <img src={value} alt={texts.personal.photo}/> : <PersonIcon/>}
-        <input type="file" accept="image/*" onChange={handleChange}/>
+        <input type="file" accept="image/*" aria-label={texts.personal.choosePhoto} onChange={handleChange}/>
       </label>
       {value && (
         <button
           type="button"
           className="photo-remove"
-          title={texts.personal.removePhoto}
+          data-hint={texts.personal.removePhoto}
           aria-label={texts.personal.removePhoto}
           onClick={() => onChange('')}
         >

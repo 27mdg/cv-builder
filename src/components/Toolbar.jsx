@@ -43,7 +43,7 @@ function Toolbar({
         type="button"
         className="btn full-screen-button frost"
         aria-label={fullScreen ? texts.tools.exitFullScreen : texts.tools.fullScreen}
-        title={fullScreen ? texts.tools.exitFullScreen : texts.tools.fullScreen}
+        data-hint={fullScreen ? texts.tools.exitFullScreen : texts.tools.fullScreen}
         onClick={() => onFullScreenChange(!fullScreen)}
       >
         <FullScreenIcon exit={fullScreen}/>

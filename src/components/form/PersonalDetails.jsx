@@ -52,7 +52,7 @@ function Field({ field, data, onChange, autoFocus, children }) {
 
 function RemoveButton({ onClick }) {
   return (
-    <button type="button" className="field-remove" title={texts.common.remove}
+    <button type="button" className="field-remove" data-hint={texts.common.remove}
       aria-label={texts.common.remove} onClick={onClick}>
       <CloseIcon/>
     </button>

@@ -45,14 +45,15 @@ function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
 
   return (
     // The "coming soon" hint goes on the span: disabled buttons do not show their title
-    <span className={wide ? 'tool wide' : 'tool'} ref={box} title={disabled ? texts.tools.comingSoon : undefined}>
+    <span className={wide ? 'tool wide' : 'tool'} ref={box} data-hint={disabled ? texts.tools.comingSoon : undefined}>
       <button
         type="button"
         className="btn btn-ghost"
         disabled={disabled}
         aria-expanded={open}
-        // On a narrow preview only the icon shows: the title keeps the name for the mouse and screen readers
-        title={label}
+        // On a narrow preview only the icon shows: these keep the name for the mouse and screen readers
+        aria-label={label}
+        data-hint={label}
         onClick={() => setOpen(!open)}
       >
         {icon}
