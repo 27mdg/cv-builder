@@ -108,6 +108,13 @@ function groupPairs(fields) {
   return groups
 }
 
+// The rows of an entry, for App.css to guess its height before it is first drawn (entries off
+// screen are skipped), so the form does not change height while scrolling
+function itemSize(groups) {
+  const rich = groups.filter((group) => group[0].type === 'longText').length
+  return { '--item-rows': groups.length - rich, '--item-rich': rich }
+}
+
 // Months since year 0, to compare dates; null without a year. A date with no month counts as
 // January, so "03/2024" goes before a plain "2024".
 function dateValue(date) {
@@ -269,7 +276,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
                   leaving={isLeaving(item.id)}
                   onLeft={() => left(item.id)}
                 >
-                  <div className={item.hidden ? 'item is-hidden' : 'item'}>
+                  <div className={item.hidden ? 'item is-hidden' : 'item'} style={itemSize(groupPairs(fields.filter((field) => shows(item, field))))}>
                     {handle}
                     {item.hidden && <p className="section-badge item-badge">{texts.visibility.hidden}</p>}
                     {groupPairs(fields.filter((field) => shows(item, field))).map((group) => {

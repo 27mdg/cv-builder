@@ -299,6 +299,17 @@ button:hover .trash-lid { rotate: -16deg; }
 .section { padding: 0 24px; border-radius: var(--r-lg); background: var(--card); box-shadow: var(--card-edge); }
 /* The gap is a margin of the card itself, so it also shrinks when a section fades out */
 .form-panel .section { margin-bottom: 14px; }
+/* Speed with long CVs: the browser skips laying out and painting the list entries that are off
+   screen (they are still there for find in page and screen readers), which is where the weight
+   is: an open section with many entries was laid out whole even when two showed, and dragging
+   the splitter re-laid out the whole form on every frame. Not whole sections: an open one never
+   shown yet would count as a guessed height when it is thousands of pixels. Until an entry is
+   first shown its height is a guess, and once shown the real one is kept ("auto"): about 70px
+   plus 92px per row of fields and 215px per description (rows counted by ListSection.jsx), so
+   the form keeps its height while scrolling. The entry being used is always drawn in full,
+   because skipping also clips what sticks out of it (a link being edited). */
+.form-panel .item { content-visibility: auto; contain-intrinsic-size: auto calc(70px + var(--item-rows, 3) * 92px + var(--item-rich, 0) * 215px); }
+.form-panel .item:is(:focus-within, :has([aria-expanded="true"])) { content-visibility: visible; }
 .section > summary { display: flex; align-items: center; gap: 14px; padding: 18px 0; cursor: pointer; list-style: none; }
 .section > summary::-webkit-details-marker { display: none; }
 /* The header is a square strip inside the card's padding: its keyboard ring goes on the whole
@@ -516,6 +527,9 @@ button:hover .trash-lid { rotate: -16deg; }
 
 .form-panel label, .form-panel .label, .date-label { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
 .form-panel label { margin-bottom: 16px; }
+/* contain on select: its width is set here, so the browser need not measure the text of all its
+   options to size it (each year dropdown has about seventy, and a long CV has hundreds) */
+.form-panel select { contain: inline-size; }
 .form-panel input:not([type="checkbox"]):not([type="file"]), .form-panel textarea, .form-panel select {
   display: block; width: 100%; margin-top: 6px; padding: 12px 16px; border: 1px solid transparent; border-radius: var(--r-md);
   background-color: var(--paper); border-color: var(--line); color: var(--ink); font: inherit; font-size: 16px; font-weight: 400;
