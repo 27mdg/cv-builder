@@ -28,7 +28,7 @@ function ConfirmDialog({ open, title, message, cancelLabel, confirmLabel, onConf
       <div className="confirm-actions">
         {/* Focused first, so a stray Enter does not delete anything */}
         <button type="button" className="btn btn-secondary" onClick={onCancel} autoFocus>{cancelLabel}</button>
-        <button type="button" className="btn btn-danger" onClick={onConfirm}>{confirmLabel}</button>
+        <button type="button" className="btn btn-primary" onClick={onConfirm}>{confirmLabel}</button>
       </div>
     </dialog>
   )

@@ -354,7 +354,7 @@ button:hover .trash-lid { rotate: -16deg; }
 .sortable.dragging .drag-handle { cursor: grabbing; }
 .section-action, .section-remove { color: var(--ink-muted); }
 .section-action:hover { color: var(--ink); }
-.section-remove:hover:not(:disabled) { color: var(--accent-strong); background: var(--accent-tint); }
+.section-remove:hover:not(:disabled) { color: var(--forest); background: var(--forest-tint); }
 /* When clicked, the pencil scribbles a little */
 .rename-button.scribbling svg { animation: scribble 0.45s ease-in-out; }
 /* The eye's slash is drawn in when something gets hidden and drawn out when it is shown again.

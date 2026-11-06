@@ -24,13 +24,10 @@
 /* Only text or an icon until the pointer is over it */
 .btn-ghost { font-weight: 500; }
 .btn-ghost:hover:not(:disabled) { background: var(--tint); }
-/* Kept for the confirm button of dialogs that delete */
-.btn-danger { background: var(--accent-strong); color: var(--text-on-accent); }
-.btn-danger:hover:not(:disabled) { background: var(--accent-strong-hover); }
-/* Removing something: terracotta like the delete confirmation, but only as text, so a row of
-   entries is not full of loud buttons; it can always be undone */
-.btn-remove { color: var(--accent-strong); }
-.btn-remove:hover:not(:disabled) { background: var(--accent-tint); }
+/* Removing something: only as text, so a row of entries is not full of loud buttons; it can
+   always be undone */
+.btn-remove { color: var(--forest); }
+.btn-remove:hover:not(:disabled) { background: var(--forest-tint); }
 .btn-icon { width: 40px; padding: 0; }
 .btn-icon.btn-small { width: 32px; }
 /* A chosen or open tool shows as a raised pill inside its bar, also under the pointer */

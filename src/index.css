@@ -32,14 +32,9 @@
   --mint: #DDE9E0;
   /* Ghost buttons: a soft tint of the ink appears under the pointer */
   --tint: rgb(31 30 29 / 0.06);
+  /* Behind forest text buttons ("Quitar") under the pointer */
+  --forest-tint: rgb(47 90 67 / 0.1);
 
-  /* Terracotta for removing: filled only on the confirm button of dialogs that delete (white text
-     on it: 5.3:1); as text on "Quitar" (5.2:1 on the list entries) */
-  --accent-strong: #A9532F;
-  --accent-strong-hover: #95472A;
-  /* Behind a terracotta "Quitar" under the pointer */
-  --accent-tint: rgb(169 83 47 / 0.1);
-  --text-on-accent: #FFFFFF;
   --danger: #B3261E;
   /* Behind a dialog */
   --overlay: rgb(31 30 29 / 0.4);
