@@ -94,7 +94,9 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Half the splitter's lane comes off the form, so at 50% the lane sits exactly mid-page */
 .form-panel { flex: 0 1 auto; width: calc(var(--form-share, 50%) - var(--gutter) / 2); min-width: max(360px, 25%); overflow-y: auto; padding: calc(var(--top-height, 80px) + 28px) 48px 48px; container-type: inline-size; }
 /* Very long lines are tiring to read, so a wide form keeps its content in the middle */
-.form-panel > * { max-width: 760px; margin-inline: auto; }
+/* Up to about three columns of fields (see the wide form rules); wider than that, lines would
+   get too long to follow and the rest stays as margin */
+.form-panel > * { max-width: 1160px; margin-inline: auto; }
 /* clip: if something ever gets wider than the panel, it is cut instead of spilling over the
    splitter and widening the page */
 .preview-panel { position: relative; flex: 1; min-width: max(360px, 25%); background: var(--desk); container-type: inline-size; overflow-x: clip; }
@@ -504,6 +506,19 @@ button:hover .trash-lid { rotate: -16deg; }
 /* Narrow form: two columns would leave fields too small to read what is typed */
 @container (max-width: 480px) {
   .grid { grid-template-columns: 1fr; }
+}
+/* Wide form: more fields per row instead of wider fields, so each one keeps about the same
+   size. Fields that take a whole row in two columns (address, birth date) take one cell here,
+   or they would leave holes; the names next to the photo stay as they are. List entries become
+   a grid of three, with the pairs (dates, schedule and mode), the description and the buttons
+   across the whole entry. */
+@container (min-width: 960px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+  .grid > .field.field-full { grid-column: auto; }
+  .personal-header .grid { grid-template-columns: 1fr 1fr; }
+  .personal-header .grid > .field.field-full { grid-column: 1 / -1; }
+  .item { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 20px; }
+  .item > :is(.field-row, .rich-field, .item-actions, .item-badge) { grid-column: 1 / -1; }
 }
 .field { position: relative; }
 .field-full { grid-column: 1 / -1; }
