@@ -21,6 +21,10 @@
 /* A real button, but quieter than the primary: one shade below the cards, with a fine edge */
 .btn-secondary { background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); }
 .btn-secondary:hover:not(:disabled) { background: var(--sunken-hover); }
+/* The action of a tinted glass strip (public mode): a light raised pill, so it does not compete
+   with the primary button right above it, and the beige secondary would look muddy on mint */
+.btn-paper { background: var(--paper); color: var(--forest); box-shadow: var(--e1); }
+.btn-paper:hover:not(:disabled) { background: var(--surface); }
 /* Only text or an icon until the pointer is over it */
 .btn-ghost { font-weight: 500; }
 .btn-ghost:hover:not(:disabled) { background: var(--tint); }

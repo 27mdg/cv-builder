@@ -70,7 +70,7 @@ export function PublicModeBar({ appear, leaving, onLeft, onFinish, onTurnOff }) 
       <div className="public-bar frost" role="status">
         <ComputerIcon/>
         <span>{t.notice}</span>
-        <button type="button" className="btn btn-secondary btn-small" onClick={() => setConfirming(true)}>{t.finish}</button>
+        <button type="button" className="btn btn-paper btn-small" onClick={() => setConfirming(true)}>{t.finish}</button>
         <button type="button" className="btn btn-ghost btn-small" onClick={onTurnOff}>{t.turnOff}</button>
         <ConfirmDialog
           open={confirming}
