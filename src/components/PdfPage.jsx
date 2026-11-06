@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react'
 
+// About 50 MB per A4 page
+const maxPixelWidth = 3000
+
 // The shown size comes from CSS (.pdf-page), so it is right at once when the panel changes size,
 // which the full-screen animation needs. drawWidth: the size it is drawn at, which catches up later.
 function PdfPage({ pdfDocument, number, drawWidth }) {
@@ -12,8 +15,10 @@ function PdfPage({ pdfDocument, number, drawWidth }) {
     async function draw() {
       const page = await pdfDocument.getPage(number)
       if (cancelled) return
-      // devicePixelRatio: without it the page looks blurry on high-resolution screens
-      const scale = (drawWidth / page.getViewport({ scale: 1 }).width) * (window.devicePixelRatio || 1)
+      // devicePixelRatio: without it the page looks blurry on high-resolution screens. Capped,
+      // because a page zoomed in a lot on such a screen would take hundreds of MB.
+      const pixels = Math.min(drawWidth * (window.devicePixelRatio || 1), maxPixelWidth)
+      const scale = pixels / page.getViewport({ scale: 1 }).width
       const viewport = page.getViewport({ scale })
       // Drawn first on a separate canvas and then copied in one go to the visible one:
       // that way the previous page stays visible while the new one is drawn (no flicker)

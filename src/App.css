@@ -125,13 +125,15 @@ button:hover .trash-lid { rotate: -16deg; }
 .splitter:focus-visible { outline: none; }
 .splitter:focus-visible .splitter-knob { box-shadow: var(--knob-shadow), var(--focus-ring); }
 /* The bottom padding keeps the floating toolbar from covering the end of the last page */
-.preview { box-sizing: border-box; height: 100%; overflow-y: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; }
+/* Both ways: zoomed in, the pages get wider than the panel */
+.preview { box-sizing: border-box; height: 100%; overflow: auto; padding: calc(var(--top-height, 80px) + 32px) 32px 104px; }
 /* Full screen covers the bar, so nothing has to start below it */
 .preview-panel.full-screen .preview { padding-top: 32px; }
 /* The content scrolls behind the glass bar, but the scrollbar starts below it: a scrollbar
    half hidden under the bar looks broken. Only the browsers' own scrollbar styling can move
    the track (with a margin); the others get the plain coloured scrollbar. */
-.form-panel::-webkit-scrollbar, .preview::-webkit-scrollbar { width: 14px; }
+.form-panel::-webkit-scrollbar, .preview::-webkit-scrollbar { width: 14px; height: 14px; }
+.preview::-webkit-scrollbar-corner { background: transparent; }
 .form-panel::-webkit-scrollbar-track, .preview::-webkit-scrollbar-track { margin: calc(var(--top-height, 80px) + 4px) 0 4px; background: transparent; }
 .preview-panel.full-screen .preview::-webkit-scrollbar-track { margin-top: 4px; }
 /* The transparent border leaves a thin pill floating in the middle of its lane. Thin and light
@@ -147,11 +149,24 @@ button:hover .trash-lid { rotate: -16deg; }
 }
 /* The sheets grow with the panel up to 900px. When two fit side by side at 640px or more
    (a panel of 1372px: 2 × 640 + the gap + the preview's padding), a CV of two or more pages
-   opens like a book. The same numbers are in Preview.jsx, which draws the pages at this size. */
-.pdf-pages { display: grid; grid-template-columns: min(100%, 900px); justify-content: center; gap: 28px; }
+   opens like a book. The same numbers are in Preview.jsx, which draws the pages at this size.
+   --zoom (Ctrl + wheel, Preview.jsx) scales that size. "safe": pages wider than the panel
+   start at its left edge instead of spilling out on the left, where they could not be
+   scrolled to. */
+.pdf-pages { display: grid; grid-template-columns: calc(min(100%, 900px) * var(--zoom, 1)); justify-content: safe center; gap: 28px; }
 @container (min-width: 1372px) {
-  .pdf-pages:has(> .pdf-page + .pdf-page) { grid-template-columns: repeat(2, minmax(0, 900px)); }
+  .pdf-pages:has(> .pdf-page + .pdf-page) { grid-template-columns: repeat(2, calc(min((100% - 28px) / 2, 900px) * var(--zoom, 1))); }
 }
+/* Over the preview's top right corner, below the top bar, while the zoom is not 100 % */
+.zoom-reset { position: absolute; top: calc(var(--top-height, 80px) + 12px); right: 28px; z-index: 5; color: var(--ink); font-variant-numeric: tabular-nums; animation: zoom-pop 0.3s var(--spring); }
+/* It pops up from its own centre, like a bubble */
+@keyframes zoom-pop { from { scale: 0.4; opacity: 0; } }
+.preview-panel.full-screen .zoom-reset { top: 20px; }
+/* Back at 100 %: a moment to read it, then it fades out (Preview.jsx removes it at the end).
+   zoom-pop stays in the list: a kept name is not restarted, so zooming again during the pause
+   does not pop the pill in a second time. */
+.zoom-reset.fading { animation: zoom-pop 0.3s var(--spring), zoom-fade 0.4s ease 1.2s forwards; pointer-events: none; }
+@keyframes zoom-fade { to { opacity: 0; } }
 /* The sheet keeps square corners: it is paper */
 .pdf-page { display: block; width: 100%; background: var(--surface); box-shadow: var(--e2); }
 .loading { padding: 48px 16px; color: var(--ink-muted); text-align: center; }
@@ -165,11 +180,14 @@ button:hover .trash-lid { rotate: -16deg; }
 .toolbar-dock { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; }
 .toolbar { display: flex; align-items: center; gap: 2px; padding: 6px; border-radius: var(--r-pill); white-space: nowrap; }
 .full-screen-button { width: 52px; height: 52px; padding: 0; }
-/* Full-screen animation (withTransition in App.jsx): the toolbar and each page (PdfPage.jsx) are
-   named so they glide to their new place; the rest of the page simply fades */
+/* Full-screen animation (withTransition in App.jsx): the toolbar, the zoom pill and each page
+   (PdfPage.jsx) are named so they glide to their new place; the rest of the page simply fades */
 /* Named only while the animation runs: a named element stops everything inside it from blurring
    what is behind, and the menus' glass would go flat */
 :root:active-view-transition .toolbar-dock { view-transition-name: toolbar; }
+/* While it glides, its glass is the solid one: the browser's snapshot of a blurring element is a
+   rectangle, and its corners showed what was behind (the green Download button) around the pill */
+:root:active-view-transition .zoom-reset { view-transition-name: zoom-pill; background: var(--frost-solid); -webkit-backdrop-filter: none; backdrop-filter: none; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.4s; animation-timing-function: var(--spring); }
 .tool { position: relative; }
 
@@ -449,8 +467,10 @@ button:hover .trash-lid { rotate: -16deg; }
 @keyframes rise-in { from { opacity: 0; translate: 0 6px; } }
 @media (prefers-reduced-motion: reduce) {
   .animated.appearing, .animated.leaving, .confirm-dialog[open], .confirm-dialog[open]::backdrop, .tool-menu, .date-popover,
-  .save-reminder, .undo-toast, .public-slot, .public-bar, .public-button-slot, .screen-glare { animation: none; }
+  .save-reminder, .undo-toast, .zoom-reset, .public-slot, .public-bar, .public-button-slot, .screen-glare { animation: none; }
   .has-tooltip:is(:hover, :focus-within) .tooltip { animation: none; }
+  /* Not none: its end is what removes the pill. It just vanishes after the pause. */
+  .zoom-reset.fading { animation: zoom-fade 1ms 1.6s forwards; }
   .copy-front, .copy-back, .trash-lid { transition: none; }
   .section::details-content { transition: none; }
 }

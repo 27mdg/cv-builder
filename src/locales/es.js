@@ -226,6 +226,8 @@ const es = {
   },
   preview: {
     loading: 'Cargando vista previa…',
+    zoom: (percent) => `${percent} %`,
+    zoomReset: 'Volver al 100 %',
   },
   download: {
     button: 'Descargar',
