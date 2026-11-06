@@ -8,19 +8,65 @@ import { prefersReducedMotion } from './useLeaving.js'
 // the PDF a moment later.
 const Preview = lazy(() => import('./Preview.jsx'))
 
+// When the browser draws without the graphics card (hardware acceleration turned off), the
+// full-screen animation runs at a few frames per second and the screen flashes empty for a
+// moment. The browser does not say how it draws, so the first animation is timed: if it was
+// that slow, full screen switches instantly on this computer for a week (acceleration may be
+// turned back on).
+const slowKey = 'cv-gratis-slow-animation'
+const slowFor = 7 * 24 * 60 * 60 * 1000
+// Median time between frames, in ms. Smooth is about 16 (60 per second); without the graphics
+// card it was 55.
+const slowFrame = 34
+
+function isSlow() {
+  try {
+    return Date.now() - Number(localStorage.getItem(slowKey) ?? 0) < slowFor
+  } catch {
+    return false
+  }
+}
+
+function timeFrames(transition) {
+  const gaps = []
+  let last = null
+  let running = true
+  const tick = (time) => {
+    if (!running) return
+    if (last !== null) gaps.push(time - last)
+    last = time
+    requestAnimationFrame(tick)
+  }
+  transition.ready.then(() => requestAnimationFrame(tick), () => { running = false })
+  transition.finished.finally(() => {
+    running = false
+    // A hidden tab draws no frames at all: nothing to learn from it
+    if (gaps.length < 3 || document.hidden) return
+    gaps.sort((a, b) => a - b)
+    if (gaps[Math.floor(gaps.length / 2)] > slowFrame) {
+      try {
+        localStorage.setItem(slowKey, String(Date.now()))
+      } catch {
+        // Without storage it is just timed again next time
+      }
+    }
+  })
+}
+
 // The browser animates from a snapshot of the page before to the page after (for full screen:
 // pages and toolbar glide, the form fades out). flushSync: React must finish the change inside
 // the callback, or the "after" snapshot would still be the old page. Without support it just switches.
 // `direction` ('enter' or 'exit') is marked on the page meanwhile: the top bar's frosted backdrop
 // fades out or in by it (App.css).
 function withTransition(update, direction) {
-  if (!document.startViewTransition || prefersReducedMotion()) {
+  if (!document.startViewTransition || prefersReducedMotion() || isSlow()) {
     update()
     return
   }
   const root = document.documentElement
   root.dataset.fullScreenTransition = direction
   const transition = document.startViewTransition(() => flushSync(update))
+  timeFrames(transition)
   transition.finished.finally(() => {
     if (root.dataset.fullScreenTransition === direction) delete root.dataset.fullScreenTransition
   })
