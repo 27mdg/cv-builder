@@ -27,15 +27,44 @@ import Splitter from './components/Splitter.jsx'
 import { prefersReducedMotion, useLeaving } from './components/useLeaving.js'
 import { LayersIcon, PlusIcon } from './components/Icons.jsx'
 
+// In ms
+const saveDelay = 300
+
 function App() {
   const [cv, setCv] = useState(loadCv)
 
   const [publicMode, setPublicModeState] = useState(isPublicMode)
 
-  // Also on a change of mode, so the CV moves to its new place (see setPublicMode)
+  // Saving writes the whole CV, photo included, so it waits for a pause in typing instead of
+  // running on every key. Also on a change of mode, so the CV moves to its new place (see
+  // setPublicMode). `unsaved` is what still waits: it is saved at once if the tab is hidden or
+  // closed meanwhile, so nothing is lost.
+  const unsaved = useRef(null)
   useEffect(() => {
-    saveCv(cv)
+    unsaved.current = cv
+    const timer = setTimeout(() => {
+      saveCv(cv)
+      unsaved.current = null
+    }, saveDelay)
+    return () => clearTimeout(timer)
   }, [cv, publicMode])
+
+  useEffect(() => {
+    function saveNow() {
+      if (!unsaved.current) return
+      saveCv(unsaved.current)
+      unsaved.current = null
+    }
+    function handleVisibility() {
+      if (document.visibilityState === 'hidden') saveNow()
+    }
+    window.addEventListener('pagehide', saveNow)
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => {
+      window.removeEventListener('pagehide', saveNow)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [])
 
   // Only what changes in this visit animates, never on page load
   const [publicAnimated, setPublicAnimated] = useState(false)
