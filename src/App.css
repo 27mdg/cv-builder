@@ -91,6 +91,11 @@ button:hover .trash-lid { rotate: -16deg; }
 /* UndoToast.jsx: a frosted pill at the bottom left, over the form, where the removal happened */
 .undo-toast { position: fixed; left: 24px; bottom: 24px; z-index: 300; max-width: calc(100vw - 48px); animation: rise-in 0.2s var(--spring); }
 .undo-toast .undo-button { color: var(--forest); }
+.undo-pages { display: inline-flex; align-items: center; }
+/* Fixed digits, so the arrows do not move while going through the pages */
+.undo-count { min-width: 4.5em; color: var(--ink-muted); text-align: center; font-variant-numeric: tabular-nums; }
+.undo-page.previous svg { rotate: 90deg; }
+.undo-page.next svg { rotate: -90deg; }
 .workspace { flex: 1; display: flex; min-height: 0; }
 /* --form-share is set by Splitter.jsx; the min-widths match its limits, and also hold when the
    window shrinks after the bar was moved */

@@ -356,8 +356,11 @@ const es = {
   undo: {
     button: 'Deshacer',
     close: 'Cerrar aviso',
+    previous: 'Ver el anterior',
+    next: 'Ver el siguiente',
+    page: (number, total) => `${number} de ${total}`,
     section: (title) => `Has quitado «${title}».`,
-    item: 'Has quitado un elemento.',
+    item: (name) => (name ? `Has quitado «${name}».` : 'Has quitado un elemento.'),
     sorted: 'Has ordenado por fecha.',
     pasted: (count) => (count === 1 ? 'Has añadido un elemento.' : `Has añadido ${count} elementos.`),
     link: 'Has quitado un enlace.',

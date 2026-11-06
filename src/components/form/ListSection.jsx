@@ -42,6 +42,13 @@ function splitList(text) {
     .filter(Boolean)
 }
 
+// The first field (position, degree, skill…) names the entry in the undo notice, so several
+// removals can be told apart. Shortened, so the notice stays on one line.
+function nameOf(item, fields) {
+  const name = fields[0].type === 'text' ? String(item[fields[0].name] ?? '').trim() : ''
+  return name.length > 40 ? `${name.slice(0, 39).trim()}…` : name
+}
+
 function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
   const label = labelFor(sectionKey, field.name)
   const value = item[field.name]
@@ -302,10 +309,10 @@ function ListSection({ sectionKey, fields, list, onChange }) {
       onChange((current) => current.filter((other) => other.id !== id))
       // An empty item is not worth a notice
       if (Object.entries(item).some(([name, value]) => name !== 'id' && value)) {
-        offerUndo(texts.undo.item, () => onChange((current) => insertAt(current, index, item)))
+        offerUndo(texts.undo.item(nameOf(item, fields)), () => onChange((current) => insertAt(current, index, item)))
       }
     })
-  }, [leave, offerUndo, onChange])
+  }, [fields, leave, offerUndo, onChange])
 
   // E.g. two positions at the same company: the copy goes right below and only needs a few changes
   const duplicate = useCallback((id) => {

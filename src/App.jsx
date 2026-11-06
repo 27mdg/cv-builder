@@ -29,6 +29,8 @@ import { LayersIcon, PlusIcon } from './components/Icons.jsx'
 
 // In ms
 const saveDelay = 300
+// Removals the undo notice keeps; older ones can no longer be brought back
+const maxUndos = 10
 
 function App() {
   const [cv, setCv] = useState(loadCv)
@@ -94,35 +96,46 @@ function App() {
   const [addedSections, setAddedSections] = useState([])
   const { isLeaving: isSectionLeaving, leave: leaveSection, left: sectionLeft } = useLeaving()
 
-  // The last removal that can still be undone: { id, message, restore }
-  const [undo, setUndo] = useState(null)
-  const closeUndo = useCallback(() => setUndo(null), [])
+  // Removals that can still be undone, oldest first ({ id, message, restore }), and the one the
+  // notice shows. Each can be undone on its own, in any order: a restore only puts back its own
+  // thing, with functional updates.
+  const [undos, setUndos] = useState({ list: [], shown: -1 })
+  const closeUndo = useCallback(() => setUndos({ list: [], shown: -1 }), [])
+  const showUndo = useCallback((shown) => setUndos((current) => ({ ...current, shown })), [])
 
   // Stable (useCallback), like the change functions below: the form's sections only redraw when
   // what they receive changes (memo), and a new function on every render would count as a change
   const offerUndo = useCallback((message, restore) => {
-    setUndo({ id: crypto.randomUUID(), message, restore })
+    setUndos(({ list }) => {
+      const next = [...list, { id: crypto.randomUUID(), message, restore }].slice(-maxUndos)
+      return { list: next, shown: next.length - 1 }
+    })
   }, [])
 
-  function runUndo() {
-    undo?.restore()
-    setUndo(null)
-  }
+  const runUndo = useCallback(() => {
+    const undo = undos.list[undos.shown]
+    if (!undo) return
+    // Outside the state update, which React may run twice
+    undo.restore()
+    setUndos(({ list, shown }) => {
+      const next = list.filter((other) => other.id !== undo.id)
+      return { list: next, shown: Math.min(shown, next.length - 1) }
+    })
+  }, [undos])
 
   // Ctrl+Z outside the fields; inside them it is the browser's own undo of the typing
   useEffect(() => {
-    if (!undo) return
+    if (!undos.list.length) return
     function handleKeyDown(e) {
       const typing = e.target.closest('input, textarea, select, [contenteditable="true"]')
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey && !typing) {
         e.preventDefault()
-        undo.restore()
-        setUndo(null)
+        runUndo()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [undo])
+  }, [undos, runUndo])
 
   // The bar floats over the panels, which start their content below it. Its height changes when
   // the public mode strip slides in or the bar wraps on a narrow window, so it is measured.
@@ -194,7 +207,7 @@ function App() {
   function finishPublicSession() {
     setCv(initialCv)
     setAddedSections([])
-    setUndo(null)
+    closeUndo()
   }
 
   const hasContent = (key) => (key === 'references' && cv.referencesOnRequest)
@@ -456,7 +469,7 @@ function App() {
           <Splitter/>
           <PreviewPanel cv={cv} onTemplateChange={changeTemplate} onDesignChange={changeDesign}/>
         </main>
-        <UndoToast undo={undo} onUndo={runUndo} onClose={closeUndo}/>
+        <UndoToast undos={undos.list} shown={undos.shown} onShow={showUndo} onUndo={runUndo} onClose={closeUndo}/>
       </div>
     </UndoContext>
   )
