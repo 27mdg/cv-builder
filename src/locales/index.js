@@ -1,13 +1,39 @@
 import es from './es.js'
 import sampleCvEs from './sampleCv.es.js'
+import ca from './ca.js'
+import de from './de.js'
+import en from './en.js'
+import eu from './eu.js'
+import fr from './fr.js'
+import gl from './gl.js'
+import it from './it.js'
+import nl from './nl.js'
+import pl from './pl.js'
+import ptBR from './pt-BR.js'
+import ptPT from './pt-PT.js'
+import ro from './ro.js'
 
 // Every language is bundled with the site (a text file is a few KB once compressed), so any of
 // them is at hand at once: the site's, and later a CV's own language (roadmap item 44).
 // To add one: copy es.js and sampleCv.es.js (e.g. en.js, sampleCv.en.js) and list them here.
 // `name`: in its own language, as the CV language menu shows it. `cvOnly`: it has only the PDF's
 // texts so far (the site is not translated yet, stage J): CVs can use it, the site cannot.
+// The CV-only translations are first drafts: a native speaker should review them before launch.
+const cvOnly = (name, texts) => ({ name, texts, sampleCv: sampleCvEs, cvOnly: true })
 const languages = {
   es: { name: 'Español', texts: es, sampleCv: sampleCvEs },
+  en: cvOnly('English', en),
+  fr: cvOnly('Français', fr),
+  de: cvOnly('Deutsch', de),
+  it: cvOnly('Italiano', it),
+  'pt-BR': cvOnly('Português (Brasil)', ptBR),
+  'pt-PT': cvOnly('Português (Portugal)', ptPT),
+  nl: cvOnly('Nederlands', nl),
+  pl: cvOnly('Polski', pl),
+  ro: cvOnly('Română', ro),
+  ca: cvOnly('Català', ca),
+  eu: cvOnly('Euskara', eu),
+  gl: cvOnly('Galego', gl),
 }
 
 /** The languages a CV can be written in: [{ code, name }], in the menu's order. */
@@ -38,6 +64,14 @@ function withFallback(own, base, path, missing) {
   return result
 }
 
+// A translation may list its section titles together (`sectionTitles: { education: '…' }`, easier
+// to translate); they go where es.js has them, `education.title`
+function withSectionTitles({ sectionTitles = {}, ...own }) {
+  const result = { ...own }
+  for (const [key, title] of Object.entries(sectionTitles)) result[key] = { ...own[key], title }
+  return result
+}
+
 const prepared = new Map()
 
 /** The texts of a language (its code, e.g. 'es'), completed with Spanish where it lacks any. */
@@ -45,7 +79,7 @@ export function textsFor(code) {
   if (!languages[code]) code = fallbackLanguage
   if (!prepared.has(code)) {
     const missing = []
-    prepared.set(code, code === fallbackLanguage ? es : withFallback(languages[code].texts, es, '', missing))
+    prepared.set(code, code === fallbackLanguage ? es : withFallback(withSectionTitles(languages[code].texts), es, '', missing))
     if (import.meta.env.DEV && missing.length && !languages[code].cvOnly) {
       console.warn(`Language "${code}" lacks ${missing.length} texts, shown in Spanish:`, missing)
     }

@@ -98,6 +98,8 @@ const es = {
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',
+    // A month and year in the CV's dates ('marzo 2021'); Basque puts the year first
+    monthYear: (month, year) => `${month} ${year}`,
     contact: 'Contacto',
     month: 'Mes',
     year: 'Año',
@@ -486,6 +488,8 @@ const es = {
     placeholder: 'dd/mm/aaaa',
     // How a date is typed and shown: d = day, m = month, y = year ('mdy' in the US)
     order: 'dmy',
+    // Between day, month and year in a full date ('.' in German, '-' in Dutch)
+    separator: '/',
     // First column of the calendar: 0 = Sunday, 1 = Monday (`weekdays` starts with it)
     firstWeekday: 1,
     open: 'Abrir calendario',

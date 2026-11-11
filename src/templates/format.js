@@ -13,7 +13,7 @@ export function formatDate(date, dateFormat) {
   if (!date.month) return date.year
   const names = texts.common.dateMonths[dateFormat]
   if (!names) return date.month.padStart(2, '0') + '/' + date.year
-  return `${names[date.month - 1]} ${date.year}`
+  return texts.common.monthYear(names[date.month - 1], date.year)
 }
 
 // '03/2021 – Presente', '2019 – 2023', just one of them, or ''
@@ -29,7 +29,7 @@ export function formatBirthDate(date) {
   if (!date) return ''
   const [y, m, d] = date.split('-')
   const parts = { d, m, y }
-  return [...texts.datePicker.order].map((part) => parts[part]).join('/')
+  return [...texts.datePicker.order].map((part) => parts[part]).join(texts.datePicker.separator)
 }
 
 // In points: the room the footer (parts/closing.jsx) takes at the bottom of every page

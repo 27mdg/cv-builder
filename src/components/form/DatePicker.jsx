@@ -27,7 +27,7 @@ function textOf(iso) {
   if (!iso) return ''
   const [y, m, d] = iso.split('-')
   const parts = { d, m, y }
-  return [...t.order].map((part) => parts[part]).join('/')
+  return [...t.order].map((part) => parts[part]).join(t.separator)
 }
 
 // '12/4/1995' (also with - or .) in the language's order → '1995-04-12', or null if it is not a real date
