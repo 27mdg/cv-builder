@@ -16,8 +16,10 @@ export function newCustomKey() {
   return customPrefix + crypto.randomUUID().slice(0, 8)
 }
 
-// Hidden behind a "+ Enlace" button until used, so the cards stay short (ListSection.jsx)
-const optionalLink = { name: 'link', type: 'text', optional: true }
+// Hidden behind a "+ Enlace" button until used, so the cards stay short (ListSection.jsx).
+// `spellCheck: false` on fields that are not words (links, names, contact data): the rest of
+// the app is spellchecked (App.jsx)
+const optionalLink = { name: 'link', type: 'text', optional: true, spellCheck: false }
 
 // The items of a custom list section
 export const customFields = [
@@ -128,7 +130,7 @@ const sections = [
       { name: 'role', type: 'text' },
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
-      { name: 'link', type: 'text' },
+      { name: 'link', type: 'text', spellCheck: false },
       { name: 'description', type: 'longText' },
     ],
   },
@@ -138,18 +140,18 @@ const sections = [
       { name: 'publication', type: 'text' },
       { name: 'publisher', type: 'text' },
       { name: 'start', type: 'date' },
-      { name: 'link', type: 'text' },
+      { name: 'link', type: 'text', spellCheck: false },
       { name: 'description', type: 'longText' },
     ],
   },
   {
     key: 'references',
     fields: [
-      { name: 'referee', type: 'text' },
+      { name: 'referee', type: 'text', spellCheck: false },
       { name: 'position', type: 'text' },
       { name: 'employer', type: 'text' },
-      { name: 'email', type: 'text' },
-      { name: 'phone', type: 'text' },
+      { name: 'email', type: 'text', spellCheck: false },
+      { name: 'phone', type: 'text', spellCheck: false },
     ],
   },
 ]

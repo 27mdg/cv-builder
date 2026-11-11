@@ -374,13 +374,15 @@ function App() {
 
   return (
     <UndoContext value={offerUndo}>
-      <div className="app">
+      {/* Every field inherits it; set here because Firefox only checks multi-line boxes on its own */}
+      <div className="app" spellCheck>
         <div className="top-layer" ref={topLayer}>
           <header className="topbar frost-behind">
             {/* Temporary logo: it will link to the home page once there is one */}
             <a href="/" className="logo">{texts.app.title}</a>
             <input
               className="file-name"
+              spellCheck={false}
               aria-label={texts.file.name}
               placeholder={texts.file.placeholder}
               value={cv.fileName}

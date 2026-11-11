@@ -119,6 +119,7 @@ function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
       <input
         value={value}
         autoFocus={autoFocus}
+        spellCheck={field.spellCheck}
         placeholder={field.pasteList ? texts.common.pasteListHint : undefined}
         onPaste={field.pasteList ? handlePaste : undefined}
         onChange={(e) => onChange(field.name, e.target.value)}

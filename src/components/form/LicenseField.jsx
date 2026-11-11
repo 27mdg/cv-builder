@@ -54,6 +54,7 @@ function LicenseField({ value, onChange, children }) {
           ))}
           <input
             value={draft}
+            spellCheck={false}
             placeholder={tags.length ? '' : t.placeholder}
             onChange={(e) => setDraft(e.target.value.replace(',', ''))}
             onKeyDown={handleKeyDown}

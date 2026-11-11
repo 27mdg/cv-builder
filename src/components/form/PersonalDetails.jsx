@@ -11,10 +11,10 @@ import { insertAt, useUndo } from '../undo.js'
 
 // `fullWidth`: spans both columns of the grid
 const fields = [
-  { name: 'email', type: 'email' },
-  { name: 'phone', type: 'tel' },
+  { name: 'email', type: 'email', spellCheck: false },
+  { name: 'phone', type: 'tel', spellCheck: false },
   { name: 'address', type: 'text', fullWidth: true },
-  { name: 'postalCode', type: 'text' },
+  { name: 'postalCode', type: 'text', spellCheck: false },
   { name: 'city', type: 'text' },
   { name: 'birthDate', type: 'date', fullWidth: true },
 ]
@@ -29,7 +29,7 @@ const extraFields = [
   { name: 'availability', type: 'text' },
   { name: 'ownVehicle', type: 'text' },
   { name: 'workPermit', type: 'text' },
-  { name: 'idNumber', type: 'text' },
+  { name: 'idNumber', type: 'text', spellCheck: false },
   { name: 'travel', type: 'text' },
 ]
 
@@ -42,6 +42,7 @@ function Field({ field, data, onChange, autoFocus, children }) {
           type={field.type}
           value={data[field.name]}
           autoFocus={autoFocus}
+          spellCheck={field.spellCheck}
           onChange={(e) => onChange(field.name, e.target.value)}
         />
       </label>
@@ -133,8 +134,8 @@ function PersonalDetails({ data, onChange }) {
           }}
         />
         <div className="grid">
-          <Field field={{ name: 'firstName', type: 'text' }} data={data} onChange={onChange}/>
-          <Field field={{ name: 'lastName', type: 'text' }} data={data} onChange={onChange}/>
+          <Field field={{ name: 'firstName', type: 'text', spellCheck: false }} data={data} onChange={onChange}/>
+          <Field field={{ name: 'lastName', type: 'text', spellCheck: false }} data={data} onChange={onChange}/>
           <Field field={{ name: 'jobTitle', type: 'text', fullWidth: true }} data={data} onChange={onChange}/>
         </div>
       </div>
@@ -183,6 +184,7 @@ function PersonalDetails({ data, onChange }) {
                 aria-label={`${texts.links.types[link.type] ?? ''} ${texts.links.url}`}
                 placeholder={texts.links.placeholder}
                 value={link.url}
+                spellCheck={false}
                 autoFocus={link.id === addedLinks.at(-1)}
                 onChange={(e) => changeLink(link.id, 'url', e.target.value)}
               />

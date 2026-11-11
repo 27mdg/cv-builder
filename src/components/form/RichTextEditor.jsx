@@ -111,6 +111,7 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
             <div className="rich-link">
               <input
                 value={linkUrl}
+                spellCheck={false}
                 placeholder={t.linkPlaceholder}
                 aria-label={t.link}
                 autoFocus

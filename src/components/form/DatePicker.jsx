@@ -162,6 +162,7 @@ function DatePicker({ label, value, onChange }) {
         <span className="date-input" ref={field}>
           <input
             placeholder={t.placeholder}
+            spellCheck={false}
             value={draft ?? textOf(value)}
             onChange={(e) => handleType(e.target.value)}
             onBlur={handleBlur}
