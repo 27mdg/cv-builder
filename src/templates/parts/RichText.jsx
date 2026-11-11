@@ -1,4 +1,5 @@
-import { View, Text, Link } from '@react-pdf/renderer'
+import { View, Link } from '@react-pdf/renderer'
+import Text from './Text.jsx'
 import { parseRichText, fullUrl } from '../format.js'
 
 function Segments({ segments }) {

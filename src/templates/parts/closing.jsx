@@ -1,4 +1,5 @@
-import { View, Text, Image } from '@react-pdf/renderer'
+import { View, Image } from '@react-pdf/renderer'
+import Text from './Text.jsx'
 import { hasText, join, formatBirthDate } from '../format.js'
 
 /** Small text at the bottom of every page (e.g. the data protection clause). Last child of <Page>. */

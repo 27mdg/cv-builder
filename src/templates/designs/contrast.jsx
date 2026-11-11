@@ -1,4 +1,5 @@
-import { Document, Page, View, Text, Image, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, View, Image, StyleSheet } from '@react-pdf/renderer'
+import Text from '../parts/Text.jsx'
 import texts from '../../locales/es.js'
 import { designValues } from '../../data/design.js'
 import { hasText, join, personalDetails, filledSections, itemParts, sectionTitle, pageWithFooter, languageLevel } from '../format.js'

@@ -22,6 +22,11 @@ export const fonts = [
   { id: 'tinos', name: 'Tinos', hint: 'Times New Roman', family: 'Tinos', css: "'Tinos', serif" },
 ]
 
+// The PDF family with a font's extended Latin letters (registered in templates/fonts.js)
+export function extendedFamily(family) {
+  return `${family} Ext`
+}
+
 // An empty `design.font` means the template's own font
 export function fontOf(design, defaultFont) {
   const id = design.font || defaultFont
@@ -98,7 +103,8 @@ export function designValues(design, template) {
   // An invalid saved value (file edited by hand) is treated as normal
   const step = (list, n) => list[n - 1] ?? 1
   return {
-    font: font.family,
+    // A list: letters missing from the first family (ł, ş…) come from the second
+    font: [font.family, extendedFamily(font.id === 'helvetica' ? 'Arimo' : font.family)],
     scale: step(steps.size, design.size),
     lineHeight: design.lineHeight,
     paragraphs: step(steps.paragraphs, design.paragraphs),

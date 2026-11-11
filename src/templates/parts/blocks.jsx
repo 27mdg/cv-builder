@@ -1,4 +1,5 @@
-import { View, Text } from '@react-pdf/renderer'
+import { View } from '@react-pdf/renderer'
+import Text from './Text.jsx'
 import { hasText } from '../format.js'
 import { RichText } from './RichText.jsx'
 
