@@ -8,7 +8,8 @@ import {
 import { baseName } from './data/file.js'
 import MyCvs from './components/MyCvs.jsx'
 import initialCv from './data/initialCv.js'
-import texts from './locales/index.js'
+import texts, { language } from './locales/index.js'
+import { CvLanguage } from './components/form/cvLanguage.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
 import SignatureField from './components/form/SignatureField.jsx'
@@ -185,6 +186,9 @@ function App() {
   const changeDesign = useCallback((field, value) => {
     setCv((previous) => ({ ...previous, design: { ...previous.design, [field]: value } }))
   }, [])
+
+  // The CV's language (only its PDF's fixed texts; the site keeps its own)
+  const changeLanguage = useCallback((code) => changeSection('language', code), [changeSection])
 
   // Like changeSection, `value` can be a function of the field's latest value
   const changePersonal = useCallback((field, value) => {
@@ -525,6 +529,7 @@ function App() {
         <main className="workspace">
           {/* A new key when another CV opens: every part of the form starts afresh */}
           <section className="form-panel" key={`${cvId}:${formRound}`}>
+            <CvLanguage value={cv.language || language}>
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
               <div className="anonymous-switch">
                 <label className="switch-label">
@@ -588,9 +593,11 @@ function App() {
               onAdd={(key) => (closingSections.includes(key) ? setAddedSections((added) => [...added, key]) : addSection(key))}
               onAddCustom={addCustomSection}
             />
+            </CvLanguage>
           </section>
           <Splitter/>
-          <PreviewPanel cv={cv} onTemplateChange={changeTemplate} onDesignChange={changeDesign}/>
+          <PreviewPanel cv={cv} onTemplateChange={changeTemplate} onDesignChange={changeDesign}
+            onLanguageChange={changeLanguage}/>
         </main>
         <UndoToast undos={undos.list} shown={undos.shown} onShow={showUndo} onUndo={runUndo} onClose={closeUndo}/>
         <HintLayer/>

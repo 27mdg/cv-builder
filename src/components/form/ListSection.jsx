@@ -12,6 +12,7 @@ import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities'
 import { CloseIcon, CopyIcon, GripIcon, PlusIcon, SortIcon, VisibilityIcon } from '../Icons.jsx'
 import { useDragSensors } from './useDragSensors.js'
+import { useCvLanguage } from './cvLanguage.js'
 
 function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
@@ -54,6 +55,7 @@ function nameOf(item, fields) {
 }
 
 function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
+  const lang = useCvLanguage()
   const label = labelFor(sectionKey, field.name)
   const value = item[field.name]
 
@@ -127,6 +129,7 @@ function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
         value={value}
         autoFocus={autoFocus}
         spellCheck={field.spellCheck}
+        lang={lang}
         placeholder={field.pasteList ? texts.common.pasteListHint(exampleFor(sectionKey, field.name)) : exampleFor(sectionKey, field.name)}
         onPaste={field.pasteList ? handlePaste : undefined}
         onChange={(e) => onChange(field.name, e.target.value)}

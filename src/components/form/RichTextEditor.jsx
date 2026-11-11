@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import texts from '../../locales/index.js'
 import { escape, fromDom, toHtml } from './richTextHtml.js'
 import { LinkIcon, ListIcon } from '../Icons.jsx'
+import { useCvLanguage } from './cvLanguage.js'
 import Animated from '../Animated.jsx'
 
 const t = texts.richText
@@ -28,6 +29,7 @@ function RichTextEditor({ label, hideLabel, value, placeholder, tip, onChange })
   const [active, setActive] = useState({ bold: false, list: false, link: false })
   const labelId = useId()
   const tipId = useId()
+  const lang = useCvLanguage()
 
   // The browser tells the formatting at the cursor; asked again whenever the cursor moves
   useEffect(() => {
@@ -135,6 +137,7 @@ function RichTextEditor({ label, hideLabel, value, placeholder, tip, onChange })
           suppressContentEditableWarning
           role="textbox"
           aria-multiline="true"
+          lang={lang}
           aria-labelledby={labelId}
           aria-describedby={tip ? tipId : undefined}
           data-placeholder={placeholder}

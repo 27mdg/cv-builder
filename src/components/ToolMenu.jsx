@@ -5,7 +5,9 @@ import { prefersReducedMotion } from './useLeaving.js'
 // children is a function that receives `close`, so the menu can close after a choice.
 // alignRight: for the tools on the right edge, whose menu would overflow the panel.
 // wide: the menu spans the whole toolbar area instead of hanging from its button.
-function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
+// shortLabel: shown instead of `label` when the name is long (a language's code); `label`, the
+// full name, stays for the hint bubble and screen readers
+function ToolMenu({ icon, label, shortLabel, disabled, alignRight, wide, children }) {
   const [open, setOpen] = useState(false)
   const box = useRef(null)
   const labelBox = useRef(null)
@@ -57,7 +59,7 @@ function ToolMenu({ icon, label, disabled, alignRight, wide, children }) {
         onClick={() => setOpen(!open)}
       >
         {icon}
-        <span ref={labelBox} className="tool-label">{label}</span>
+        <span ref={labelBox} className="tool-label">{shortLabel ?? label}</span>
       </button>
       {open && (
         <div className={['tool-menu frost', alignRight && 'align-right', wide && 'wide'].filter(Boolean).join(' ')}>

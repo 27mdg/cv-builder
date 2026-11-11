@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import texts from '../locales/index.js'
+import texts, { cvLanguages } from '../locales/index.js'
 import { templateInfo } from '../templates/list.js'
+import LanguageMenu from './LanguageMenu.jsx'
 import { fontOf } from '../data/design.js'
 import ToolMenu from './ToolMenu.jsx'
 import TemplatePicker from './TemplatePicker.jsx'
@@ -9,12 +10,13 @@ import SpacingMenu from './SpacingMenu.jsx'
 import ColorMenu from './ColorMenu.jsx'
 import DateMenu from './DateMenu.jsx'
 import {
-  TemplatesIcon, FontIcon, SpacingIcon, CalendarIcon, ColorsIcon,
+  TemplatesIcon, FontIcon, SpacingIcon, CalendarIcon, ColorsIcon, GlobeIcon,
   FullScreenIcon,
 } from './Icons.jsx'
 
+// language: the CV's own ('' already turned into the site's by PreviewPanel)
 function Toolbar({
-  template, onTemplateChange, design, onDesignChange, fullScreen, onFullScreenChange,
+  template, onTemplateChange, design, onDesignChange, language, onLanguageChange, fullScreen, onFullScreenChange,
 }) {
   const info = templateInfo(template)
 
@@ -34,6 +36,12 @@ function Toolbar({
         </ToolMenu>
         <ToolMenu icon={<CalendarIcon/>} label={texts.tools.date} alignRight>
           {() => <DateMenu design={design} onChange={onDesignChange}/>}
+        </ToolMenu>
+        {/* The chosen language's code (ES, EN, PT-BR): its name ("Português (Portugal)") would
+            not fit; the name shows in the hint bubble */}
+        <ToolMenu icon={<GlobeIcon/>} label={cvLanguages.find((l) => l.code === language)?.name ?? texts.tools.cvLanguage}
+          shortLabel={language.toUpperCase()} alignRight>
+          {() => <LanguageMenu value={language} onChange={onLanguageChange}/>}
         </ToolMenu>
         <ToolMenu icon={<ColorsIcon/>} label={texts.tools.colors} alignRight>
           {() => <ColorMenu design={design} defaultColor={info.defaultColor} onChange={onDesignChange}/>}

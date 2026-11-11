@@ -334,6 +334,8 @@ button:hover .trash-lid { rotate: -16deg; }
 .option-list button::before { content: '✓'; margin-right: 6px; visibility: hidden; }
 .option-list button.selected::before { visibility: visible; }
 .date-menu { width: auto; padding: 6px 8px 8px; }
+/* A short explanation under a menu's title */
+.menu-note { margin: 0 6px 10px; color: var(--ink-muted); font-size: 12.5px; line-height: 1.4; }
 /* Raised circles of colour; the chosen one gets a forest ring with a gap */
 .color-menu { width: 244px; padding: 10px; }
 /* Four per row, spread over the whole width so they line up with the custom colour row below */
@@ -349,8 +351,9 @@ button:hover .trash-lid { rotate: -16deg; }
 .preview-panel.full-screen .tool-menu.wide { width: min(1100px, 92cqw); }
 
 /* Narrow preview: icons only, and every menu centred on the toolbar so it does not leave the panel.
-   The width is the full toolbar with labels (~720 px with a long font name) plus some margin. */
-@container (max-width: 780px) {
+   The width is the full toolbar with labels (~850 px with a long font name and «PT-PT») plus some
+   margin; test-tools/toolbar-fit-check.mjs measures it. */
+@container (max-width: 880px) {
   .toolbar .tool-label { display: none; }
   .toolbar .tool > .btn { width: 40px; padding: 0; }
   .toolbar .tool { position: static; }

@@ -309,6 +309,8 @@ const es = {
     colors: 'Colores',
     date: 'Fecha',
     dateFormat: 'Formato de fecha',
+    cvLanguage: 'Idioma del CV',
+    cvLanguageNote: 'Cambia los textos fijos del PDF: títulos, fechas y niveles. Lo que escribes no se traduce.',
     fullScreen: 'Pantalla completa',
     exitFullScreen: 'Salir de pantalla completa (Esc)',
     comingSoon: 'Próximamente',

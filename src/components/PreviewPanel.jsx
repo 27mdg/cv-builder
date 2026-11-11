@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
-import texts from '../locales/index.js'
+import texts, { language } from '../locales/index.js'
 import Toolbar from './Toolbar.jsx'
 import { prefersReducedMotion } from './useLeaving.js'
 
@@ -77,7 +77,7 @@ function withTransition(update, direction) {
  * for React to redraw what changed, and from App that was the whole form, which froze the
  * start of the animation on modest computers.
  */
-function PreviewPanel({ cv, onTemplateChange, onDesignChange }) {
+function PreviewPanel({ cv, onTemplateChange, onDesignChange, onLanguageChange }) {
   const [fullScreen, setFullScreen] = useState(false)
 
   // Stable, so the toolbar (memo) does not redraw on every keystroke
@@ -104,6 +104,8 @@ function PreviewPanel({ cv, onTemplateChange, onDesignChange }) {
         onTemplateChange={onTemplateChange}
         design={cv.design}
         onDesignChange={onDesignChange}
+        language={cv.language || language}
+        onLanguageChange={onLanguageChange}
         fullScreen={fullScreen}
         onFullScreenChange={changeFullScreen}
       />

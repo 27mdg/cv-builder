@@ -8,6 +8,7 @@ import { ArrowIcon, CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
 import { insertAt, useUndo } from '../undo.js'
+import { useCvLanguage } from './cvLanguage.js'
 
 // `fullWidth`: spans both columns of the grid. Only the city by default: a street address is
 // no longer advised on CVs (privacy, nobody sends letters)
@@ -41,6 +42,7 @@ const extraFields = [
 const mainChips = ['birthDate', 'drivingLicense', 'nationality', 'availability']
 
 function Field({ field, data, onChange, autoFocus, children }) {
+  const lang = useCvLanguage()
   return (
     <div className={field.fullWidth ? 'field field-full' : 'field'}>
       <label>
@@ -50,6 +52,7 @@ function Field({ field, data, onChange, autoFocus, children }) {
           value={data[field.name]}
           autoFocus={autoFocus}
           spellCheck={field.spellCheck}
+          lang={lang}
           placeholder={texts.personal.placeholders[field.name]}
           onChange={(e) => onChange(field.name, e.target.value)}
         />
