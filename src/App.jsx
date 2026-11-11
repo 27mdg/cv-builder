@@ -339,6 +339,7 @@ function App() {
     if (key === 'skills') {
       return (
         <>
+          <p className="field-tip section-tip">{texts.tips.skills}</p>
           <label className="switch-label section-switch">
             <input
               type="checkbox"

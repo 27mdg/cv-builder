@@ -42,7 +42,7 @@ const jobFields = [
   { name: 'start', type: 'date' },
   { name: 'end', type: 'endDate' },
   optionalLink,
-  { name: 'description', type: 'longText' },
+  { name: 'description', type: 'longText', tip: 'description' },
 ]
 
 const sections = [
@@ -131,7 +131,7 @@ const sections = [
       { name: 'start', type: 'date' },
       { name: 'end', type: 'endDate' },
       { name: 'link', type: 'text', spellCheck: false },
-      { name: 'description', type: 'longText' },
+      { name: 'description', type: 'longText', tip: 'description' },
     ],
   },
   {

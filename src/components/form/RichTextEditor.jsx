@@ -15,7 +15,8 @@ function linkAtCursor(editorBox) {
 }
 
 /** A description box that shows bullets, bold and links as they will look in the CV. */
-function RichTextEditor({ label, hideLabel, value, placeholder, onChange }) {
+// `tip`: a short help line shown under the box (and read with it by screen readers)
+function RichTextEditor({ label, hideLabel, value, placeholder, tip, onChange }) {
   const editor = useRef(null)
   // The text this editor produced last: if `value` is the same, the editor already shows it,
   // and rewriting it would move the cursor to the start
@@ -26,6 +27,7 @@ function RichTextEditor({ label, hideLabel, value, placeholder, onChange }) {
   // What applies where the cursor is, so each button shows whether it is on
   const [active, setActive] = useState({ bold: false, list: false, link: false })
   const labelId = useId()
+  const tipId = useId()
 
   // The browser tells the formatting at the cursor; asked again whenever the cursor moves
   useEffect(() => {
@@ -134,6 +136,7 @@ function RichTextEditor({ label, hideLabel, value, placeholder, onChange }) {
           role="textbox"
           aria-multiline="true"
           aria-labelledby={labelId}
+          aria-describedby={tip ? tipId : undefined}
           data-placeholder={placeholder}
           // New lines as <div>, the same in every browser
           onFocus={() => document.execCommand('defaultParagraphSeparator', false, 'div')}
@@ -141,6 +144,7 @@ function RichTextEditor({ label, hideLabel, value, placeholder, onChange }) {
           onPaste={handlePaste}
         />
       </div>
+      {tip && <p className="field-tip" id={tipId}>{tip}</p>}
     </div>
   )
 }

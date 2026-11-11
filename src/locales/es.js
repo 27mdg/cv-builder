@@ -32,7 +32,17 @@ const es = {
     lessDetails: 'Menos datos',
     // Examples inside the empty boxes
     placeholders: {
+      jobTitle: 'p. ej. Recepcionista',
+      email: 'p. ej. nombre@correo.com',
+      phone: 'p. ej. +34 600 123 456',
       city: 'p. ej. Sevilla, España',
+      address: 'p. ej. Calle Mayor 12, 3.º B',
+      birthPlace: 'p. ej. Córdoba',
+      nationality: 'p. ej. Española',
+      availability: 'p. ej. Inmediata',
+      workPermit: 'p. ej. Permiso de trabajo en la UE',
+      travel: 'p. ej. Sí, por España y Europa',
+      ownVehicle: 'p. ej. Sí, coche propio',
       disability: 'p. ej. 33 %',
     },
     website: 'Página web',
@@ -77,7 +87,8 @@ const es = {
     remove: 'Quitar',
     duplicate: 'Duplicar',
     sortByDate: 'Ordenar por fecha',
-    pasteListHint: 'Puedes pegar varias separadas por comas',
+    // The example of a field that splits a pasted list (texts.examples), plus how to use it
+    pasteListHint: (example) => `${example}, o pega varias separadas por comas`,
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',
@@ -127,6 +138,40 @@ const es = {
       A2: 'A2 – Básico',
       A1: 'A1 – Principiante',
     },
+  },
+  // Examples inside the empty boxes of list entries: texts.examples[section][field], else
+  // texts.examples.fields[field]. Always "p. ej.", so they never look like something already
+  // written. Invented names only, and job titles that are the same for women and men.
+  examples: {
+    fields: {
+      position: 'p. ej. Recepcionista',
+      employer: 'p. ej. Hotel Mirador',
+      city: 'p. ej. Madrid',
+      link: 'p. ej. miweb.com/proyecto',
+    },
+    education: {
+      degree: 'p. ej. Grado en Enfermería',
+      school: 'p. ej. Universidad de Granada',
+      grade: 'p. ej. Notable (7,8)',
+    },
+    skills: { skill: 'p. ej. Excel', category: 'p. ej. Informática' },
+    hobbies: { interest: 'p. ej. Senderismo' },
+    qualities: { quality: 'p. ej. Constancia' },
+    languages: { language: 'p. ej. Inglés' },
+    courses: { course: 'p. ej. Excel avanzado' },
+    internships: { position: 'p. ej. Auxiliar administrativo', employer: 'p. ej. Gestoría Norte' },
+    activities: { position: 'p. ej. Representante de clase', employer: 'p. ej. Club de debate' },
+    certificates: { certificate: 'p. ej. Manipulador de alimentos' },
+    projects: { project: 'p. ej. Web para una asociación', role: 'p. ej. Diseño y programación' },
+    volunteering: { position: 'p. ej. Apoyo escolar', employer: 'p. ej. Asociación vecinal' },
+    awards: { award: 'p. ej. Beca de excelencia', issuer: 'p. ej. Ayuntamiento de Valencia' },
+    publications: { publication: 'p. ej. Guía de cuidados en casa', publisher: 'p. ej. Revista Salud Hoy' },
+    references: { referee: 'p. ej. Laura Gómez', position: 'p. ej. Jefa de tienda', employer: 'p. ej. Librería Central' },
+  },
+  // A short visible line under a field (not inside it: it would vanish when typing)
+  tips: {
+    description: 'Empieza cada frase con un verbo y añade cifras si puedes: «Atendí a 80 clientes al día».',
+    skills: 'Lo que sabes hacer: programas, herramientas, oficios. Tus rasgos personales van en «Cualidades personales».',
   },
   // Used when the section has no label of its own with the same name
   fields: {

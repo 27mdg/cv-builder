@@ -17,6 +17,10 @@ function labelFor(sectionKey, name) {
   return texts[sectionKey][name] ?? texts.fields[name]
 }
 
+function exampleFor(sectionKey, name) {
+  return texts.examples[sectionKey]?.[name] ?? texts.examples.fields[name]
+}
+
 function emptyItem(fields) {
   // The index is not a valid key: when an item is removed, React would mix up another one's fields
   const item = { id: crypto.randomUUID() }
@@ -54,7 +58,10 @@ function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
   const value = item[field.name]
 
   if (field.type === 'longText') {
-    return <RichTextEditor label={label} value={value} onChange={(text) => onChange(field.name, text)}/>
+    return (
+      <RichTextEditor label={label} value={value} tip={field.tip && texts.tips[field.tip]}
+        onChange={(text) => onChange(field.name, text)}/>
+    )
   }
   if (field.type === 'date') {
     return <DateField label={label} value={value} onChange={(date) => onChange(field.name, date)}/>
@@ -120,7 +127,7 @@ function Field({ sectionKey, field, item, onChange, onPasteList, autoFocus }) {
         value={value}
         autoFocus={autoFocus}
         spellCheck={field.spellCheck}
-        placeholder={field.pasteList ? texts.common.pasteListHint : undefined}
+        placeholder={field.pasteList ? texts.common.pasteListHint(exampleFor(sectionKey, field.name)) : exampleFor(sectionKey, field.name)}
         onPaste={field.pasteList ? handlePaste : undefined}
         onChange={(e) => onChange(field.name, e.target.value)}
       />
