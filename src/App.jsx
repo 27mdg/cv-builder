@@ -8,7 +8,8 @@ import {
 import { baseName } from './data/file.js'
 import MyCvs from './components/MyCvs.jsx'
 import initialCv from './data/initialCv.js'
-import texts, { language } from './locales/index.js'
+import texts, { language, sampleCvFor } from './locales/index.js'
+import { samplePhoto } from './data/samplePhoto.js'
 import { CvLanguage } from './components/form/cvLanguage.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
 import LongText from './components/form/LongText.jsx'
@@ -292,6 +293,21 @@ function App() {
     show(id, newCv)
   }
 
+  // The sample CV, in the look chosen now, as a CV of its own. An empty open CV gives way to it,
+  // so no blank CV is left behind; otherwise the user's CV stays in «Mis CV».
+  function openExample() {
+    const sample = sampleCvFor(language)
+    const example = {
+      ...sample,
+      template: cv.template,
+      design: cv.design,
+      fileName: texts.myCvs.exampleName,
+      personal: { ...sample.personal, photo: samplePhoto() },
+    }
+    if (isBlankCv(cv)) show(cvId, example)
+    else addCv(example)
+  }
+
   function duplicateCv(id) {
     const source = id === cvId ? cv : readCv(id)
     if (source) addCv({ ...source, fileName: texts.myCvs.copyName(baseName(source)) })
@@ -505,7 +521,7 @@ function App() {
             {/* Temporary logo: it will link to the home page once there is one */}
             <div className="topbar-start">
               <a href="/" className="logo">{texts.app.title}</a>
-              <MyCvs openId={cvId} openName={baseName(cv)} onOpen={openCv} onNew={() => addCv(blankCv())}
+              <MyCvs openId={cvId} openName={baseName(cv)} onOpen={openCv} onNew={() => addCv(blankCv())} onExample={openExample}
                 onDuplicate={duplicateCv} onRemove={removeCv} onRestore={restoreVersion}
                 // Versions equal to what is open now are left out: restoring them would change nothing
                 readVersions={() => {
@@ -557,7 +573,8 @@ function App() {
             <CvLanguage value={cv.language || language}>
             {start.shown && (
               <Animated appear={start.appear} leaving={start.closed} onLeft={() => setStart({ ...start, shown: false })}>
-                <StartCard chosen={profile} onChoose={chooseProfile} onClose={() => setStart({ ...start, closed: true })}/>
+                <StartCard chosen={profile} onChoose={chooseProfile} onClose={() => setStart({ ...start, closed: true })}
+                  onExample={openExample}/>
               </Animated>
             )}
             <Section title={texts.personal.title} open {...sectionProps('personal')}>

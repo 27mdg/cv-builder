@@ -538,6 +538,8 @@ button:hover .trash-lid { rotate: -16deg; }
 .start-choice[aria-pressed="true"] .library-icon { background: var(--paper); }
 .start-check { flex: none; display: flex; color: var(--forest); }
 .start-check svg { width: 18px; height: 18px; }
+.start-example { margin-top: 14px; color: var(--forest); }
+.start-example svg { width: 16px; height: 16px; }
 
 .extra-sections { padding: 32px 0 8px; }
 .extra-sections-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }

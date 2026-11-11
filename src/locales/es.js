@@ -453,6 +453,9 @@ const es = {
     button: 'Mis CV',
     title: 'Mis CV',
     newCv: 'Nuevo CV',
+    example: 'Ver un CV de ejemplo',
+    // The example's name in the list, until the user gives it another
+    exampleName: 'Ejemplo de CV',
     duplicate: 'Duplicar',
     remove: 'Eliminar',
     open: (name) => `Abrir «${name}»`,
@@ -469,6 +472,7 @@ const es = {
     title: '¿Cómo empiezas?',
     hint: 'Elige lo que más se parece a ti y ordenamos las secciones para que lo importante vaya primero. Luego puedes moverlas como quieras.',
     close: 'Cerrar',
+    example: 'O mira primero un CV de ejemplo',
     profiles: {
       student: { title: 'Estudiante o primer empleo', hint: 'Tus estudios y prácticas van primero.' },
       experienced: { title: 'Ya tengo experiencia', hint: 'Tus trabajos van primero.' },

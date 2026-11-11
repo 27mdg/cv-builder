@@ -1,6 +1,6 @@
 import texts from '../../locales/index.js'
 import { profiles } from '../../data/start.js'
-import { BriefcaseIcon, CapIcon, CheckIcon, CloseIcon, ForkIcon } from '../Icons.jsx'
+import { BriefcaseIcon, CapIcon, CheckIcon, CloseIcon, ForkIcon, SparkleIcon } from '../Icons.jsx'
 
 const t = texts.start
 const icons = { student: CapIcon, experienced: BriefcaseIcon, careerChange: ForkIcon }
@@ -8,8 +8,9 @@ const icons = { student: CapIcon, experienced: BriefcaseIcon, careerChange: Fork
 /**
  * «¿Cómo empiezas?»: shown on an empty CV. Choosing a profile orders the sections for it
  * (`onChoose(id)`); `chosen` is the one picked in this visit, which can still be changed.
+ * `onExample` opens the sample CV instead.
  */
-function StartCard({ chosen, onChoose, onClose }) {
+function StartCard({ chosen, onChoose, onClose, onExample }) {
   return (
     <section className="start-card" aria-labelledby="start-title">
       <div className="start-head">
@@ -37,6 +38,9 @@ function StartCard({ chosen, onChoose, onClose }) {
           )
         })}
       </div>
+      <button type="button" className="btn btn-ghost btn-small start-example" onClick={onExample}>
+        <SparkleIcon/>{t.example}
+      </button>
     </section>
   )
 }

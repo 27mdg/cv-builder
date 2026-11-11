@@ -2,6 +2,7 @@ import * as pdfjs from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import { buildPdf } from './pdfClient.js'
 import { language, sampleCvFor } from '../locales/index.js'
+import { samplePhoto } from '../data/samplePhoto.js'
 
 // Loaded with import() from the template picker: it pulls in the heavy PDF libraries.
 
@@ -9,30 +10,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = workerUrl
 
 // The sample CV never changes, so each thumbnail is drawn once per session
 const cache = new Map()
-let samplePhoto = null
-
-// A neutral silhouette drawn on the fly, so the sample needs no stock photo or licence
-function placeholderPhoto() {
-  const canvas = document.createElement('canvas')
-  canvas.width = 240
-  canvas.height = 240
-  const context = canvas.getContext('2d')
-  context.fillStyle = '#cfd4da'
-  context.fillRect(0, 0, 240, 240)
-  context.fillStyle = '#eef0f3'
-  context.beginPath()
-  context.arc(120, 96, 46, 0, Math.PI * 2)
-  context.fill()
-  context.beginPath()
-  context.ellipse(120, 240, 92, 84, 0, Math.PI, 0)
-  context.fill()
-  return canvas.toDataURL('image/jpeg', 0.9)
-}
 
 async function render(id, width) {
-  samplePhoto ??= placeholderPhoto()
   const sampleCv = sampleCvFor(language)
-  const cv = { ...sampleCv, template: id, personal: { ...sampleCv.personal, photo: samplePhoto } }
+  const cv = { ...sampleCv, template: id, personal: { ...sampleCv.personal, photo: samplePhoto() } }
   const pdfDocument = await pdfjs.getDocument({ data: await buildPdf(cv) }).promise
   try {
     const page = await pdfDocument.getPage(1)

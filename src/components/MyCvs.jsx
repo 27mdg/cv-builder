@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import texts from '../locales/index.js'
 import { listCvs } from '../data/library.js'
-import { ArrowIcon, CheckIcon, ClockIcon, CopyIcon, PlusIcon, TrashIcon } from './Icons.jsx'
+import { ArrowIcon, CheckIcon, ClockIcon, CopyIcon, PlusIcon, SparkleIcon, TrashIcon } from './Icons.jsx'
 
 const t = texts.myCvs
 const h = texts.history
@@ -43,10 +43,10 @@ function versionLabel(time) {
 
 /**
  * «Mis CV»: the saved CVs, to open, duplicate or delete one, or start a new one; and the open
- * CV's history, to go back to an older version. `openName` is the open CV's name as it is now
+ * CV's history, to go back to an older version; or open the example CV (`onExample`). `openName` is the open CV's name as it is now
  * (the saved list may be a moment behind). `readVersions()` gives the history to show.
  */
-function MyCvs({ openId, openName, onOpen, onNew, onDuplicate, onRemove, onRestore, readVersions }) {
+function MyCvs({ openId, openName, onOpen, onNew, onExample, onDuplicate, onRemove, onRestore, readVersions }) {
   const [open, setOpen] = useState(false)
   const [list, setList] = useState([])
   // 'list' (the CVs) or 'history' (the open CV's versions)
@@ -169,6 +169,9 @@ function MyCvs({ openId, openName, onOpen, onNew, onDuplicate, onRemove, onResto
           </button>
           <button type="button" className="my-cvs-new my-cvs-add" onClick={() => choose(onNew)}>
             <PlusIcon/>{t.newCv}
+          </button>
+          <button type="button" className="my-cvs-new my-cvs-example" onClick={() => choose(onExample)}>
+            <SparkleIcon/>{t.example}
           </button>
         </div>
       )}
