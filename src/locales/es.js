@@ -464,6 +464,17 @@ const es = {
     editedOn: (day, month) => `Editado el ${day} ${month}`,
     editedOnYear: (day, month, year) => `Editado el ${day} ${month} ${year}`,
   },
+  // The card at the top of an empty CV (data/start.js)
+  start: {
+    title: '¿Cómo empiezas?',
+    hint: 'Elige lo que más se parece a ti y ordenamos las secciones para que lo importante vaya primero. Luego puedes moverlas como quieras.',
+    close: 'Cerrar',
+    profiles: {
+      student: { title: 'Estudiante o primer empleo', hint: 'Tus estudios y prácticas van primero.' },
+      experienced: { title: 'Ya tengo experiencia', hint: 'Tus trabajos van primero.' },
+      careerChange: { title: 'Cambio de sector', hint: 'Tus habilidades y tu nueva formación van primero.' },
+    },
+  },
   clear: {
     button: 'Borrar todos los datos',
     tooltip: 'Borra todos tus CV de este navegador. No se puede deshacer.',

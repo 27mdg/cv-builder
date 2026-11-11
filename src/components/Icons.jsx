@@ -137,6 +137,11 @@ export function BriefcaseIcon() {
   return <Icon><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></Icon>
 }
 
+// A road that forks: a change of direction (career change)
+export function ForkIcon() {
+  return <Icon><path d="M6 21v-7a4 4 0 0 1 4-4h8M6 3v11M15 7l3 3-3 3"/></Icon>
+}
+
 export function StarIcon() {
   return <Icon><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></Icon>
 }

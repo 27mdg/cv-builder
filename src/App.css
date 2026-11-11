@@ -525,6 +525,20 @@ button:hover .trash-lid { rotate: -16deg; }
 @media (prefers-reduced-motion: reduce) {
   .section-remove svg { transition: none; }
 }
+/* «¿Cómo empiezas?»: on an empty CV, above everything. Paper rather than card, so it reads as a
+   question to the user and not as one more section of the CV */
+.start-card { margin-bottom: 14px; padding: 20px 24px 24px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--card-edge), var(--e1); }
+.start-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.start-title { font-family: var(--font-heading); font-size: 22px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+.start-hint { margin-top: 4px; color: var(--ink-muted); font-size: 14px; line-height: 1.45; }
+/* One answer per row: reads like a question and fits any width */
+.start-choices { display: grid; gap: 8px; margin-top: 16px; }
+.form-panel .library-card.start-choice { align-items: center; padding: 12px 14px; }
+.form-panel .start-choice[aria-pressed="true"] { background: var(--mint); box-shadow: var(--card-edge), 0 0 0 2px var(--forest); }
+.start-choice[aria-pressed="true"] .library-icon { background: var(--paper); }
+.start-check { flex: none; display: flex; color: var(--forest); }
+.start-check svg { width: 18px; height: 18px; }
+
 .extra-sections { padding: 32px 0 8px; }
 .extra-sections-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); }
 /* SectionLibrary.jsx: small paper cards with a line of help, as many per row as fit; they lift

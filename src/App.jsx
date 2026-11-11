@@ -15,6 +15,8 @@ import LongText from './components/form/LongText.jsx'
 import SignatureField from './components/form/SignatureField.jsx'
 import Animated from './components/Animated.jsx'
 import SectionLibrary from './components/form/SectionLibrary.jsx'
+import StartCard from './components/form/StartCard.jsx'
+import { isBlankCv, profileOrder, profiles } from './data/start.js'
 import sections, { optionalSections, customFields, isCustomKey, newCustomKey } from './data/sections.js'
 import { hasText, sectionTitle } from './templates/format.js'
 import Section from './components/form/Section.jsx'
@@ -113,6 +115,24 @@ function App() {
   // are always shown, so this does not need to be saved in the CV.
   const [addedSections, setAddedSections] = useState([])
   const { isLeaving: isSectionLeaving, leave: leaveSection, left: sectionLeft } = useLeaving()
+
+  // «¿Cómo empiezas?» card: on an empty CV, until it is closed or the user writes something
+  // (then it does not come back in this visit, even if the CV is emptied again). `profile`: the
+  // one picked, which can be changed while the card shows. Neither is saved.
+  const [start, setStart] = useState(() => ({ closed: !isBlankCv(opened.cv), shown: isBlankCv(opened.cv), appear: false }))
+  const [profile, setProfile] = useState(null)
+  if (!start.closed && !isBlankCv(cv)) setStart({ ...start, closed: true })
+
+  function chooseProfile(id) {
+    setCv((previous) => ({ ...previous, sectionOrder: profileOrder(id, previous.sectionOrder) }))
+    // The CV is empty, so the sections the previous choice added hold nothing
+    const before = profiles[profile]?.add ?? []
+    setAddedSections((added) => [
+      ...added.filter((key) => !before.includes(key)),
+      ...profiles[id].add.filter((key) => !added.includes(key) || before.includes(key)),
+    ])
+    setProfile(id)
+  }
 
   // Removals that can still be undone, oldest first ({ id, message, restore }), and the one the
   // notice shows. Each can be undone on its own, in any order: a restore only puts back its own
@@ -228,6 +248,9 @@ function App() {
     setCv(nextCv)
     setFormRound((round) => round + 1)
     setAddedSections([])
+    const blank = isBlankCv(nextCv)
+    setStart({ closed: !blank, shown: blank, appear: true })
+    setProfile(null)
     closeUndo()
   }
 
@@ -305,6 +328,8 @@ function App() {
     clearLibrary()
     setCv(initialCv)
     setAddedSections([])
+    setStart({ closed: false, shown: true, appear: true })
+    setProfile(null)
     closeUndo()
   }
 
@@ -530,6 +555,11 @@ function App() {
           {/* A new key when another CV opens: every part of the form starts afresh */}
           <section className="form-panel" key={`${cvId}:${formRound}`}>
             <CvLanguage value={cv.language || language}>
+            {start.shown && (
+              <Animated appear={start.appear} leaving={start.closed} onLeft={() => setStart({ ...start, shown: false })}>
+                <StartCard chosen={profile} onChoose={chooseProfile} onClose={() => setStart({ ...start, closed: true })}/>
+              </Animated>
+            )}
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
               <div className="anonymous-switch">
                 <label className="switch-label">
