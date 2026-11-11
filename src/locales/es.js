@@ -15,7 +15,7 @@ const es = {
     phone: 'Teléfono',
     address: 'Dirección',
     postalCode: 'Código postal',
-    city: 'Localidad',
+    city: 'Ciudad',
     birthDate: 'Fecha de nacimiento',
     birthPlace: 'Lugar de nacimiento',
     drivingLicense: 'Carné de conducir',
@@ -27,6 +27,14 @@ const es = {
     workPermit: 'Permiso de trabajo',
     idNumber: 'DNI/NIE',
     travel: 'Disponibilidad para viajar',
+    disability: 'Discapacidad reconocida',
+    moreDetails: 'Más datos',
+    lessDetails: 'Menos datos',
+    // Examples inside the empty boxes
+    placeholders: {
+      city: 'p. ej. Sevilla, España',
+      disability: 'p. ej. 33 %',
+    },
     website: 'Página web',
     linkedin: 'LinkedIn',
   },
@@ -36,7 +44,7 @@ const es = {
     remove: (category) => `Quitar ${category}`,
   },
   links: {
-    button: 'Red o enlace',
+    button: 'LinkedIn y enlaces',
     type: 'Tipo de enlace',
     url: 'Dirección',
     placeholder: 'p. ej. linkedin.com/in/tu-nombre',

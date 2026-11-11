@@ -4,34 +4,41 @@ import PhotoField from './PhotoField.jsx'
 import DatePicker from './DatePicker.jsx'
 import Select from './Select.jsx'
 import LicenseField from './LicenseField.jsx'
-import { CloseIcon, PlusIcon } from '../Icons.jsx'
+import { ArrowIcon, CloseIcon, PlusIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'
 import { useLeaving } from '../useLeaving.js'
 import { insertAt, useUndo } from '../undo.js'
 
-// `fullWidth`: spans both columns of the grid
+// `fullWidth`: spans both columns of the grid. Only the city by default: a street address is
+// no longer advised on CVs (privacy, nobody sends letters)
 const fields = [
   { name: 'email', type: 'email', spellCheck: false },
   { name: 'phone', type: 'tel', spellCheck: false },
-  { name: 'address', type: 'text', fullWidth: true },
-  { name: 'postalCode', type: 'text', spellCheck: false },
-  { name: 'city', type: 'text' },
-  { name: 'birthDate', type: 'date', fullWidth: true },
+  { name: 'city', type: 'text', fullWidth: true },
 ]
 
-// Rarely used: hidden behind a "+" button so the form stays short
+// Behind "+" chips so the form stays short, in the order they take in the form once added.
+// Birth date is here because many countries advise against it (age discrimination); the last
+// ones are the least advised (identity theft, discrimination).
 const extraFields = [
+  { name: 'address', type: 'text', fullWidth: true },
+  { name: 'postalCode', type: 'text', spellCheck: false },
+  { name: 'birthDate', type: 'date' },
   { name: 'birthPlace', type: 'text' },
-  { name: 'drivingLicense', type: 'text' },
-  { name: 'gender', type: 'text' },
   { name: 'nationality', type: 'text' },
-  { name: 'maritalStatus', type: 'text' },
+  { name: 'drivingLicense', type: 'text' },
   { name: 'availability', type: 'text' },
-  { name: 'ownVehicle', type: 'text' },
   { name: 'workPermit', type: 'text' },
-  { name: 'idNumber', type: 'text', spellCheck: false },
   { name: 'travel', type: 'text' },
+  { name: 'ownVehicle', type: 'text' },
+  { name: 'disability', type: 'text' },
+  { name: 'idNumber', type: 'text', spellCheck: false },
+  { name: 'gender', type: 'text' },
+  { name: 'maritalStatus', type: 'text' },
 ]
+
+// The chips shown at first; the rest wait behind "Más datos" so there is no wall of chips
+const mainChips = ['birthDate', 'drivingLicense', 'nationality', 'availability']
 
 function Field({ field, data, onChange, autoFocus, children }) {
   return (
@@ -43,6 +50,7 @@ function Field({ field, data, onChange, autoFocus, children }) {
           value={data[field.name]}
           autoFocus={autoFocus}
           spellCheck={field.spellCheck}
+          placeholder={texts.personal.placeholders[field.name]}
           onChange={(e) => onChange(field.name, e.target.value)}
         />
       </label>
@@ -69,8 +77,40 @@ function PersonalDetails({ data, onChange }) {
   const { isLeaving, leave, left } = useLeaving()
   const offerUndo = useUndo()
 
+  // "Más datos" opened in this visit (not saved: the form starts short each time)
+  const [showAll, setShowAll] = useState(false)
+
   const visible = extraFields.filter((f) => data[f.name] !== '' || opened.includes(f.name))
   const hidden = extraFields.filter((f) => !visible.includes(f))
+  // The chips behind "Más datos" shrink away before they go
+  const [hiding, setHiding] = useState(false)
+
+  function hideMore() {
+    setShowAll(false)
+    setHiding(false)
+  }
+
+  function toggleMore() {
+    // Also when clicked again while they are still shrinking: they stay
+    if (!showAll || hiding) {
+      setShowAll(true)
+      return setHiding(false)
+    }
+    // Without animations there is no animationend to wait for
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return hideMore()
+    setHiding(true)
+  }
+
+  function chipFor(field) {
+    const more = !mainChips.includes(field.name)
+    return (
+      <button type="button" key={field.name}
+        className={more ? `chip ${hiding ? 'chip-leave' : 'chip-appear'}` : 'chip'}
+        onClick={() => setOpened([...opened, field.name])}>
+        <span className="chip-plus"><PlusIcon/></span>{texts.personal[field.name]}
+      </button>
+    )
+  }
 
   function removeExtra(name) {
     const value = data[name]
@@ -141,31 +181,31 @@ function PersonalDetails({ data, onChange }) {
       </div>
 
       <div className="grid">
-        {fields.map((field) => (field.type === 'date'
-          ? (
-            <DatePicker key={field.name} label={texts.personal[field.name]} value={data[field.name]}
-              onChange={(value) => onChange(field.name, value)}/>
-          )
-          : <Field key={field.name} field={field} data={data} onChange={onChange}/>
-        ))}
+        {fields.map((field) => <Field key={field.name} field={field} data={data} onChange={onChange}/>)}
         {visible.map((field) => (
           <Animated
             key={field.name}
+            className={field.fullWidth ? 'field-full' : undefined}
             appear={opened.includes(field.name)}
             leaving={isLeaving(field.name)}
             onLeft={() => left(field.name)}
           >
-            {field.name === 'drivingLicense'
-              ? (
-                <LicenseField value={data.drivingLicense} onChange={(value) => onChange('drivingLicense', value)}>
-                  <RemoveButton onClick={() => removeExtra(field.name)}/>
-                </LicenseField>
-              )
-              : (
+            {field.name === 'drivingLicense' && (
+              <LicenseField value={data.drivingLicense} onChange={(value) => onChange('drivingLicense', value)}>
+                <RemoveButton onClick={() => removeExtra(field.name)}/>
+              </LicenseField>
+            )}
+            {field.type === 'date' && (
+              <DatePicker label={texts.personal[field.name]} value={data[field.name]}
+                onChange={(value) => onChange(field.name, value)}>
+                <RemoveButton onClick={() => removeExtra(field.name)}/>
+              </DatePicker>
+            )}
+            {field.name !== 'drivingLicense' && field.type !== 'date' && (
                 <Field field={field} data={data} onChange={onChange} autoFocus={opened.includes(field.name)}>
-                  <RemoveButton onClick={() => removeExtra(field.name)}/>
-                </Field>
-              )}
+                <RemoveButton onClick={() => removeExtra(field.name)}/>
+              </Field>
+            )}
           </Animated>
         ))}
         {data.links.map((link) => (
@@ -221,17 +261,25 @@ function PersonalDetails({ data, onChange }) {
       </div>
 
       <div className="chips">
-        {hidden.map((field) => (
-          <button type="button" className="chip" key={field.name}
-            onClick={() => setOpened([...opened, field.name])}>
-            <span className="chip-plus"><PlusIcon/></span>{texts.personal[field.name]}
-          </button>
-        ))}
         <button type="button" className="chip" onClick={addLink}>
           <span className="chip-plus"><PlusIcon/></span>{texts.links.button}
         </button>
-        <button type="button" className="chip" onClick={addCustom}>
-          <span className="chip-plus"><PlusIcon/></span>{texts.customFields.button}
+        {hidden.filter((field) => mainChips.includes(field.name)).map(chipFor)}
+        {showAll && (
+          <>
+            {hidden.filter((field) => !mainChips.includes(field.name)).map(chipFor)}
+            {/* The last chip: when it has shrunk away, they all have */}
+            <button type="button" className={hiding ? 'chip chip-leave' : 'chip chip-appear'} onClick={addCustom}
+              onAnimationEnd={(e) => {
+                if (e.animationName === 'chip-out') hideMore()
+              }}>
+              <span className="chip-plus"><PlusIcon/></span>{texts.customFields.button}
+            </button>
+          </>
+        )}
+        <button type="button" className="btn btn-ghost btn-small more-details" aria-expanded={showAll && !hiding}
+          onClick={toggleMore}>
+          {showAll && !hiding ? texts.personal.lessDetails : texts.personal.moreDetails}<ArrowIcon/>
         </button>
       </div>
     </>

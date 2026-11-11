@@ -49,7 +49,7 @@ const sameDay = (a, b) => isoOf(a) === isoOf(b)
  * Date field with our own calendar in a bubble, because the browser's one cannot be styled.
  * The date can also be typed (dd/mm/aaaa).
  */
-function DatePicker({ label, value, onChange }) {
+function DatePicker({ label, value, onChange, children }) {
   // What the user is typing, until it leaves the field; null = show the saved date
   const [draft, setDraft] = useState(null)
   const [open, setOpen] = useState(false)
@@ -180,6 +180,7 @@ function DatePicker({ label, value, onChange }) {
           </button>
         </span>
       </label>
+      {children}
       {open && (
         <div ref={bubble} popover="manual" className="date-popover" role="dialog" aria-label={t.calendar}>
           <div className="date-header">

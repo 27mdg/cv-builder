@@ -495,7 +495,8 @@ button:hover .trash-lid { rotate: -16deg; }
 .library-card:hover .library-plus svg { transform: rotate(90deg); }
 /* The custom section's two kinds, on a paper card above its own card.
    cqw: at most the form's width, as the form panel is a size container. */
-.library-custom { position: relative; }
+/* A flex box, so its card stretches to the row's height like the cards beside it */
+.library-custom { position: relative; display: flex; }
 .form-panel .library-custom > .library-card[aria-expanded="true"] { box-shadow: var(--card-edge), 0 0 0 2px var(--forest); }
 .library-popover { position: absolute; bottom: calc(100% + 12px); left: 50%; z-index: 20; display: grid; gap: 8px; width: min(320px, 92cqw); padding: 14px; border-radius: var(--r-lg); background: var(--paper); box-shadow: var(--e3); transform: translateX(-50%); animation: rise-in 0.18s var(--spring); }
 .library-question { margin: 0 2px 2px; color: var(--ink-muted); font-size: 13px; font-weight: 600; }
@@ -721,6 +722,17 @@ button:hover .trash-lid { rotate: -16deg; }
 .photo-remove svg { width: 14px; height: 14px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+/* The chips revealed by "Más datos" grow in where they stand */
+.chip-appear { animation: pop-in 0.2s var(--spring) backwards; }
+/* ...and shrink away in place when "Menos datos" hides them */
+.chip-leave { animation: chip-out 0.15s ease-in forwards; pointer-events: none; }
+@keyframes chip-out { to { opacity: 0; scale: 0.9; } }
+.more-details svg { margin-left: 6px; transition: rotate 0.2s var(--spring); }
+.more-details[aria-expanded="true"] svg { rotate: 180deg; }
+@media (prefers-reduced-motion: reduce) {
+  .chip-appear, .chip-leave { animation: none; }
+  .more-details svg { transition: none; }
+}
 
 /* Each entry of a list is a soft ivory panel inside its section's card: no box inside a box */
 .item { position: relative; margin-bottom: 12px; padding: 20px; border-radius: var(--r-md); background: var(--ivory); }

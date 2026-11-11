@@ -36,6 +36,7 @@ const initialCv = {
     workPermit: '',
     idNumber: '',
     travel: '',
+    disability: '', // recognised disability, free text ('33 %'): each country measures it its own way
     links: [], // { id, type (see texts.links.types), url }
     customFields: [], // { id, label, value }
   },

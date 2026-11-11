@@ -154,6 +154,7 @@ export function personalDetails(personal) {
     [texts.personal.workPermit, p.workPermit],
     [texts.personal.idNumber, p.idNumber],
     [texts.personal.travel, p.travel],
+    [texts.personal.disability, p.disability],
     ...itemsWithContent(p.customFields).map((field) => [field.label, field.value]),
   ]
     .filter(([, value]) => hasText(value))
