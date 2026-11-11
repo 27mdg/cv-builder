@@ -1,10 +1,10 @@
 import { memo } from 'react'
-import texts from '../../locales/es.js'
 import RichTextEditor from './RichTextEditor.jsx'
 
-// Profile, achievements and free-text custom sections
-function LongText({ value, hint, onChange }) {
-  return <RichTextEditor label={texts.common.description} value={value} placeholder={hint} onChange={onChange}/>
+// Profile, achievements and free-text custom sections. The box is the whole section, so its
+// label (the section's title) is only for screen readers: shown, it would repeat the title.
+function LongText({ label, value, hint, onChange }) {
+  return <RichTextEditor label={label} hideLabel value={value} placeholder={hint} onChange={onChange}/>
 }
 
 export default memo(LongText)

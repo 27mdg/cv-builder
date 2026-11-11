@@ -15,7 +15,7 @@ function linkAtCursor(editorBox) {
 }
 
 /** A description box that shows bullets, bold and links as they will look in the CV. */
-function RichTextEditor({ label, value, placeholder, onChange }) {
+function RichTextEditor({ label, hideLabel, value, placeholder, onChange }) {
   const editor = useRef(null)
   // The text this editor produced last: if `value` is the same, the editor already shows it,
   // and rewriting it would move the cursor to the start
@@ -95,7 +95,7 @@ function RichTextEditor({ label, value, placeholder, onChange }) {
 
   return (
     <div className="rich-field">
-      <span className="label" id={labelId}>{label}</span>
+      <span className={hideLabel ? 'visually-hidden' : 'label'} id={labelId}>{label}</span>
       <div className="rich-editor">
         {/* onMouseDown + preventDefault: clicking a button must not take the selection away */}
         <div className="rich-toolbar">

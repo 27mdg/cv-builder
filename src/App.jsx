@@ -322,11 +322,11 @@ function App() {
       return Array.isArray(cv[key])
         // Its labels come from texts.customSection, as it has none of its own
         ? <ListSection sectionKey="customSection" fields={customFields} list={cv[key]} onChange={changerFor(key)}/>
-        : <LongText value={cv[key]} hint={texts.customSection.hint} onChange={changerFor(key)}/>
+        : <LongText label={sectionTitle(cv, key)} value={cv[key]} hint={texts.customSection.hint} onChange={changerFor(key)}/>
     }
     const listSection = sections.find((section) => section.key === key)
     if (!listSection) {
-      return <LongText value={cv[key]} hint={texts[key].hint} onChange={changerFor(key)}/>
+      return <LongText label={sectionTitle(cv, key)} value={cv[key]} hint={texts[key].hint} onChange={changerFor(key)}/>
     }
     const list = (
       <ListSection

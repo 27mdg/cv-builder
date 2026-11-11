@@ -131,8 +131,8 @@ const es = {
   // Used when the section has no label of its own with the same name
   fields: {
     position: 'Puesto',
-    employer: 'Empleador',
-    city: 'Localidad',
+    employer: 'Empresa',
+    city: 'Ciudad',
     start: 'Inicio',
     end: 'Fin',
     description: 'Descripción',
@@ -140,7 +140,7 @@ const es = {
   },
   education: {
     title: 'Formación',
-    degree: 'Formación',
+    degree: 'Título o estudios',
     school: 'Centro de estudios',
     grade: 'Nota media o mención',
     add: 'Añadir formación',
@@ -191,9 +191,9 @@ const es = {
     add: 'Añadir certificado',
   },
   qualities: {
-    title: 'Aptitudes',
-    quality: 'Aptitud',
-    add: 'Añadir aptitud',
+    title: 'Cualidades personales',
+    quality: 'Cualidad',
+    add: 'Añadir cualidad',
   },
   projects: {
     title: 'Proyectos',
