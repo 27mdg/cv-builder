@@ -5,10 +5,16 @@ import templates from '../templates/list.js'
 // Only in the browser (localStorage, or sessionStorage in public computer mode): the data never
 // leaves it (GDPR).
 
-const storageKey = 'cv-gratis'
+// Every key of the saved CVs starts with it (library.js). Version 2 kept one CV under 'cv-gratis'
+// itself; library.js converts it.
+export const keyPrefix = 'cv-gratis:'
+export const oldKey = 'cv-gratis'
+
 // Bump it when the shape of the data changes, to recognise (and convert) old CVs.
-// Exported files use it too.
-export const version = 2
+// Exported files use it too. 3: several CVs, each with its language.
+export const version = 3
+// Versions whose CVs can still be read (saved or imported); 1 is ignored (user's decision)
+const readable = [2, 3]
 
 // Keeps the saved order, drops unknown keys and adds sections that did not exist yet at the
 // end, so older or hand-edited CVs never lose a section. Custom sections count if they have content.
@@ -21,7 +27,7 @@ function normalizeOrder(order, cv) {
 
 // { version, cv } → complete CV, or null if invalid (localStorage or imported file)
 export function cvFromData(data) {
-  if (data?.version !== version || typeof data.cv?.personal !== 'object') return null
+  if (!readable.includes(data?.version) || typeof data.cv?.personal !== 'object') return null
   // Merged with initialCv so CVs saved before new fields existed get them (empty)
   const cv = {
     ...initialCv,
@@ -56,6 +62,8 @@ export function cvFromData(data) {
   if (!templates.some((t) => t.id === cv.template)) {
     cv.template = initialCv.template
   }
+  if (typeof cv.language !== 'string') cv.language = initialCv.language
+  cv.anonymous = cv.anonymous === true
   return cv
 }
 
@@ -63,8 +71,27 @@ export function cvFromData(data) {
 // which the browser clears when the tab closes, and nothing stays in localStorage.
 const publicModeKey = 'cv-gratis-public'
 
-function store() {
+/** Where the CVs live now: sessionStorage in public computer mode, else localStorage. */
+export function store() {
   return isPublicMode() ? sessionStorage : localStorage
+}
+
+// The keys of the saved CVs in one storage (also the old version 2 one)
+export function libraryKeys(storage) {
+  const keys = []
+  for (let i = 0; i < storage.length; i++) {
+    const key = storage.key(i)
+    if (key === oldKey || key.startsWith(keyPrefix)) keys.push(key)
+  }
+  return keys
+}
+
+// All the CVs go along to the other storage, so turning the mode on or off loses none
+function moveLibrary(from, to) {
+  for (const key of libraryKeys(from)) {
+    to.setItem(key, from.getItem(key))
+    from.removeItem(key)
+  }
 }
 
 export function isPublicMode() {
@@ -76,32 +103,20 @@ export function isPublicMode() {
 }
 
 /**
- * Turns public computer mode on or off and deletes the copy in the other place. The next
- * saveCv() writes the CV where it now belongs.
+ * Turns public computer mode on or off, moving the saved CVs to where they now belong (this
+ * tab's sessionStorage while it is on), so nothing stays behind in the other place.
  */
 export function setPublicMode(on) {
   try {
     if (on) {
       sessionStorage.setItem(publicModeKey, 'on')
-      localStorage.removeItem(storageKey)
+      moveLibrary(localStorage, sessionStorage)
     } else {
       sessionStorage.removeItem(publicModeKey)
-      sessionStorage.removeItem(storageKey)
+      moveLibrary(sessionStorage, localStorage)
     }
   } catch {
-    // Storage blocked: nothing was saved anyway
-  }
-}
-
-// The saved CV, or an empty one if there is none or it is broken
-export function loadCv() {
-  try {
-    const text = store().getItem(storageKey)
-    if (!text) return initialCv
-    return cvFromData(JSON.parse(text)) ?? initialCv
-  } catch {
-    // Broken text or a browser that does not allow localStorage
-    return initialCv
+    // Storage blocked or full: the open CV is saved again by App in its new place
   }
 }
 
@@ -111,10 +126,3 @@ export function keepSaved() {
   navigator.storage?.persist?.().catch(() => {})
 }
 
-export function saveCv(cv) {
-  try {
-    store().setItem(storageKey, JSON.stringify({ version, cv }))
-  } catch {
-    // Private mode or storage full: the site keeps working, just without saving
-  }
-}

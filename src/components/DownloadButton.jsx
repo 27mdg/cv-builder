@@ -5,11 +5,18 @@ import { exportCv } from '../data/file.js'
 import Tooltip from './Tooltip.jsx'
 import { CloseIcon, DownloadIcon } from './Icons.jsx'
 
-// publicMode: nothing is kept in this browser, so there is nothing to protect or remind about
-function DownloadButton({ cv, publicMode }) {
+// publicMode: nothing is kept in this browser, so there is nothing to protect or remind about.
+// storageFull: saving failed for lack of space; the same bubble asks for a copy (once).
+function DownloadButton({ cv, publicMode, storageFull }) {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState(false)
   const [reminder, setReminder] = useState(false)
+  const [fullClosed, setFullClosed] = useState(false)
+  const full = storageFull && !fullClosed
+  function closeBubble() {
+    if (full) setFullClosed(true)
+    else setReminder(false)
+  }
   // Once per visit: after that it would only get in the way
   const reminded = useRef(false)
 
@@ -41,15 +48,15 @@ function DownloadButton({ cv, publicMode }) {
           {generating ? texts.download.generating : texts.download.button}
         </button>
       </Tooltip>
-      {reminder && (
-        <div className="save-reminder frost" role="status">
-          <p>{texts.download.reminder}</p>
+      {(reminder || full) && (
+        <div className="save-reminder frost" role={full ? 'alert' : 'status'}>
+          <p>{full ? texts.storage.full : texts.download.reminder}</p>
           <button
             type="button"
             className="btn btn-primary btn-small"
             onClick={() => {
               exportCv(cv)
-              setReminder(false)
+              closeBubble()
             }}
           >
             {texts.download.reminderExport}
@@ -59,7 +66,7 @@ function DownloadButton({ cv, publicMode }) {
             className="btn btn-ghost btn-icon btn-small save-reminder-close"
             aria-label={texts.download.reminderClose}
             data-hint={texts.download.reminderClose}
-            onClick={() => setReminder(false)}
+            onClick={closeBubble}
           >
             <CloseIcon/>
           </button>

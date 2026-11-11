@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
-import { isPublicMode, loadCv, saveCv, setPublicMode } from './data/storage.js'
+import { isPublicMode, setPublicMode } from './data/storage.js'
+import { clearLibrary, loadLibrary, saveOpenCv } from './data/library.js'
 import initialCv from './data/initialCv.js'
 import texts from './locales/index.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
@@ -34,9 +35,18 @@ const saveDelay = 300
 const maxUndos = 10
 
 function App() {
-  const [cv, setCv] = useState(loadCv)
+  // The CV last used in this browser (library.js), and its id among the saved ones
+  const [opened] = useState(loadLibrary)
+  const cvId = opened.id
+  const [cv, setCv] = useState(opened.cv)
 
   const [publicMode, setPublicModeState] = useState(isPublicMode)
+
+  // The browser's space for this site ran out: saving failed, and the user is told once
+  const [storageFull, setStorageFull] = useState(false)
+  const save = useCallback((toSave) => {
+    if (saveOpenCv(cvId, toSave) === 'full') setStorageFull(true)
+  }, [cvId])
 
   // Saving writes the whole CV, photo included, so it waits for a pause in typing instead of
   // running on every key. Also on a change of mode, so the CV moves to its new place (see
@@ -46,16 +56,16 @@ function App() {
   useEffect(() => {
     unsaved.current = cv
     const timer = setTimeout(() => {
-      saveCv(cv)
+      save(cv)
       unsaved.current = null
     }, saveDelay)
     return () => clearTimeout(timer)
-  }, [cv, publicMode])
+  }, [cv, publicMode, save])
 
   useEffect(() => {
     function saveNow() {
       if (!unsaved.current) return
-      saveCv(unsaved.current)
+      save(unsaved.current)
       unsaved.current = null
     }
     function handleVisibility() {
@@ -67,7 +77,7 @@ function App() {
       window.removeEventListener('pagehide', saveNow)
       document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [])
+  }, [save])
 
   // Only what changes in this visit animates, never on page load
   const [publicAnimated, setPublicAnimated] = useState(false)
@@ -206,6 +216,8 @@ function App() {
   // Public computer mode: leaves nothing behind, not even what "Deshacer" could bring back.
   // Then the mode turns off, as there is nothing left to protect.
   function finishPublicSession() {
+    // Erased before the mode turns off, which would otherwise carry them back to localStorage
+    clearLibrary()
     setCv(initialCv)
     setAddedSections([])
     closeUndo()
@@ -403,7 +415,7 @@ function App() {
               <span className="actions-divider" aria-hidden="true"/>
               <ImportButton currentCv={cv} onImport={setCv}/>
               <ExportButton cv={cv}/>
-              <DownloadButton cv={cv} publicMode={publicMode}/>
+              <DownloadButton cv={cv} publicMode={publicMode} storageFull={storageFull}/>
             </div>
           </header>
           {publicMode && (

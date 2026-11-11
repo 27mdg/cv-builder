@@ -512,6 +512,8 @@ const es = {
   // Not shown at the moment: kept for the future home page
   storage: {
     notice: 'Tus datos se guardan solo en este navegador y no se envían a ningún servidor. Con «Exportar» puedes guardar una copia en tu equipo.',
+    // When the browser's space for the site runs out and the last changes could not be saved
+    full: 'No queda espacio en este navegador y tus últimos cambios no se han podido guardar. Exporta una copia para no perderlos.',
   },
 }
 
