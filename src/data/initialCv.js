@@ -64,8 +64,10 @@ const initialCv = {
   signature: { image: '', place: '', date: '' },
   // Small text at the bottom of every page (e.g. the data protection clause)
   footer: '',
-  // Per section: { hidden: true } leaves it out of the PDF without deleting it
-  sectionSettings: {},
+  // Per section: { hidden: true } leaves it out of the PDF without deleting it.
+  // Skill levels start hidden: the dots are drawings that CV-reading software cannot read, and
+  // recruiters distrust self-ratings. Saved CVs keep their own settings (storage.js).
+  sectionSettings: { skills: { hideLevel: true } },
   // Order of every section except the personal details, which always go first.
   // The user changes it by dragging the sections in the form; templates follow it.
   sectionOrder: [

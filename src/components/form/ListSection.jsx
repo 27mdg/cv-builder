@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import texts from '../../locales/es.js'
 import Animated from '../Animated.jsx'
@@ -290,7 +290,13 @@ const EntryBody = memo(function EntryBody({
   )
 })
 
-function ListSection({ sectionKey, fields, list, onChange }) {
+// hiddenField: a field left out of the form for now (skill levels while the CV does not show
+// them); its value stays saved, so it comes back as it was
+function ListSection({ sectionKey, fields, hiddenField, list, onChange }) {
+  const shownFields = useMemo(
+    () => (hiddenField ? fields.filter((field) => field.name !== hiddenField) : fields),
+    [fields, hiddenField],
+  )
   // Items added in this visit: only these grow in, so nothing animates on page load
   const [added, setAdded] = useState([])
   // Optional fields (the link) opened in this visit, as 'itemId:fieldName'
@@ -433,7 +439,7 @@ function ListSection({ sectionKey, fields, list, onChange }) {
             <Entry
               key={item.id}
               item={item}
-              fields={fields}
+              fields={shownFields}
               sectionKey={sectionKey}
               draggable={list.length > 1}
               transitionName={sorting ? `item-${item.id}` : undefined}

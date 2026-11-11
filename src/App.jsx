@@ -332,6 +332,7 @@ function App() {
       <ListSection
         sectionKey={key}
         fields={listSection.fields}
+        hiddenField={key === 'skills' && cv.sectionSettings.skills?.hideLevel ? 'level' : undefined}
         list={cv[key]}
         onChange={changerFor(key)}
       />
