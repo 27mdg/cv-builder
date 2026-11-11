@@ -53,6 +53,8 @@ const es = {
     tip: 'El PDF muestra solo tus iniciales y quita la foto, la edad, el género, el origen y otros datos que no deberían influir. Aquí no se borra nada.',
   },
   licence: {
+    // The usual categories, suggested while typing (EU ones in Spain)
+    categories: ['AM', 'A1', 'A2', 'A', 'B', 'BE', 'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE'],
     placeholder: 'Elige o escribe, p. ej. B',
     suggestions: 'Categorías habituales',
     remove: (category) => `Quitar ${category}`,
@@ -451,12 +453,16 @@ const es = {
   },
   datePicker: {
     placeholder: 'dd/mm/aaaa',
+    // How a date is typed and shown: d = day, m = month, y = year ('mdy' in the US)
+    order: 'dmy',
+    // First column of the calendar: 0 = Sunday, 1 = Monday (`weekdays` starts with it)
+    firstWeekday: 1,
     open: 'Abrir calendario',
     calendar: 'Calendario',
     previous: 'Mes anterior',
     next: 'Mes siguiente',
     clear: 'Borrar',
-    // Starting on Monday
+    // Starting on `firstWeekday`
     weekdays: ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
     // Read aloud by screen readers on each day
     dayLabel: (day, month, year) => `${day} de ${month} de ${year}`,

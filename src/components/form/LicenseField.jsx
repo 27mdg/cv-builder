@@ -3,8 +3,8 @@ import texts from '../../locales/index.js'
 import { CloseIcon } from '../Icons.jsx'
 
 const t = texts.licence
-// Suggestions only (the EU categories): anything else can be typed, for other countries
-const categories = ['AM', 'A1', 'A2', 'A', 'B', 'BE', 'C1', 'C1E', 'C', 'CE', 'D1', 'D1E', 'D', 'DE']
+// Suggestions only, each language its country's: anything else can be typed
+const categories = t.categories
 
 // Stored as text ('A2, B'), like before: older CVs with a typed licence keep working
 function parse(value) {

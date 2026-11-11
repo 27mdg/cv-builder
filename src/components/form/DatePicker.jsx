@@ -22,24 +22,28 @@ function fromIso(iso) {
   return new Date(year, month - 1, day)
 }
 
+// Written in the language's order (t.order), e.g. '12/04/1995' in Spanish
 function textOf(iso) {
   if (!iso) return ''
-  const [year, month, day] = iso.split('-')
-  return `${day}/${month}/${year}`
+  const [y, m, d] = iso.split('-')
+  const parts = { d, m, y }
+  return [...t.order].map((part) => parts[part]).join('/')
 }
 
-// '12/4/1995' (also with - or .) → '1995-04-12', or null if it is not a real date
+// '12/4/1995' (also with - or .) in the language's order → '1995-04-12', or null if it is not a real date
 function parseText(text) {
-  const match = text.trim().match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/)
+  const match = text.trim().match(/^(\d{1,4})[/.-](\d{1,4})[/.-](\d{1,4})$/)
   if (!match) return null
-  const [day, month, year] = match.slice(1).map(Number)
+  const parts = Object.fromEntries([...t.order].map((part, i) => [part, Number(match[i + 1])]))
+  const { d: day, m: month, y: year } = parts
+  if (year < 1000) return null
   const date = new Date(year, month - 1, day)
   return date.getMonth() === month - 1 && date.getDate() === day ? isoOf(date) : null
 }
 
-// Six full weeks starting on Monday, so the grid never changes height between months
+// Six full weeks starting on the language's first weekday, so the grid never changes height
 function monthDays(year, month) {
-  const offset = (new Date(year, month, 1).getDay() + 6) % 7
+  const offset = (new Date(year, month, 1).getDay() - t.firstWeekday + 7) % 7
   return Array.from({ length: 42 }, (_, i) => new Date(year, month, 1 - offset + i))
 }
 
@@ -47,7 +51,7 @@ const sameDay = (a, b) => isoOf(a) === isoOf(b)
 
 /**
  * Date field with our own calendar in a bubble, because the browser's one cannot be styled.
- * The date can also be typed (dd/mm/aaaa).
+ * The date can also be typed, in the language's order (dd/mm/aaaa in Spanish).
  */
 function DatePicker({ label, value, onChange, children }) {
   // What the user is typing, until it leaves the field; null = show the saved date
