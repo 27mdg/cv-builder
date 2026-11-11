@@ -427,6 +427,23 @@ const es = {
     photo: 'Has quitado la foto.',
     signature: 'Has borrado la firma.',
     cv: (name) => `Has eliminado «${name}».`,
+    version: (when) => `Has vuelto a la versión «${when}».`,
+  },
+  history: {
+    open: 'Historial de este CV',
+    back: 'Mis CV',
+    title: (name) => `Historial · ${name}`,
+    now: 'Ahora',
+    nowHint: 'La versión que estás editando',
+    restore: 'Restaurar',
+    restoreLabel: (when) => `Restaurar la versión «${when}»`,
+    // When each version was kept; `month` from common.dateMonths.short
+    today: (time) => `Hoy, ${time}`,
+    yesterday: (time) => `Ayer, ${time}`,
+    day: (day, month, time) => `${day} ${month}, ${time}`,
+    dayOfYear: (day, month, year, time) => `${day} ${month} ${year}, ${time}`,
+    note: 'Se guarda una versión cada 10 minutos mientras escribes; se conservan las 10 últimas. La foto y la firma no se guardan en el historial.',
+    empty: 'Todavía no hay versiones anteriores: la primera se guardará dentro de unos minutos.',
   },
   myCvs: {
     button: 'Mis CV',

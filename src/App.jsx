@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
-import { isPublicMode, setPublicMode } from './data/storage.js'
-import { clearLibrary, createCv, deleteCv, listCvs, loadLibrary, readCv, restoreCv, saveOpenCv } from './data/library.js'
+import { cvFromData, isPublicMode, setPublicMode, version } from './data/storage.js'
+import {
+  addVersion, addVersionSometimes, clearLibrary, createCv, deleteCv, listCvs, loadLibrary, readCv, readHistory,
+  restoreCv, saveOpenCv, withoutImages,
+} from './data/library.js'
 import { baseName } from './data/file.js'
 import MyCvs from './components/MyCvs.jsx'
 import initialCv from './data/initialCv.js'
@@ -48,6 +51,7 @@ function App() {
   const [storageFull, setStorageFull] = useState(false)
   const save = useCallback((toSave) => {
     if (saveOpenCv(cvId, toSave) === 'full') setStorageFull(true)
+    else addVersionSometimes(cvId, toSave)
   }, [cvId])
 
   // Saving writes the whole CV, photo included, so it waits for a pause in typing instead of
@@ -209,13 +213,38 @@ function App() {
     unsaved.current = null
   }
 
-  // Shows another CV. The form starts afresh (its key is the id), and pending «Deshacer» go:
-  // they would change this CV, not the one they came from.
+  // Each CV shown (another one, or an older version of this one) gets a new form key, so every
+  // part of the form starts afresh
+  const [formRound, setFormRound] = useState(0)
+
+  // Shows another CV, or another version of this one. Pending «Deshacer» go: they would change
+  // what is shown now, not what they came from.
   function show(id, nextCv) {
     setCvId(id)
     setCv(nextCv)
+    setFormRound((round) => round + 1)
     setAddedSections([])
     closeUndo()
+  }
+
+  // An older version comes back with today's photo and signature (the history keeps no images).
+  // What was there is kept as a version first, so this can also be undone from the history.
+  function restoreVersion(time, label) {
+    const older = readHistory(cvId).find((entry) => entry.time === time)
+    if (!older) return
+    addVersion(cvId, cv)
+    const restored = cvFromData({
+      version,
+      cv: {
+        ...older.cv,
+        personal: { ...older.cv.personal, photo: cv.personal.photo },
+        signature: { ...older.cv.signature, image: cv.signature.image },
+      },
+    })
+    if (!restored) return
+    const current = cv
+    show(cvId, restored)
+    offerUndo(texts.undo.version(label), () => show(cvId, current))
   }
 
   function openCv(id) {
@@ -448,7 +477,12 @@ function App() {
             <div className="topbar-start">
               <a href="/" className="logo">{texts.app.title}</a>
               <MyCvs openId={cvId} openName={baseName(cv)} onOpen={openCv} onNew={() => addCv(blankCv())}
-                onDuplicate={duplicateCv} onRemove={removeCv}/>
+                onDuplicate={duplicateCv} onRemove={removeCv} onRestore={restoreVersion}
+                // Versions equal to what is open now are left out: restoring them would change nothing
+                readVersions={() => {
+                  const now = JSON.stringify(withoutImages(cv))
+                  return readHistory(cvId).filter((entry) => JSON.stringify(entry.cv) !== now)
+                }}/>
             </div>
             <input
               className="file-name"
@@ -490,7 +524,7 @@ function App() {
         </div>
         <main className="workspace">
           {/* A new key when another CV opens: every part of the form starts afresh */}
-          <section className="form-panel" key={cvId}>
+          <section className="form-panel" key={`${cvId}:${formRound}`}>
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
               <div className="anonymous-switch">
                 <label className="switch-label">

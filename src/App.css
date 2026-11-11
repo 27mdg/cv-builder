@@ -51,8 +51,18 @@
 .my-cvs-new { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color var(--t-fast); }
 .my-cvs-new:hover { background: var(--tint); }
 .my-cvs-new svg { width: 18px; height: 18px; color: var(--forest); transition: transform 0.25s var(--spring); }
-.my-cvs-new:hover svg { transform: rotate(90deg); }
-.my-cvs-open:focus-visible, .my-cvs-new:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.my-cvs-add:hover svg { transform: rotate(90deg); }
+/* The history view: «‹ Mis CV» back, then «Ahora» in mint and each older version */
+.my-cvs-back { display: flex; align-items: center; gap: 6px; margin: 2px 0 4px; padding: 6px 12px 6px 8px; border: none; border-radius: var(--r-pill); background: transparent; color: var(--ink-muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color var(--t-fast), color var(--t-fast); }
+.my-cvs-back:hover { background: var(--tint); color: var(--ink); }
+.my-cvs-back svg { rotate: 90deg; }
+.my-cvs-version { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 8px 6px 12px; border-radius: var(--r-md); transition: background-color var(--t-fast); }
+.my-cvs-version:not(.current):hover { background: var(--tint); }
+.my-cvs-version.current { background: var(--mint); }
+.my-cvs-version.current .my-cvs-name { color: var(--forest); }
+.my-cvs-version .my-cvs-text { flex: 1; }
+.my-cvs-note { margin: 8px 10px 4px; color: var(--ink-muted); font-size: 12.5px; line-height: 1.4; }
+.my-cvs-open:focus-visible, .my-cvs-new:focus-visible, .my-cvs-back:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 @media (prefers-reduced-motion: reduce) {
   .my-cvs-menu { animation: none; }
   .my-cvs-button svg, .my-cvs-new svg { transition: none; }
