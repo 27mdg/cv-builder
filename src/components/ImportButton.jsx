@@ -1,16 +1,10 @@
 import { useRef, useState } from 'react'
 import texts from '../locales/index.js'
-import initialCv from '../data/initialCv.js'
 import { readFile } from '../data/file.js'
 import Tooltip from './Tooltip.jsx'
 
-// Having chosen a template or a design does not count as data that could be lost
-function hasData(cv) {
-  const onlyContent = { ...cv, template: initialCv.template, design: initialCv.design }
-  return JSON.stringify(onlyContent) !== JSON.stringify(initialCv)
-}
-
-function ImportButton({ currentCv, onImport }) {
+// The file's CV is added as a new one (onImport): nothing is overwritten, so nothing to confirm
+function ImportButton({ onImport }) {
   const picker = useRef(null)
   const [error, setError] = useState('')
 
@@ -21,9 +15,7 @@ function ImportButton({ currentCv, onImport }) {
     if (!file) return
     setError('')
     try {
-      const cv = await readFile(file)
-      if (hasData(currentCv) && !window.confirm(texts.file.confirmImport)) return
-      onImport(cv)
+      onImport(await readFile(file))
     } catch (err) {
       setError(err.message)
     }

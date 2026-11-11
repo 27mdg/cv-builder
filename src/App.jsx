@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 import { isPublicMode, setPublicMode } from './data/storage.js'
-import { clearLibrary, loadLibrary, saveOpenCv } from './data/library.js'
+import { clearLibrary, createCv, deleteCv, listCvs, loadLibrary, readCv, restoreCv, saveOpenCv } from './data/library.js'
+import { baseName } from './data/file.js'
+import MyCvs from './components/MyCvs.jsx'
 import initialCv from './data/initialCv.js'
 import texts from './locales/index.js'
 import PersonalDetails from './components/form/PersonalDetails.jsx'
@@ -37,7 +39,7 @@ const maxUndos = 10
 function App() {
   // The CV last used in this browser (library.js), and its id among the saved ones
   const [opened] = useState(loadLibrary)
-  const cvId = opened.id
+  const [cvId, setCvId] = useState(opened.id)
   const [cv, setCv] = useState(opened.cv)
 
   const [publicMode, setPublicModeState] = useState(isPublicMode)
@@ -201,16 +203,66 @@ function App() {
     }))
   }, [])
 
-  // Only what the user typed is cleared; template, design and section order are not personal data
-  function clearCv() {
-    setCv((previous) => ({
-      ...initialCv,
-      template: previous.template,
-      design: previous.design,
-      // Custom sections are the user's own content: they go too
-      sectionOrder: previous.sectionOrder.filter((key) => !isCustomKey(key)),
-    }))
+  // What is still waiting to be saved of the open CV, written now (before opening another)
+  function saveNow() {
+    if (unsaved.current) save(unsaved.current)
+    unsaved.current = null
+  }
+
+  // Shows another CV. The form starts afresh (its key is the id), and pending «Deshacer» go:
+  // they would change this CV, not the one they came from.
+  function show(id, nextCv) {
+    setCvId(id)
+    setCv(nextCv)
     setAddedSections([])
+    closeUndo()
+  }
+
+  function openCv(id) {
+    const next = readCv(id)
+    if (!next) return
+    saveNow()
+    show(id, next)
+  }
+
+  // A new CV starts empty but keeps the look chosen (template and design are not personal data)
+  const blankCv = () => ({ ...initialCv, template: cv.template, design: cv.design })
+
+  // Saved straight away, so it is in the list even if the tab closes at once
+  function addCv(newCv) {
+    saveNow()
+    const { id, status } = createCv(newCv)
+    if (status === 'full') setStorageFull(true)
+    show(id, newCv)
+  }
+
+  function duplicateCv(id) {
+    const source = id === cvId ? cv : readCv(id)
+    if (source) addCv({ ...source, fileName: texts.myCvs.copyName(baseName(source)) })
+  }
+
+  function removeCv(id, name) {
+    const wasOpen = id === cvId
+    // The open one is not saved again: it is being deleted
+    if (wasOpen) unsaved.current = null
+    else saveNow()
+    const removed = deleteCv(id)
+    if (wasOpen) {
+      const next = listCvs().map((entry) => ({ id: entry.id, cv: readCv(entry.id) })).find((entry) => entry.cv)
+      if (next) show(next.id, next.cv)
+      else addCv(blankCv())
+    }
+    offerUndo(texts.undo.cv(name), () => {
+      restoreCv(removed)
+      if (wasOpen) openCv(removed.entry.id)
+    })
+  }
+
+  // «Borrar todo»: every CV leaves this browser; a new empty one stays open
+  function clearAll() {
+    unsaved.current = null
+    clearLibrary()
+    addCv(blankCv())
   }
 
   // Public computer mode: leaves nothing behind, not even what "Deshacer" could bring back.
@@ -393,12 +445,17 @@ function App() {
         <div className="top-layer" ref={topLayer}>
           <header className="topbar frost-behind">
             {/* Temporary logo: it will link to the home page once there is one */}
-            <a href="/" className="logo">{texts.app.title}</a>
+            <div className="topbar-start">
+              <a href="/" className="logo">{texts.app.title}</a>
+              <MyCvs openId={cvId} openName={baseName(cv)} onOpen={openCv} onNew={() => addCv(blankCv())}
+                onDuplicate={duplicateCv} onRemove={removeCv}/>
+            </div>
             <input
               className="file-name"
               spellCheck={false}
               aria-label={texts.file.name}
-              placeholder={texts.file.placeholder}
+              // While empty it shows the automatic name, the one «Mis CV» lists ('CV - Ana Pérez')
+              placeholder={baseName({ ...cv, fileName: '' })}
               value={cv.fileName}
               onChange={(e) => changeSection('fileName', e.target.value)}
             />
@@ -411,9 +468,9 @@ function App() {
                   onTurnOn={turnOnPublicMode}
                 />
               )}
-              <ClearButton onClear={clearCv}/>
+              <ClearButton onClear={clearAll}/>
               <span className="actions-divider" aria-hidden="true"/>
-              <ImportButton currentCv={cv} onImport={setCv}/>
+              <ImportButton onImport={addCv}/>
               <ExportButton cv={cv}/>
               <DownloadButton cv={cv} publicMode={publicMode} storageFull={storageFull}/>
             </div>
@@ -432,7 +489,8 @@ function App() {
           )}
         </div>
         <main className="workspace">
-          <section className="form-panel">
+          {/* A new key when another CV opens: every part of the form starts afresh */}
+          <section className="form-panel" key={cvId}>
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
               <div className="anonymous-switch">
                 <label className="switch-label">

@@ -1,8 +1,9 @@
 import initialCv from './initialCv.js'
 import { cvFromData, keyPrefix, libraryKeys, oldKey, store, version } from './storage.js'
+import { baseName } from './file.js'
 
 // Several CVs, each under its own key, so saving writes only the open one (as fast as with one):
-//   cv-gratis:index      { version, current: id, list: [{ id, updated }] }  (list order = shown order)
+//   cv-gratis:index      { version, current: id, list: [{ id, updated, name }] }  (list order = shown order)
 //   cv-gratis:cv:<id>    { version, cv }
 // Version 2 kept a single CV under 'cv-gratis'; it becomes the first CV of the list.
 
@@ -55,7 +56,7 @@ function writeIndex(index) {
 function migrate(cv) {
   const id = newId()
   if (write(cvKey(id), { version, cv }) !== 'ok') return { id, cv }
-  if (writeIndex({ current: id, list: [{ id, updated: Date.now() }] }) !== 'ok') return { id, cv }
+  if (writeIndex({ current: id, list: [entryFor(id, cv)] }) !== 'ok') return { id, cv }
   const back = cvFromData(read(cvKey(id)))
   if (back && JSON.stringify(back) === JSON.stringify(cv)) {
     try {
@@ -95,14 +96,59 @@ export function clearLibrary() {
   }
 }
 
+// What the list shows of a CV, kept in the index so the list never reads every CV (photos)
+function entryFor(id, cv) {
+  return { id, updated: Date.now(), name: baseName(cv) }
+}
+
 /** Saves the open CV and marks it as the last one used. Returns 'ok', 'full' or 'blocked'. */
 export function saveOpenCv(id, cv) {
   const saved = write(cvKey(id), { version, cv })
   if (saved !== 'ok') return saved
   const index = readIndex() ?? { list: [] }
-  const entry = { id, updated: Date.now() }
+  const entry = entryFor(id, cv)
   const list = index.list.some((other) => other.id === id)
     ? index.list.map((other) => (other.id === id ? entry : other))
     : [...index.list, entry]
   return writeIndex({ current: id, list })
+}
+
+/** The saved CVs as the «Mis CV» list shows them: [{ id, updated, name }]. */
+export function listCvs() {
+  return readIndex()?.list ?? []
+}
+
+/** A saved CV, complete and checked, or null. */
+export function readCv(id) {
+  return cvFromData(read(cvKey(id)))
+}
+
+/** Saves a new CV at the end of the list and makes it the open one. Returns { id, status }. */
+export function createCv(cv) {
+  const id = newId()
+  return { id, status: saveOpenCv(id, cv) }
+}
+
+/** Deletes one CV; returns what restoreCv needs to bring it back («Deshacer»). */
+export function deleteCv(id) {
+  const index = readIndex() ?? { list: [] }
+  const position = index.list.findIndex((entry) => entry.id === id)
+  const removed = { entry: index.list[position], data: read(cvKey(id)), position }
+  try {
+    store().removeItem(cvKey(id))
+  } catch {
+    // Storage blocked: nothing to delete
+  }
+  writeIndex({ current: index.current, list: index.list.filter((entry) => entry.id !== id) })
+  return removed
+}
+
+/** Puts a deleted CV back where it was in the list. */
+export function restoreCv({ entry, data, position }) {
+  if (!entry || !data) return
+  write(cvKey(entry.id), data)
+  const index = readIndex() ?? { list: [] }
+  const list = index.list.filter((other) => other.id !== entry.id)
+  list.splice(Math.max(position, 0), 0, entry)
+  writeIndex({ current: index.current, list })
 }

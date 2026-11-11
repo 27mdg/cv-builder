@@ -22,6 +22,41 @@
 .file-name:hover { border-color: var(--line-strong); }
 .file-name:focus { outline: none; border-color: var(--forest); background: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }
 .actions { justify-self: end; display: flex; align-items: center; gap: 4px; }
+.topbar-start { justify-self: start; display: flex; align-items: center; gap: 14px; }
+
+/* «Mis CV»: the saved CVs in a glass menu hanging from its button */
+.my-cvs { position: relative; }
+.my-cvs-button svg { margin-left: 4px; transition: rotate 0.2s var(--spring); }
+.my-cvs-button[aria-expanded="true"] svg { rotate: 180deg; }
+.my-cvs-menu { position: absolute; top: calc(100% + 14px); left: 0; z-index: 300; width: 340px; padding: 8px; border-radius: var(--r-lg); animation: drop-in 0.18s var(--spring); }
+@keyframes drop-in { from { opacity: 0; translate: 0 -6px; } }
+.my-cvs-menu .menu-subtitle { margin: 8px 10px 6px; }
+/* A small gap, so the chosen row's mint and a neighbour's hover never touch */
+.my-cvs-list { display: grid; gap: 4px; max-height: min(60vh, 420px); overflow-y: auto; margin: 0; padding: 0; list-style: none; }
+.my-cvs-row { display: flex; align-items: center; gap: 4px; padding-right: 6px; border-radius: var(--r-md); transition: background-color var(--t-fast); }
+.my-cvs-row:not(.current):hover { background: var(--tint); }
+.my-cvs-row.current { background: var(--mint); }
+.my-cvs-open { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; padding: 8px 4px 8px 10px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.my-cvs-check { flex: none; display: flex; width: 18px; color: var(--forest); }
+.my-cvs-check svg { width: 18px; height: 18px; }
+.my-cvs-text { display: flex; flex-direction: column; min-width: 0; }
+.my-cvs-name { overflow: hidden; font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.my-cvs-row.current .my-cvs-name { color: var(--forest); }
+.my-cvs-date { color: var(--ink-muted); font-size: 12.5px; }
+/* Duplicate and delete: always on the open CV, on the others when pointed at or reached with Tab */
+.my-cvs-actions { display: flex; gap: 2px; opacity: 0; transition: opacity var(--t-fast); }
+.my-cvs-row.current .my-cvs-actions, .my-cvs-row:hover .my-cvs-actions, .my-cvs-row:focus-within .my-cvs-actions { opacity: 1; }
+.my-cvs-actions .btn { width: 32px; height: 32px; padding: 0; justify-content: center; }
+.my-cvs-divider { height: 1px; margin: 6px 8px; background: var(--line); }
+.my-cvs-new { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; border-radius: var(--r-md); background: transparent; color: var(--ink); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color var(--t-fast); }
+.my-cvs-new:hover { background: var(--tint); }
+.my-cvs-new svg { width: 18px; height: 18px; color: var(--forest); transition: transform 0.25s var(--spring); }
+.my-cvs-new:hover svg { transform: rotate(90deg); }
+.my-cvs-open:focus-visible, .my-cvs-new:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+@media (prefers-reduced-motion: reduce) {
+  .my-cvs-menu { animation: none; }
+  .my-cvs-button svg, .my-cvs-new svg { transition: none; }
+}
 .actions-divider { width: 1px; height: 20px; margin-inline: 6px; background: var(--stone); }
 .import { display: flex; align-items: center; gap: 8px; }
 .error-message, .download-error { color: var(--danger); font-size: 14px; }
