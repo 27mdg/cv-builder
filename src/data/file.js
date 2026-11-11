@@ -1,5 +1,5 @@
 import texts from '../locales/es.js'
-import { join, hasText } from '../templates/format.js'
+import { join, hasText, shownCv } from '../templates/format.js'
 import { cvFromData, version } from './storage.js'
 
 // Everything happens in the browser: files never go through a server (GDPR).
@@ -21,7 +21,9 @@ function cleanName(text) {
 export function baseName(cv) {
   const chosen = cleanName(cv.fileName)
   if (hasText(chosen)) return chosen
-  const name = cleanName(join([cv.personal.firstName, cv.personal.lastName], ' '))
+  // An anonymous CV must not give the name away in its file name either
+  const { personal } = shownCv(cv)
+  const name = cleanName(join([personal.firstName, personal.lastName], ' '))
   const base = texts.download.fileName
   return hasText(name) ? `${base} - ${name}` : base
 }

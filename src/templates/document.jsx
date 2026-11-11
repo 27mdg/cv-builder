@@ -1,6 +1,7 @@
 import texts from '../locales/es.js'
 import templates, { templateInfo } from './list.js'
 import './fonts.js'
+import { shownCv } from './format.js'
 
 // Every file in designs/ is a template whose id is its file name, so adding one
 // does not require importing it here.
@@ -20,5 +21,5 @@ if (import.meta.env.DEV) {
 export function cvDocument(cv) {
   const template = templateInfo(cv.template)
   const Template = components[template.id]
-  return <Template cv={cv} template={template}/>
+  return <Template cv={shownCv(cv)} template={template}/>
 }

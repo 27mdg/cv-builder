@@ -137,6 +137,29 @@ export function itemSummary(key, item) {
   return [join([title, subtitle], ' — '), join([date, place])]
 }
 
+// What an anonymous CV leaves out: whatever hints at age, gender, origin, health or identity.
+// The city stays, as employers need to know where the person can work.
+const anonymousHidden = [
+  'photo', 'birthDate', 'birthPlace', 'gender', 'maritalStatus', 'nationality', 'disability',
+  'address', 'postalCode', 'idNumber',
+]
+
+// 'Ana María' → 'A. M.'
+function initials(name) {
+  return name.trim().split(/\s+/).filter(Boolean).map((word) => `${word[0].toUpperCase()}.`).join(' ')
+}
+
+/**
+ * The CV as the PDF and the file name show it: with "CV anónimo" on, without the data above and
+ * with the name as initials. The form keeps everything, so switching it off brings it all back.
+ */
+export function shownCv(cv) {
+  if (!cv.anonymous) return cv
+  const personal = { ...cv.personal, firstName: initials(cv.personal.firstName), lastName: initials(cv.personal.lastName) }
+  for (const name of anonymousHidden) personal[name] = ''
+  return { ...cv, personal }
+}
+
 // { fullName, contact: [{ key, type, label, text }], otherDetails: ['Label: value'] }, without empty ones.
 // `type` lets templates pick an icon (PdfIcon); `key` is unique, as there can be several links.
 export function personalDetails(personal) {
@@ -170,7 +193,11 @@ export function personalDetails(personal) {
   }))
   return {
     fullName: join([p.firstName, p.lastName], ' '),
-    contact: [contact('phone', p.phone), contact('email', p.email), ...links, contact('address', address)]
+    contact: [
+      contact('phone', p.phone), contact('email', p.email), ...links,
+      // Only the city (the usual case now): labelled as such, not as an address
+      { ...contact('address', address), label: hasText(p.address) ? texts.personal.address : texts.personal.city },
+    ]
       .filter((c) => hasText(c.text)),
     otherDetails,
   }

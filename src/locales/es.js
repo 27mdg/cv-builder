@@ -48,6 +48,10 @@ const es = {
     website: 'Página web',
     linkedin: 'LinkedIn',
   },
+  anonymous: {
+    label: 'CV anónimo',
+    tip: 'El PDF muestra solo tus iniciales y quita la foto, la edad, el género, el origen y otros datos que no deberían influir. Aquí no se borra nada.',
+  },
   licence: {
     placeholder: 'Elige o escribe, p. ej. B',
     suggestions: 'Categorías habituales',

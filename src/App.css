@@ -631,6 +631,8 @@ button:hover .trash-lid { rotate: -16deg; }
 /* A short help line under a field or at the top of a section */
 .field-tip { margin: 6px 2px 0; color: var(--ink-muted); font-size: 13px; line-height: 1.4; }
 .section-tip { margin: 0 2px 14px; }
+.anonymous-switch { margin-bottom: 18px; }
+.form-panel .anonymous-switch .switch-label { display: flex; }
 .rich-editor { margin-top: 6px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); transition: background-color var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast); }
 .rich-editor:hover { border-color: var(--line-strong); }
 .rich-editor:focus-within { border-color: var(--forest); background: var(--paper); box-shadow: 0 0 0 4px var(--focus-halo); }

@@ -422,6 +422,20 @@ function App() {
         <main className="workspace">
           <section className="form-panel">
             <Section title={texts.personal.title} open {...sectionProps('personal')}>
+              <div className="anonymous-switch">
+                <label className="switch-label">
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    className="toggle"
+                    checked={cv.anonymous}
+                    aria-describedby="anonymous-tip"
+                    onChange={(e) => changeSection('anonymous', e.target.checked)}
+                  />
+                  {texts.anonymous.label}
+                </label>
+                <p className="field-tip" id="anonymous-tip">{texts.anonymous.tip}</p>
+              </div>
               <PersonalDetails data={cv.personal} onChange={changePersonal}/>
             </Section>
             <SortableSections

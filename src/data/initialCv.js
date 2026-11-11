@@ -57,6 +57,8 @@ const initialCv = {
   awards: [],
   publications: [],
   references: [],
+  // "CV anónimo": the PDF leaves out photo, age, gender, origin… and shows initials (shownCv in format.js)
+  anonymous: false,
   // true: the CV only says that references are available on request, without the list
   referencesOnRequest: false,
   achievements: '',
