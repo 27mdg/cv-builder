@@ -98,7 +98,7 @@ const es = {
     description: 'Descripción',
     toggle: 'Plegar o desplegar la sección',
     current: 'Presente',
-    // A month and year in the CV's dates ('marzo 2021'); Basque puts the year first
+    // A month and year in the CV's dates ('marzo 2021'); a function because some languages put the year first
     monthYear: (month, year) => `${month} ${year}`,
     contact: 'Contacto',
     month: 'Mes',

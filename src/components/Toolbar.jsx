@@ -19,6 +19,7 @@ function Toolbar({
   template, onTemplateChange, design, onDesignChange, language, onLanguageChange, fullScreen, onFullScreenChange,
 }) {
   const info = templateInfo(template)
+  const chosenLanguage = cvLanguages.find((l) => l.code === language)
 
   return (
     // The round full-screen button sits beside the bar rather than in it: it changes the
@@ -37,10 +38,10 @@ function Toolbar({
         <ToolMenu icon={<CalendarIcon/>} label={texts.tools.date} alignRight>
           {() => <DateMenu design={design} onChange={onDesignChange}/>}
         </ToolMenu>
-        {/* The chosen language's code (ES, EN, PT-BR): its name ("Português (Portugal)") would
-            not fit; the name shows in the hint bubble */}
-        <ToolMenu icon={<GlobeIcon/>} label={cvLanguages.find((l) => l.code === language)?.name ?? texts.tools.cvLanguage}
-          shortLabel={language.toUpperCase()} alignRight>
+        {/* The chosen language's short code (ES, EN): a long name would not fit; the name shows
+            in the hint bubble */}
+        <ToolMenu icon={<GlobeIcon/>} label={chosenLanguage?.name ?? texts.tools.cvLanguage}
+          shortLabel={chosenLanguage?.short ?? language.toUpperCase()} alignRight>
           {() => <LanguageMenu value={language} onChange={onLanguageChange}/>}
         </ToolMenu>
         <ToolMenu icon={<ColorsIcon/>} label={texts.tools.colors} alignRight>

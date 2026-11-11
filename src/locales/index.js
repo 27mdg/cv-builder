@@ -1,43 +1,29 @@
 import es from './es.js'
 import sampleCvEs from './sampleCv.es.js'
-import ca from './ca.js'
-import de from './de.js'
-import en from './en.js'
-import eu from './eu.js'
-import fr from './fr.js'
-import gl from './gl.js'
-import it from './it.js'
-import nl from './nl.js'
-import pl from './pl.js'
-import ptBR from './pt-BR.js'
-import ptPT from './pt-PT.js'
-import ro from './ro.js'
+import enGB from './en-GB.js'
 
 // Every language is bundled with the site (a text file is a few KB once compressed), so any of
-// them is at hand at once: the site's, and later a CV's own language (roadmap item 44).
-// To add one: copy es.js and sampleCv.es.js (e.g. en.js, sampleCv.en.js) and list them here.
-// `name`: in its own language, as the CV language menu shows it. `cvOnly`: it has only the PDF's
-// texts so far (the site is not translated yet, stage J): CVs can use it, the site cannot.
-// The CV-only translations are first drafts: a native speaker should review them before launch.
-const cvOnly = (name, texts) => ({ name, texts, sampleCv: sampleCvEs, cvOnly: true })
+// them is at hand at once: the site's, and a CV's own language (roadmap item 44).
+// To add one: copy es.js and sampleCv.es.js (e.g. fr.js, sampleCv.fr.js) and list them here.
+// `name`: in its own language, as the CV language menu shows it; `short`: the toolbar's label.
+// `cvOnly`: it has only the PDF's texts so far (the site is not translated yet, stage J): CVs can
+// use it, the site cannot.
 const languages = {
-  es: { name: 'Español', texts: es, sampleCv: sampleCvEs },
-  en: cvOnly('English', en),
-  fr: cvOnly('Français', fr),
-  de: cvOnly('Deutsch', de),
-  it: cvOnly('Italiano', it),
-  'pt-BR': cvOnly('Português (Brasil)', ptBR),
-  'pt-PT': cvOnly('Português (Portugal)', ptPT),
-  nl: cvOnly('Nederlands', nl),
-  pl: cvOnly('Polski', pl),
-  ro: cvOnly('Română', ro),
-  ca: cvOnly('Català', ca),
-  eu: cvOnly('Euskara', eu),
-  gl: cvOnly('Galego', gl),
+  es: { name: 'Español', short: 'ES', texts: es, sampleCv: sampleCvEs },
+  'en-GB': { name: 'English', short: 'EN', texts: enGB, sampleCv: sampleCvEs, cvOnly: true },
 }
 
-/** The languages a CV can be written in: [{ code, name }], in the menu's order. */
-export const cvLanguages = Object.entries(languages).map(([code, { name }]) => ({ code, name }))
+/** The languages a CV can be written in: [{ code, name, short }], in the menu's order. */
+export const cvLanguages = Object.entries(languages).map(([code, { name, short }]) => ({ code, name, short }))
+
+// CVs saved while other codes existed: English was plain 'en' before it became British
+const renamed = { en: 'en-GB' }
+
+/** A saved CV's language as it is now: renamed if needed, '' (the site's) if it no longer exists. */
+export function knownCvLanguage(code) {
+  const current = renamed[code] ?? code
+  return languages[current] ? current : ''
+}
 
 const fallbackLanguage = 'es'
 
@@ -93,7 +79,7 @@ export function sampleCvFor(code) {
 }
 
 // The page's own language (`<html lang>`, which each language's address will set). While
-// developing, `?lang=en` in the address tries another one. The PDF worker has no page: it is
+// developing, `?lang=en-GB` in the address tries another one. The PDF worker has no page: it is
 // told the language with each request (switchLanguage).
 function pageLanguage() {
   if (typeof document === 'undefined') return fallbackLanguage

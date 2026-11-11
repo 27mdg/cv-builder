@@ -1,6 +1,6 @@
 const initialCv = {
   template: 'arch',
-  // The CV's language ('es', 'en'…); empty = the site's (roadmap item 44 lets them differ)
+  // The CV's language ('es', 'en-GB'); empty = the site's (roadmap item 44 lets them differ)
   language: '',
   // Empty = automatic ('CV - First Last')
   fileName: '',

@@ -1,4 +1,5 @@
-// English (US). For now only the CV's own texts (the PDF); the site itself is translated later.
+// British English, the English of most CV readers outside the US. For now only the CV's own texts
+// (the PDF); the site itself is translated later.
 export default {
   sectionTitles: {
     profile: 'Profile',
@@ -27,16 +28,16 @@ export default {
     city: 'City',
     birthDate: 'Date of birth',
     birthPlace: 'Place of birth',
-    drivingLicense: "Driver's license",
+    drivingLicense: 'Driving licence',
     gender: 'Gender',
     nationality: 'Nationality',
     maritalStatus: 'Marital status',
     availability: 'Availability',
     ownVehicle: 'Own vehicle',
-    workPermit: 'Work authorization',
+    workPermit: 'Right to work',
     idNumber: 'ID number',
     travel: 'Willing to travel',
-    disability: 'Recognized disability',
+    disability: 'Recognised disability',
   },
   links: { types: { portfolio: 'Portfolio', website: 'Website', other: 'Other link' } },
   common: {
@@ -60,7 +61,7 @@ export default {
       A1: 'A1 – Beginner',
     },
   },
-  datePicker: { order: 'mdy', separator: '/' },
-  references: { onRequestText: 'References available upon request.' },
+  datePicker: { order: 'dmy', separator: '/' },
+  references: { onRequestText: 'References available on request.' },
   customSection: { untitled: 'Custom section' },
 }

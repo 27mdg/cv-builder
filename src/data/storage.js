@@ -1,6 +1,7 @@
 import initialCv from './initialCv.js'
 import { isCustomKey } from './sections.js'
 import templates from '../templates/list.js'
+import { knownCvLanguage } from '../locales/index.js'
 
 // Only in the browser (localStorage, or sessionStorage in public computer mode): the data never
 // leaves it (GDPR).
@@ -62,7 +63,7 @@ export function cvFromData(data) {
   if (!templates.some((t) => t.id === cv.template)) {
     cv.template = initialCv.template
   }
-  if (typeof cv.language !== 'string') cv.language = initialCv.language
+  cv.language = typeof cv.language === 'string' ? knownCvLanguage(cv.language) : initialCv.language
   cv.anonymous = cv.anonymous === true
   return cv
 }
