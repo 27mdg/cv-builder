@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { CloseIcon } from '../Icons.jsx'
 
 const t = texts.licence

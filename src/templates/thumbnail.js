@@ -1,7 +1,7 @@
 import * as pdfjs from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import { buildPdf } from './pdfClient.js'
-import sampleCv from '../locales/sampleCv.es.js'
+import { language, sampleCvFor } from '../locales/index.js'
 
 // Loaded with import() from the template picker: it pulls in the heavy PDF libraries.
 
@@ -31,6 +31,7 @@ function placeholderPhoto() {
 
 async function render(id, width) {
   samplePhoto ??= placeholderPhoto()
+  const sampleCv = sampleCvFor(language)
   const cv = { ...sampleCv, template: id, personal: { ...sampleCv.personal, photo: samplePhoto } }
   const pdfDocument = await pdfjs.getDocument({ data: await buildPdf(cv) }).promise
   try {

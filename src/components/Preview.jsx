@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import * as pdfjs from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { buildPdf } from '../templates/pdfClient.js'
 import PdfPage from './PdfPage.jsx'
 

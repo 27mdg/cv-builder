@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { prefersReducedMotion } from './useLeaving.js'
 
 // children is a function that receives `close`, so the menu can close after a choice.

@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import DatePicker from './DatePicker.jsx'
 import { useUndo } from '../undo.js'
 

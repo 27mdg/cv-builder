@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { fonts, fontOf } from '../data/design.js'
 import Slider from './Slider.jsx'
 // So each name in the list shows in its own typeface. Served from our own site (GDPR)

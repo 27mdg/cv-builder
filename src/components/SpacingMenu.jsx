@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { lineHeight } from '../data/design.js'
 import Slider from './Slider.jsx'
 

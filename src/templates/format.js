@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { isCustomKey } from '../data/sections.js'
 
 // Shared by every template, so each one only deals with layout.

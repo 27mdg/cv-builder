@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { ComputerIcon } from './Icons.jsx'
 import ConfirmDialog from './ConfirmDialog.jsx'
 import Tooltip from './Tooltip.jsx'

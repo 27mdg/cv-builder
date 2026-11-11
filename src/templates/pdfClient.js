@@ -2,6 +2,8 @@
 // meanwhile. It is built in a worker (pdfWorker.js) instead. If the browser cannot start the
 // worker, or it breaks, it is built on the page as before.
 
+import { language } from '../locales/index.js'
+
 let worker = null
 let broken = false
 let lastId = 0
@@ -46,6 +48,6 @@ export function buildPdf(cv) {
   return new Promise((resolve, reject) => {
     const id = ++lastId
     waiting.set(id, { resolve, reject, onPage: () => buildOnPage(cv).then(resolve, reject) })
-    worker.postMessage({ id, cv })
+    worker.postMessage({ id, cv, language })
   })
 }

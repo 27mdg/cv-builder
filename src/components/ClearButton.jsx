@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { TrashIcon } from './Icons.jsx'
 import ConfirmDialog from './ConfirmDialog.jsx'
 import Tooltip from './Tooltip.jsx'

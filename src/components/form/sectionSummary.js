@@ -1,4 +1,4 @@
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { hasText, join, itemSummary, itemsWithContent, formatBirthDate, plainText } from '../../templates/format.js'
 
 // Sections whose items are a single field instead of a title built by itemSummary

@@ -1,4 +1,4 @@
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { CloseIcon, PersonIcon } from '../Icons.jsx'
 
 // In pixels, longest side. An unresized phone photo does not fit in localStorage.

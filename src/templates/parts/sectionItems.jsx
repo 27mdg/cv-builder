@@ -1,6 +1,6 @@
 import { View } from '@react-pdf/renderer'
 import Text from './Text.jsx'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { hasText, itemSummary, languageLevel } from '../format.js'
 import { Item } from './blocks.jsx'
 

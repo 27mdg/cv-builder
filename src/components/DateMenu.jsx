@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { dateFormats } from '../data/design.js'
 import { formatDate } from '../templates/format.js'
 import Segmented from './Segmented.jsx'

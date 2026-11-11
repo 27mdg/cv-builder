@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { ArrowIcon, CloseIcon, UndoIcon } from './Icons.jsx'
 
 // Long enough to read it and react, short enough not to stay in the way

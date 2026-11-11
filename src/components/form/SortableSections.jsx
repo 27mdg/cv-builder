@@ -1,7 +1,7 @@
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import Section from './Section.jsx'
 import Animated from '../Animated.jsx'
 import { GripIcon } from '../Icons.jsx'

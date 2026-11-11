@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { escape, fromDom, toHtml } from './richTextHtml.js'
 import { LinkIcon, ListIcon } from '../Icons.jsx'
 import Animated from '../Animated.jsx'

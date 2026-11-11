@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { join, hasText, shownCv } from '../templates/format.js'
 import { cvFromData, version } from './storage.js'
 

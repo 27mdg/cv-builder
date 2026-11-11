@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 
 // Our own colour picker for the custom colour, instead of the system's colour window, which
 // cannot be styled: a square for saturation (across) and brightness (up), a hue slider and the

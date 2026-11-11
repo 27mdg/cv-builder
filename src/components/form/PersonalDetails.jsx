@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import PhotoField from './PhotoField.jsx'
 import DatePicker from './DatePicker.jsx'
 import Select from './Select.jsx'

@@ -1,5 +1,5 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { GripIcon } from './Icons.jsx'
 
 // Separate from the CV: it is a screen preference, so it is neither exported nor cleared

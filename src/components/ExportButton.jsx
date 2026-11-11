@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { exportCv } from '../data/file.js'
 import Tooltip from './Tooltip.jsx'
 

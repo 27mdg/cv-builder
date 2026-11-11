@@ -1,4 +1,4 @@
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import Select from './Select.jsx'
 
 // Includes future years for studies that have not finished yet

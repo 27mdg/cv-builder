@@ -1,4 +1,4 @@
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import templates, { templateInfo } from './list.js'
 import './fonts.js'
 import { shownCv } from './format.js'

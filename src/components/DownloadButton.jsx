@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { keepSaved } from '../data/storage.js'
 import { exportCv } from '../data/file.js'
 import Tooltip from './Tooltip.jsx'

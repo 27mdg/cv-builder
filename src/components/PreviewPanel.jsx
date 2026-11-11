@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import Toolbar from './Toolbar.jsx'
 import { prefersReducedMotion } from './useLeaving.js'
 

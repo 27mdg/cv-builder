@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import Select from './Select.jsx'
 import { ArrowIcon, CalendarIcon } from '../Icons.jsx'
 

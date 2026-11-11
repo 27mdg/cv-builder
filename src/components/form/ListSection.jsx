@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import Animated from '../Animated.jsx'
 import { prefersReducedMotion, useLeaving } from '../useLeaving.js'
 import { insertAt, useUndo } from '../undo.js'

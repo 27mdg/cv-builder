@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { templateInfo } from '../templates/list.js'
 import { fontOf } from '../data/design.js'
 import ToolMenu from './ToolMenu.jsx'

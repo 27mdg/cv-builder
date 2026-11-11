@@ -1,6 +1,6 @@
 import { Document, Page, View, Image, StyleSheet } from '@react-pdf/renderer'
 import Text from '../parts/Text.jsx'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { designValues } from '../../data/design.js'
 import { hasText, personalDetails, filledSections, sectionTitle, pageWithFooter } from '../format.js'
 import { RichText } from '../parts/RichText.jsx'

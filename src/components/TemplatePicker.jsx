@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import templates from '../templates/list.js'
 import { prefersReducedMotion } from './useLeaving.js'
 

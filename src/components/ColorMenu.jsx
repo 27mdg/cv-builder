@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import texts from '../locales/es.js'
+import texts from '../locales/index.js'
 import { colors } from '../data/design.js'
 import Animated from './Animated.jsx'
 import ColorPicker from './ColorPicker.jsx'

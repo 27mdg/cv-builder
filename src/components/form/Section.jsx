@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import texts from '../../locales/es.js'
+import texts from '../../locales/index.js'
 import { ArrowIcon, CloseIcon, PencilIcon, VisibilityIcon } from '../Icons.jsx'
 
 // <details> folds and unfolds without JavaScript or state.
