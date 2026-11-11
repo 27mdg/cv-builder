@@ -4,9 +4,14 @@ import sampleCvEs from './sampleCv.es.js'
 // Every language is bundled with the site (a text file is a few KB once compressed), so any of
 // them is at hand at once: the site's, and later a CV's own language (roadmap item 44).
 // To add one: copy es.js and sampleCv.es.js (e.g. en.js, sampleCv.en.js) and list them here.
+// `name`: in its own language, as the CV language menu shows it. `cvOnly`: it has only the PDF's
+// texts so far (the site is not translated yet, stage J): CVs can use it, the site cannot.
 const languages = {
-  es: { texts: es, sampleCv: sampleCvEs },
+  es: { name: 'Español', texts: es, sampleCv: sampleCvEs },
 }
+
+/** The languages a CV can be written in: [{ code, name }], in the menu's order. */
+export const cvLanguages = Object.entries(languages).map(([code, { name }]) => ({ code, name }))
 
 const fallbackLanguage = 'es'
 
@@ -41,7 +46,7 @@ export function textsFor(code) {
   if (!prepared.has(code)) {
     const missing = []
     prepared.set(code, code === fallbackLanguage ? es : withFallback(languages[code].texts, es, '', missing))
-    if (import.meta.env.DEV && missing.length) {
+    if (import.meta.env.DEV && missing.length && !languages[code].cvOnly) {
       console.warn(`Language "${code}" lacks ${missing.length} texts, shown in Spanish:`, missing)
     }
   }
@@ -58,9 +63,10 @@ export function sampleCvFor(code) {
 // told the language with each request (switchLanguage).
 function pageLanguage() {
   if (typeof document === 'undefined') return fallbackLanguage
+  const isSiteLanguage = (code) => languages[code] && !languages[code].cvOnly
   const asked = import.meta.env.DEV && new URLSearchParams(location.search).get('lang')
-  const code = languages[asked] ? asked : document.documentElement.lang
-  return languages[code] ? code : fallbackLanguage
+  const code = isSiteLanguage(asked) ? asked : document.documentElement.lang
+  return isSiteLanguage(code) ? code : fallbackLanguage
 }
 
 export let language = pageLanguage()

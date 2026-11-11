@@ -24,10 +24,12 @@ function dateRange(item, dateFormat) {
 }
 
 // '1995-04-12' → '12/04/1995'
+// '1990-05-04' → '04/05/1990' in Spanish, '05/04/1990' in US English (the language's date order)
 export function formatBirthDate(date) {
   if (!date) return ''
-  const [year, month, day] = date.split('-')
-  return `${day}/${month}/${year}`
+  const [y, m, d] = date.split('-')
+  const parts = { d, m, y }
+  return [...texts.datePicker.order].map((part) => parts[part]).join('/')
 }
 
 // In points: the room the footer (parts/closing.jsx) takes at the bottom of every page

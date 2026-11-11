@@ -10,6 +10,8 @@ let lastId = 0
 // id → { resolve, reject, onPage } of the requests the worker has not answered yet
 const waiting = new Map()
 
+// Only when there is no worker: the PDF then uses the site's language, as switching the shared
+// texts here would switch the whole site (rare; every current browser runs the worker)
 async function buildOnPage(cv) {
   const [{ pdf }, { cvDocument }] = await Promise.all([import('@react-pdf/renderer'), import('./document.jsx')])
   return new Uint8Array(await (await pdf(cvDocument(cv)).toBlob()).arrayBuffer())
@@ -48,6 +50,7 @@ export function buildPdf(cv) {
   return new Promise((resolve, reject) => {
     const id = ++lastId
     waiting.set(id, { resolve, reject, onPage: () => buildOnPage(cv).then(resolve, reject) })
-    worker.postMessage({ id, cv, language })
+    // The PDF speaks the CV's language (cv.language, '' = the site's), the site stays in its own
+    worker.postMessage({ id, cv, language: cv.language || language })
   })
 }
